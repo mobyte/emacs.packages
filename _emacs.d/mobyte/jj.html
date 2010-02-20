@@ -1,0 +1,87 @@
+;int main() {
+;  print()
+;}
+
+;<div class="c" style="font-family: monospace; color: #000000;"><span style="color: #993333;">int</span> main<span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span> <span style="color: #66cc66;">&#123;</span><br />&nbsp; print<span style="color: #66cc66;">&#40;</span><span style="color: #66cc66;">&#41;</span><br /><span style="color: #66cc66;">&#125;</span><a href="http://syhi.stworks.ru/"  style="display: block; text-align: right; font-size: 9px;">Syhi-подсветка кода</a></div>
+
+(setq max-lisp-eval-depth 1000)
+
+(defun jj-get-color ()
+  (let ((face (get-text-property (point) 'face)))
+    (if face
+      (face-attribute face :foreground)
+      nil)))
+
+(defun jj-debug-log (s)
+  (set-buffer "b")
+  (insert s)
+  (insert "\n")
+  (set-buffer "jj.el"))
+
+(defun jj-str-eq (str1 str2)
+  (if (or (null str1) 
+          (null str2))
+      nil
+      (if (string= str1 str2)
+          "true"
+        nil)))
+
+(defun jj-bad-colorp (color)
+  (if (or (jj-str-eq color "unspecified") 
+          (null color))
+      "true"
+    nil))
+
+(defun jj-good-colorp (color)
+  (not (jj-good-colorp color)))
+
+(defun jj-debug-log-char (color)
+  (let ((schar (format "\"%s\" \"%s\"" 
+                       (char-to-string (char-after))
+                       (if (null color) "nil" color))))
+    (jj-debug-log schar)))
+
+(defun ttt ()
+  (interactive)
+  (setq result "")
+  (setq word "")
+  (setq pcolor "")
+  (setq need-close-tagp nil)
+  (while (not (eobp))
+    (setq color (jj-get-color))
+    (setq schar (char-to-string (char-after)))
+    (if (not (string= word ""))
+        (if (or (jj-bad-colorp color) (not (jj-str-eq color pcolor)))
+            (progn
+              (jj-debug-log word)
+              (jj-debug-log "</span>")
+              (setq result (concat result "</span>"))
+              (setq word ""))
+          (progn
+            (setq word (concat word schar))
+            (setq need-close-tagp "true"))))
+    (if (and (not (jj-bad-colorp color)) (string= word ""))
+        (progn
+          (setq word (concat "<span style=\"color: #" 
+                             (number-to-string (car (color-values color))) ";\">"))
+          (setq result (concat result word))
+          (setq need-close-tagp "true")))
+
+    (setq pcolor color)
+    (jj-debug-log-char (format "%s, %s" color word))
+    (setq result (concat result schar))
+    (forward-char 1))
+  (if need-close-tagp 
+      (progn
+        (jj-debug-log "</span>")
+        (setq result (concat result "</span>"))))
+  (jj-debug-log "\n----------result------------")
+  (jj-debug-log result))
+      
+(global-set-key (kbd "C-<f1>") 'ttt)
+
+(progn
+  (set-buffer "b")
+  (message (char-to-string (char-after)))); dfdsfdd
+(let 
+(defun;test
