@@ -39,14 +39,10 @@
   (puthash "|" "&#124;" jj-ht-syms)
   (puthash "}" "&#125;" jj-ht-syms))
 
-(let ((value ""))
-  (dotimes (i tab-width value)
-    (setq value (concat value "&nbsp;"))))
-
 (defun jj-map-sym (sym)
   (gethash sym jj-ht-syms sym))
 
-(defun save-to-clipboard (text)
+(defun jj-save-to-clipboard (text)
   (set-clipboard-coding-system 'utf-8)
   (x-set-selection 'CLIPBOARD text))
 
@@ -61,27 +57,6 @@
               color)))
       nil)))
 
-(defun ttt ()
-  (interactive)
-  (let ((face (get-text-property (point) 'face)))
-    (message "%s" 
-             (if (null face)
-                 nil
-               (if (atom face)
-                   (face-foreground face)
-                 (face-foreground (car face)))))))
-                 ;"red")))))
-
-(global-set-key (kbd "C-<f2>") 'ttt)
-
-(defun tt ()
-  (interactive)
-  (let ((face (get-text-property (point) 'face)))
-    (message "%s" face)))
-
-(global-set-key (kbd "C-<f3>") 'tt)
-
-;;;; face-attribute: Wrong type argument: symbolp, (font-lock-variable-name-face underline)
 
 (defun jj-debug-log (s)
   (let ((log-buffer "*JJ-debug-log*")
@@ -130,16 +105,18 @@
   (concat "<font color=\"#" 
           (jj-color-to-rgb color)
           "\">"))
+
+(defun color-tag-end () "</font>")
+
+
+;;;;(defun color-tag-begin (color)
 ;;;;  (concat "<span style=\"color: #" 
 ;;;;          (jj-color-to-rgb color)
 ;;;;          ";\">"))
 
-(defun color-tag-end () "</font>")
 ;;;;(defun color-tag-end () "</span>")
 
 (defun jj-format ()
-  "transforms emacs highlighting text to live journal code format"
-  (interactive)
   (setq result "")
   (setq pcolor "") ; previous char color
   (setq need-close-tagp nil)
@@ -149,7 +126,6 @@
   (while (< (point) pos-end)
     (setq color (jj-get-color))
     (setq schar (char-to-string (char-after)))
-    ;;(jj-debug-log (format "%s, \"%s\"" color schar))
     (if need-close-tagp
         (if (or (jj-bad-color-p color) (not (jj-str-eq color pcolor)))
             (progn
@@ -161,12 +137,43 @@
           (setq need-close-tagp "true")))
     (setq pcolor color)
     (setq result (concat result (jj-map-sym schar)))
-;;    (if (eolp) (setq result (concat result "<br />")))
     (forward-char 1))
   (if need-close-tagp 
       (setq result (concat result (color-tag-end))))
-  (save-to-clipboard (div-tag-wrap result))
+  (div-tag-wrap result))
+
+(defun jj-get-result ()
+  (interactive)
+  (jj-save-to-clipboard (jj-format))
   (keyboard-quit))
 
-(global-set-key (kbd "C-<f1>") 'jj-format)
+(global-set-key (kbd "C-<f1>") 'jj-get-result)
 
+
+;;;; tests
+
+(let ((value ""))
+  (dotimes (i tab-width value)
+    (setq value (concat value "&nbsp;"))))
+
+(defun ttt ()
+  (interactive)
+  (let ((face (get-text-property (point) 'face)))
+    (message "%s" 
+             (if (null face)
+                 nil
+               (if (atom face)
+                   (face-foreground face)
+                 (face-foreground (car face)))))))
+                 ;"red")))))
+
+(global-set-key (kbd "C-<f2>") 'ttt)
+
+(defun tt ()
+  (interactive)
+  (let ((face (get-text-property (point) 'face)))
+    (message "%s" face)))
+
+(global-set-key (kbd "C-<f3>") 'tt)
+
+;;;; face-attribute: Wrong type argument: symbolp, (font-lock-variable-name-face underline)

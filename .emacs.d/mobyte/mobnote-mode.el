@@ -13,7 +13,7 @@
          'font-lock-keyword-face)
    (cons "^[\-\*]+[ \t]+"
          'font-lock-keyword-face)
-   (cons "__[a-zA-ZÁ-Ñá-ñ_!,\. ]+__"
+   (cons "__[\-0-9a-zA-ZÁ-Ñá-ñ_!,\. ]+__"
          'font-lock-warning-face)))
  
 (defvar mobnote-font-lock-keywords mobnote-font-lock-keywords-1

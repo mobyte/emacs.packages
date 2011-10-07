@@ -1,5 +1,6 @@
 ;; misc settings
 (custom-set-variables
+;; '(inverse-video t)
  '(column-number-mode t)
  '(display-battery-mode nil)
  '(display-time-mode nil)
@@ -13,9 +14,21 @@
  '(inhibit-splash-screen t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
+(set-default-font "Monaco 16")
+(set-background-color "black")
+(set-face-background 'default "black")
+(set-face-background 'region "black")
+(set-face-foreground 'default "white")
+(set-face-foreground 'region "gray60")
+(set-foreground-color "white")
+(set-cursor-color "red")
+;;(global-hl-line-mode 1)
+;;(set-face-background 'hl-line "#330")
+(set-face-background 'region "#134F78")
+
 (menu-bar-mode nil)
-(scroll-bar-mode nil)
-(tool-bar-mode nil)
+;;(scroll-bar-mode nil)
+(tool-bar-mode 0)
 
 ;; disabled hot keys
 (put 'downcase-region 'disabled nil)
@@ -25,17 +38,11 @@
 (global-set-key (kbd "C-<home>") 'beginning-of-buffer)
 (global-set-key (kbd "C-<end>") 'end-of-buffer)
 
-(defun go-to-buffer-list ()
-  (interactive)
-  (buffer-menu))
-
-(global-set-key (kbd "C-x <down>") 'go-to-buffer-list)
-
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+
+(setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "opera")
+
+(setq default-buffer-file-coding-system 'utf-8)
+(setq default-input-method 'russian-computer)
+
 
