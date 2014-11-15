@@ -1,0 +1,8 @@
+.emacs.d/auto-save-list
+.emacs.d/backups
+.emacs.d/repl-history
+.emacs.d/tramp
+.emacs.d/url
+*.elc
+/.emacs.d/eshell/history
+/.emacs.d/eshell/lastdir

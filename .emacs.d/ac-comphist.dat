@@ -1,0 +1,22 @@
+((("getenv" .
+   [0 0 0 0 0 1])
+  ("Please" .
+   [1 0 0 0 0 2])
+  ("hello" .
+   [0 0 0 0 1])
+  ("def" .
+   [0 1 0])
+  ("stats-graph" .
+   [0 0 0 0 0 0 0 0 0 0 1])
+  ("search-products" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("get-facets-from-answer" .
+   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0])
+  (":responseHeader" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0])
+  ("gen-tree" .
+   [1 0 0 0 0 0 0 3])
+  ("Clojure" .
+   [2 0 0 0 0 0 1])
+  ("create-basket" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 1])))

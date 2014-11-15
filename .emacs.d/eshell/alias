@@ -1,0 +1,2 @@
+alias gg git log --color -$1
+alias git git --no-pager $*
