@@ -208,7 +208,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; Change the default eshell prompt
 
-(setq eshell-prompt-function
+(setq shell-prompt-function
       (lambda ()
         (concat ""
                 (cur-dir-git-branch-string (eshell/pwd))

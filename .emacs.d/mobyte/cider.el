@@ -22,7 +22,13 @@
 
 (global-set-key (kbd "C-c C-x n") 'cider-switch-to-next-connection)
 
-(setq cider-repl-popup-stacktraces t)
+;; (setq cider-repl-pop-to-buffer-on-connect nil)
+
+;; (setq cider-repl-popup-stacktraces t)
+;; (setq cider-show-error-buffer 'except-in-repl)
+(setq cider-show-error-buffer t)
+
+(global-set-key (kbd "C-c C-x n") 'cider-visit-error-buffer)
 
 (setq nrepl-buffer-name-show-port t)
 
