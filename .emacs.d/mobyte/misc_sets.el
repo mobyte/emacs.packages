@@ -208,10 +208,10 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; Change the default eshell prompt
 
-(setq shell-prompt-function
+(setq eshell-prompt-function
       (lambda ()
         (concat ""
-                (cur-dir-git-branch-string (eshell/pwd))
+                ;; (cur-dir-git-branch-string (eshell/pwd))
                 ;; (propertize (concat "[" (getenv "USER") "@" system-name "] ")
                 ;;             'face `(:foreground "darkblue"))
                 (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
