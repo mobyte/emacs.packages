@@ -1,3 +1,50 @@
+;;* very first entry
+(setq my-outline-level (lambda ()
+                         (let ((len (- (match-end 0)
+                                       (match-beginning 0))))
+                           (- len 2))))
+
+(defun my-emacs-lisp-mode-hook ()
+  (defun emacs-lisp-outline-minor-setup ()
+    (local-set-key (kbd "M-o") 'outline-toggle-children)
+    ;;(setq outline-regexp "^;;\\*+")
+    ;; (setq outline-level
+    ;;       (lambda ()
+    ;;         (let ((len (- (match-end 0)
+    ;;                       (match-beginning 0))))
+    ;;           (- len 2))))
+    )
+  (add-hook 'outline-minor-mode-hook 'emacs-lisp-outline-minor-setup)
+  (outline-minor-mode)
+  ;;(hide-sublevels 1)
+  )
+
+;;; Local Variables:
+;;; mode: outline-minor
+;;; outline-regexp: "^;;\\*+"
+;;; oultine-level 'my-outline-level
+;;; eval: (outline-minor-mode 1)
+;;; End:
+
+(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+
+;;* first entry
+(defun my-emacs-lisp-mode-hook ()
+  (defun emacs-lisp-outline-minor-setup ()
+    (local-set-key (kbd "M-o") 'outline-toggle-children)
+    (setq outline-regexp "^;;\\*+")
+    (setq outline-level
+          (lambda ()
+            (let ((len (- (match-end 0)
+                          (match-beginning 0))))
+              (- len 2)))))
+  (add-hook 'outline-minor-mode-hook 'emacs-lisp-outline-minor-setup)
+  (outline-minor-mode)
+  ;;(hide-sublevels 1)
+  )
+(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+
+;;* hello
 (require 'package)
 ;; (add-to-list 'package-archives 
 ;;     '("marmalade" .
@@ -8,7 +55,7 @@
              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (package-initialize)
-
+;;* other
 ;; set PATH
 (setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/emilyessenamanov/bin")
 (setenv "PATH" path)
@@ -78,29 +125,35 @@
 ;; (add-hook 'haskell-mode-hook 'font-lock-mode)
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(column-number-mode t)
  '(display-battery-mode nil)
  '(display-time-mode nil)
  '(global-font-lock-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
+ '(ispell-program-name "/usr/bin/aspell")
  '(make-backup-files nil)
  '(org-agenda-files (quote ("~/tmp/1.org")))
+ '(safe-local-variable-values (quote ((aaa . bbb))))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )
 
 (cd "~/")
 
 (server-start)
+
+;; Local Variables:
+;; aaa: bbb
+;; End:
