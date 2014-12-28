@@ -1,47 +1,16 @@
-;;* very first entry
-(setq my-outline-level (lambda ()
-                         (let ((len (- (match-end 0)
-                                       (match-beginning 0))))
-                           (- len 2))))
-
-(defun my-emacs-lisp-mode-hook ()
-  (defun emacs-lisp-outline-minor-setup ()
-    (local-set-key (kbd "M-o") 'outline-toggle-children)
-    ;;(setq outline-regexp "^;;\\*+")
-    ;; (setq outline-level
-    ;;       (lambda ()
-    ;;         (let ((len (- (match-end 0)
-    ;;                       (match-beginning 0))))
-    ;;           (- len 2))))
-    )
-  (add-hook 'outline-minor-mode-hook 'emacs-lisp-outline-minor-setup)
-  (outline-minor-mode)
-  ;;(hide-sublevels 1)
-  )
-
-;;; Local Variables:
-;;; mode: outline-minor
-;;; outline-regexp: "^;;\\*+"
-;;; oultine-level 'my-outline-level
-;;; eval: (outline-minor-mode 1)
-;;; End:
-
-(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
-
-;;* first entry
+;;* outline config
 (defun my-emacs-lisp-mode-hook ()
   (defun emacs-lisp-outline-minor-setup ()
     (local-set-key (kbd "M-o") 'outline-toggle-children)
     (setq outline-regexp "^;;\\*+")
-    (setq outline-level
-          (lambda ()
-            (let ((len (- (match-end 0)
-                          (match-beginning 0))))
-              (- len 2)))))
+    (setq outline-level (lambda ()
+                          (let ((len (- (match-end 0)
+                                        (match-beginning 0))))
+                            (- len 2)))))
   (add-hook 'outline-minor-mode-hook 'emacs-lisp-outline-minor-setup)
-  (outline-minor-mode)
-  ;;(hide-sublevels 1)
-  )
+  (outline-minor-mode 1)
+  (hide-sublevels 1))
+
 (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 ;;* hello
@@ -153,7 +122,3 @@
 (cd "~/")
 
 (server-start)
-
-;; Local Variables:
-;; aaa: bbb
-;; End:
