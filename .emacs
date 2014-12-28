@@ -1,17 +1,27 @@
 ;;* outline config
-(defun my-emacs-lisp-mode-hook ()
-  (defun emacs-lisp-outline-minor-setup ()
-    (local-set-key (kbd "M-o") 'outline-toggle-children)
-    (setq outline-regexp "^;;\\*+")
-    (setq outline-level (lambda ()
-                          (let ((len (- (match-end 0)
-                                        (match-beginning 0))))
-                            (- len 2)))))
-  (add-hook 'outline-minor-mode-hook 'emacs-lisp-outline-minor-setup)
-  (outline-minor-mode 1)
-  (hide-sublevels 1))
 
-(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+(eval-after-load "outline"
+  (lambda ()
+    (define-key outline-minor-mode-map
+      [(shift control n)] 'outline-next-visible-heading)
+    (define-key outline-minor-mode-map
+      [(shift control p)] 'outline-previous-visible-heading)
+    (define-key outline-minor-mode-map
+      [(tab)] 'org-cycle)))
+
+(add-hook 'outline-minor-mode-hook
+          (lambda ()
+            (local-set-key (kbd "M-o") 'outline-toggle-children)
+            (setq outline-regexp "^;;\\*+")
+            (setq outline-level (lambda ()
+                                  (let ((len (- (match-end 0)
+                                                (match-beginning 0))))
+                                    (- len 2))))))
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+              (outline-minor-mode 1)
+              (hide-sublevels 1)))
 
 ;;* hello
 (require 'package)
