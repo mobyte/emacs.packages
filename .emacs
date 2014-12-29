@@ -3,6 +3,8 @@
 (eval-after-load "outline"
   (lambda ()
     (define-key outline-minor-mode-map
+      [(meta o)] 'org-cycle)
+    (define-key outline-minor-mode-map
       [(shift control n)] 'outline-next-visible-heading)
     (define-key outline-minor-mode-map
       [(shift control p)] 'outline-previous-visible-heading)
@@ -11,12 +13,12 @@
 
 (add-hook 'outline-minor-mode-hook
           (lambda ()
-            (local-set-key (kbd "M-o") 'outline-toggle-children)
-            (setq outline-regexp "^;;\\*+")
-            (setq outline-level (lambda ()
-                                  (let ((len (- (match-end 0)
-                                                (match-beginning 0))))
-                                    (- len 2))))))
+            (set (make-local-variable 'outline-regexp)
+                 "^;;\\*+")
+            (set (make-local-variable 'outline-level)
+                 (lambda ()
+                   (let ((len (- (match-end 0) (match-beginning 0))))
+                     (- len 2))))))
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
