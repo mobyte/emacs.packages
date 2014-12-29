@@ -1,1 +1,0 @@
-(define-package "auto-compile" "1.2.1" "automatically compile Emacs Lisp libraries" '((cl-lib "0.2") (packed "0.3.4")) :url "http://tarsius.github.com/auto-compile" :keywords '("compile" "convenience" "lisp"))

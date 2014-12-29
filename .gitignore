@@ -6,3 +6,4 @@
 *.elc
 /.emacs.d/eshell/history
 /.emacs.d/eshell/lastdir
+/.emacs.d/ac-comphist.dat
