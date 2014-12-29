@@ -1,15 +1,26 @@
+;;* emacs packages config
+(require 'package)
+;; (add-to-list 'package-archives 
+;;     '("marmalade" .
+;;       "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+(package-initialize)
 ;;* outline config
 
 (eval-after-load "outline"
   (lambda ()
     (define-key outline-minor-mode-map
-      [(meta o)] 'org-cycle)
-    (define-key outline-minor-mode-map
       [(shift control n)] 'outline-next-visible-heading)
     (define-key outline-minor-mode-map
       [(shift control p)] 'outline-previous-visible-heading)
     (define-key outline-minor-mode-map
-      [(tab)] 'org-cycle)))
+      [(tab)] 'org-cycle)
+    (define-key outline-minor-mode-map
+      [(meta o)] 'outline-toggle-children)))
 
 (add-hook 'outline-minor-mode-hook
           (lambda ()
@@ -25,17 +36,6 @@
               (outline-minor-mode 1)
               (hide-sublevels 1)))
 
-;;* hello
-(require 'package)
-;; (add-to-list 'package-archives 
-;;     '("marmalade" .
-;;       "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
-(package-initialize)
 ;;* other
 ;; set PATH
 (setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/emilyessenamanov/bin")
