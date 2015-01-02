@@ -107,7 +107,7 @@
 (global-set-key (kbd "C-<home>") 'beginning-of-buffer)
 (global-set-key (kbd "C-<end>") 'end-of-buffer)
 
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
 (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "opera")
 
