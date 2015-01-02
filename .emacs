@@ -62,7 +62,8 @@
 
 (setq visible-bell t)
 
-;; misc settings
+;;* custom settings
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -95,35 +96,26 @@
 ;;(set-face-background 'hl-line "#330")
 (set-face-background 'region "#134F78")
 
+;;* disable emacs gui elements
+
 (menu-bar-mode nil)
 ;;(scroll-bar-mode nil)
 (tool-bar-mode 0)
 
-;; disabled hot keys
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'erase-buffer 'disabled nil)
-
-(global-set-key (kbd "C-<home>") 'beginning-of-buffer)
-(global-set-key (kbd "C-<end>") 'end-of-buffer)
-
-;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
-
-(setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "opera")
+;;* coding system
 
 (setq default-buffer-file-coding-system 'utf-8)
 (setq default-input-method 'russian-computer)
 
-;; command key to meta
-(setq mac-command-modifier 'meta)
-
-;; ido mode
+;;* external programms settings
+(setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "opera")
+;;* ido mode
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
 
-;; smex
+;;* smex
 
 (require 'smex)
 ;; (global-set-key [(meta x)] (lambda ()
@@ -135,22 +127,67 @@
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 
-;;;; set hotkey to switch frame
+;;* general keybinding settings
+
+;; disabled hot keys
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'erase-buffer 'disabled nil)
+
+(global-set-key (kbd "C-<home>") 'beginning-of-buffer)
+(global-set-key (kbd "C-<end>") 'end-of-buffer)
+
+;; command key to meta
+(setq mac-command-modifier 'meta)
+
+;; set hotkey to switch frame
 (defun go-to-next-frame ()
        (interactive)
        (other-frame 1))
 ;; (global-set-key (kbd "M-`") 'go-to-next-frame)
 (global-set-key (kbd "M-§") 'go-to-next-frame)
 
-(defun switch-to-nrepl-right ()
+;; set hotkey to next/prev paragraphs
+
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
+
+;; disable Ctrl-z
+
+(global-set-key (kbd "C-z") nil)
+(global-set-key (kbd "C-x C-z") 'nil)
+
+;;* show current buffer filename
+
+(defun buffer-info ()
   (interactive)
-  (let ((wnd (split-window-right)))
-    (windmove-right)
-    (set-window-buffer wnd "*nrepl*")))
+  (message (buffer-file-name)))
 
-;; (nrepl-switch-to-repl-buffer nil)
+;;* backup files settings
 
-(global-set-key (kbd "C-x r") 'switch-to-nrepl-right)
+;; (Add-to-list 'backup-directory-alist
+;;              (cons "." "~/.emacs.d/backups/"))
+
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups/")))
+;; (setq backup-by-copying t)
+;; (setq tramp-backup-directory-alist backup-directory-alist)
+
+;;* navigation
+
+(defun n-lines-down ()
+  (interactive)
+  (dotimes (n 5 nil)
+    (next-line)))
+
+(defun n-lines-up ()
+  (interactive)
+  (dotimes (n 5 nil)
+    (previous-line)))
+
+(global-set-key (kbd "S-C-n") 'n-lines-down)
+(global-set-key (kbd "S-C-p") 'n-lines-up)
+
+;;* window management
 
 (global-set-key (kbd "C-x p") 'previous-buffer)
 (global-set-key (kbd "C-x n") 'next-buffer)
@@ -159,39 +196,6 @@
 (global-set-key (kbd "C-2") 'windmove-right)
 (global-set-key (kbd "C-3") 'windmove-up)
 (global-set-key (kbd "C-4") 'windmove-down)
-
-;;; set hotkey to next/prev paragraphs
-
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-
-;;; disable Ctrl-z
-
-(global-set-key (kbd "C-z") nil)
-(global-set-key (kbd "C-x C-z") 'nil)
-
-;;; disable C-x C-c
-
-;; (global-set-key (kbd "C-x C-c") nil)
-
-;;; disable "RETURN" key
-
-;; (global-set-key (kbd "<return>") 'ignore)
-
-;;;; show current buffer filename
-
-(defun buffer-info ()
-  (interactive)
-  (message (buffer-file-name)))
-
-;;;; backup files settings
-
-;; (Add-to-list 'backup-directory-alist
-;;              (cons "." "~/.emacs.d/backups/"))
-
-(setq backup-directory-alist `(("." . "~/.emacs.d/backups/")))
-;; (setq backup-by-copying t)
-;; (setq tramp-backup-directory-alist backup-directory-alist)
 
 ;; when new window arise automatically (errors, etc) allow only split window vertically 
 (setq split-height-threshold 80)
@@ -224,35 +228,7 @@
 (global-set-key (kbd "C-x M-k u") 'kill-upper-window)
 (global-set-key (kbd "C-x M-k b") 'kill-below-window)
 
-(defun kill-nrepl-error ()
-  (interactive)
-  (kill-buffer "*cider-error*"))
-
-(global-set-key (kbd "C-x M-k e") 'kill-nrepl-error)
-
-;;;; move n lines up/down
-
-(defun n-lines-down ()
-  (interactive)
-  (dotimes (n 5 nil)
-    (next-line)))
-
-(defun n-lines-up ()
-  (interactive)
-  (dotimes (n 5 nil)
-    (previous-line)))
-
-(global-set-key (kbd "S-C-n") 'n-lines-down)
-(global-set-key (kbd "S-C-p") 'n-lines-up)
-
-;;;; scroll keys
-
-(global-set-key [(meta right)] 'scroll-left)
-(global-set-key [(meta left)] 'scroll-right)
-
-(setq org-directory "/Users/emilyessenamanov/Documents/org")
-
-(global-set-key (kbd "C-x M-k b") 'kill-below-window)
+;;* shell settings
 
 ;; eshell
 
@@ -288,31 +264,27 @@ current git branch as a string.  Otherwise return an empty string."
                 (propertize " "
                             'face `(:foreground "white")))))
 
-;;;; clear eshell buffer
+;;* clear buffer
 
-(defun eshell-clear ()
+(defun clear-buffer ()
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)))
 
-(global-set-key (kbd "C-x M-O") 'eshell-clear)
-(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-x M-O") 'clear-buffer)
 
-;; (setq ac-use-menu-map t)
-;; (define-key ac-menu-map "\C-n" 'ac-next)
-;; (define-key ac-menu-map "\C-p" 'ac-previous)
-
+;;* yank settings
 ;; (add-to-list 'yank-excluded-properties 'font)
 ;; (add-to-list 'yank-excluded-properties 'font-lock-face)
 (setq yank-excluded-properties t)
 
-;; auto completion keys
+;;* auto completion keys
 
 (require 'auto-complete-config)
 (define-key ac-completing-map (kbd "C-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-p") 'ac-previous)
 
-;; highlight line
+;;* highlight line
 
 ;; (require 'hl-line+)
 ;; (toggle-hl-line-when-idle 1)
@@ -598,6 +570,8 @@ current git branch as a string.  Otherwise return an empty string."
 ;;* mode for notes
 ;; (load-file "~/.emacs.d/mobyte/mobnote-mode.el")
 ;;* load org-mode settings
+
+(setq org-directory "/Users/emilyessenamanov/Documents/org")
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
