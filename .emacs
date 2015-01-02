@@ -324,7 +324,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (set-face-background 'hl-line "#3e4446")
 ;; (set-face-foreground 'highlight nil)
 
-;; magit
+;;* magit
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -332,6 +332,11 @@ current git branch as a string.  Otherwise return an empty string."
 (defun browse-magit-cheatsheet ()
   (interactive)
   (eww url-magit-cheatsheet))
+
+(defun magit-commit-mode-hook-fn ()
+  (turn-off-auto-fill))
+
+(add-hook 'git-commit-mode-hook 'magit-commit-mode-hook-fn)
 
 ;;* shell buffers
 
