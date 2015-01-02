@@ -327,7 +327,6 @@ current git branch as a string.  Otherwise return an empty string."
 ;; magit
 
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x C-g") 'magit-status)
 
 (setq url-magit-cheatsheet "http://daemianmack.com/magit-cheatsheet.html")
 (defun browse-magit-cheatsheet ()
