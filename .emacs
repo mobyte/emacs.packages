@@ -265,8 +265,8 @@ current git branch as a string.  Otherwise return an empty string."
                             'face `(:foreground "white")))))
 
 
-(defadvice ansi-term (after advice-term-line-mode activate)
-  (term-line-mode))
+;; (defadvice ansi-term (after advice-term-line-mode activate)
+;;   (term-line-mode))
 
 ;;* clear buffer
 
