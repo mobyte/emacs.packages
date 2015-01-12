@@ -268,6 +268,11 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (defadvice ansi-term (after advice-term-line-mode activate)
 ;;   (term-line-mode))
 
+(eval-after-load "term"
+  (lambda ()
+    (define-key term-raw-map
+      (kbd "C-y") 'term-paste)))
+
 ;;* clear buffer
 
 (defun clear-buffer ()
