@@ -314,19 +314,6 @@ current git branch as a string.  Otherwise return an empty string."
 
 (add-hook 'git-commit-mode-hook 'magit-commit-mode-hook-fn)
 
-;;* shell buffers
-
-;; (defun create-shell-buffers ()
-;;   (interactive)
-;;   (eshell)
-;;   (rename-buffer "*shell-divakit-daemon*")
-;;   (eshell)
-;;   (rename-buffer "*shell-git*")
-;;   (eshell)
-;;   (rename-buffer "*shell-zookeper*")
-;;   (eshell)
-;;   (rename-buffer "*shell-start-doo*"))
-
 ;;* paredit
 
 (autoload 'paredit-mode "paredit"
