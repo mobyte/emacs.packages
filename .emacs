@@ -232,6 +232,8 @@
 
 ;; eshell
 
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
 (defun cur-dir-git-branch-string (pwd)
   "Return current git branch as a string.
 If PWD is in a git repo and the git command is found, then return the
@@ -521,6 +523,13 @@ current git branch as a string.  Otherwise return an empty string."
 ;;* ace jump
 
 (require 'ace-jump-mode)
+(setq key-chord-one-key-delay 0.16)
+
+(key-chord-define-global "jf" 'ace-jump-mode)
+(key-chord-define-global "fj" 'ace-jump-mode)
+(key-chord-define-global "jj" 'ace-jump-char-mode)
+(key-chord-mode 1)
+
 (global-set-key (kbd "C-c SPC") 'ace-jump-char-mode)
 ;;(define-key global-map (kbd "C-x o") 'other-window)
 
