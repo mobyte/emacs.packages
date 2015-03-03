@@ -518,7 +518,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; (global-set-key (kbd "C-x <down>") 'ibuffer)
 ;; (global-set-key (kbd "C-x x") 'ibuffer)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+;;(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;* ace jump
 
