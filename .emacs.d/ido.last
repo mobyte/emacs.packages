@@ -1,0 +1,118 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/mobyte/tmp/2delete/sync/src/doo_core/" . "util/")
+ ("/appuser@172.30.126.20:/home/" . "appuser/")
+ ("/appuser@172.30.126.20:/" . "home/")
+ ("/Users/mobyte/Library/Application Support/" . "com.operasoftware.OperaDeveloper/")
+ ("/Users/mobyte/Library/" . "Application Support/")
+ ("/sudo:root@localhost:/Users/" . "emilyessenamanov/")
+ ("/sudo:root@localhost:/" . "Users/")
+ ("/Users/mobyte/repos/old.customer-service/" . ".idea/")
+ ("/Users/mobyte/tmp/" . "2delete/")
+ ("/Users/mobyte/repos/customer-service/src/" . "main/")
+ ("/Users/mobyte/repos/customer-service/" . ".idea/")
+ ("/Users/mobyte/repos/clj-cs/src/" . "clj_cs/")
+ ("/Users/mobyte/repos/clj-cs/" . "src/")
+ ("/Users/mobyte/repos/" . "clj-cs/")
+ ("/Users/mobyte/" . ".lein/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/mobyte/repos/rewe-shop/"
+ "/Users/mobyte/repos/clj-cs/src/clj_cs/"
+ "/Users/mobyte/repos/clj-cs/src/"
+ "/Users/mobyte/.lein/"
+ "/Users/mobyte/repos/clj-cs/"
+ "/Users/mobyte/tmp/2delete/sync/"
+ "/Users/mobyte/tmp/2delete/sync/src/doo_core/util/"
+ "/Users/mobyte/tmp/"
+ "/Users/mobyte/repos/customer-service/"
+ "/Users/mobyte/tmp/2delete/"
+ "/Users/mobyte/"
+ "/appuser@172.30.126.20:/home/appuser/"
+ "/Users/mobyte/Library/Application Support/com.operasoftware.OperaDeveloper/"
+ "/sudo:root@localhost:/Users/emilyessenamanov/"
+ "/Users/mobyte/repos/customer-service/.idea/"
+ "/Users/mobyte/repos/old.customer-service/.idea/"
+ "/Users/mobyte/repos/clj-cs/sql/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "README.md"
+ "visual.clj"
+ "log4j.properties"
+ "cs.clj"
+ "profiles.clj"
+ "project.clj"
+ "uri.clj"
+ "customer.clj"
+ "db.clj"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/mobyte/tmp/" (21806 7975 0 0) "zipcode" "testclj/" "test_register_action_timing.txt" "setenv.sh" "rpn.org" "rpn.html" "review-remarks.org" "remarks_from_Bjorn.org" "manual_deployment.org" "logs_401-537.txt" "logs_401-537.org" "logs_401-537.odt" "logs_401-537.csv" "logs_301-400.txt" "logs_301-400.org" "logs_301-400.odt" "logs_301-400.ods" "logs_301-400.csv" "logs_1-100.csv" "logs.txt" "logs.res.txt" "logs.org" "logs.odt" "logs.ods" "logs.html" "logs-grep-results.txt" "logs-grep-results.org" "logs-grep-results.html" "logs-grep-results.csv" "logs/" "logging_entries_1-100.csv" "links" "groovy_object2json_serialization.txt" "distractions.org" "customer_service_health_check.json" "backup/" "a.out" "2delete/" "123.html" "123" "1.c" ".#1.c" "#logs-grep-results.txt#" "../" "./")
+
+ ("/Users/mobyte/" (21806 3120 0 0) "winrar" "update.sh" "tmp/" "start-postgres.sh" "setJava7" "screen-sharing" "scala-2.11.5/" "running-server.sh" "run-ui-test" "run-mongo.sh" "run-get-test" "ROOT.war" "rollback.sh" "repos/" "Public/" "ppmhhincfabcahokokgpdcckmjghpian/" "postgres_stop.sh" "postgres_start.sh" "Pictures/" "pcurl" "mymusic/" "Music/" "Movies/" "mnt.sh" "MEGA/" "Library/" "kill-running-service" "grep_liquibase_ids" "gitt" "ggit" "dump.rdb" "Dropbox/" "Downloads/" "Documents/" "Desktop/" "customer-data-service/" "clean_update_shop.sh" "clean-install" "bin/" "Applications/" "apache-tomcat-7.0.55/" "apache-tomcat-7/" ".viminfo" ".Trash/" ".subversion/" ".ssh/" ".sqlworkbench/" ".smex-items" ".sbt/" ".psql_history" ".npm/" ".m2/" ".local/" ".lesshst" ".lein/" ".keepassx/" ".ivy2/" ".IntelliJIdea14/" ".hgignore_global" ".gitconfig" ".emacs.d/" ".emacs" ".DS_Store" ".dropbox/" ".cups/" ".config/" ".CFUserTextEncoding" ".cache/" ".bashrc" ".bash_profile" ".bash_history" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-shop/" (21797 5174 0 0) "test_block_push.txt" "target/" "rewe-testsupport/" "rewe-storefront/" "rewe-shop.iml" "rewe-services/" "rewe-loadtests/" "rewe-jfunk-tests/" "rewe-geb-tests/" "rewe-deployment/" "rewe-data-validation/" "rewe-data-migration/" "rewe-backoffice/" "README.md" "pom.xml" "mgm-ecom-user-bo/" "mgm-ecom-services/" "mgm-ecom-localization/" "mgm-ecom-line-item-container/" "mgm-ecom-email/" "mgm-ecom-ehcache-bo/" "mgm-ecom-customer/" "log/" ".idea/" ".gitignore" ".gitattributes" ".git/" "../" "./")
+
+ ("/Users/mobyte/repos/clj-cs/src/clj_cs/" (21794 33412 0 0) "visual.clj" "http.clj" "db_customer.clj" "db.clj" "customer.clj" "cs.clj" "../" "./")
+
+ ("/Users/mobyte/repos/clj-cs/" (21794 29437 0 0) "test/" "target/" "src/" "sql/" "resources/" "README.md" "project.clj" "mqjms.log.0.lck" "mqjms.log.0.2" "mqjms.log.0.1.lck" "mqjms.log.0.1" "mqjms.log.0" "log/" "LICENSE" "doc/" ".nrepl-port" ".lein-repl-history" ".hgignore" ".gitignore" "../" "./")
+
+ ("/Users/mobyte/tmp/2delete/sync/" (21794 28221 0 0) "zookeeper.out" "test-resources/" "test/" "target/" "src/" "shell-scripts/" "safety-net/" "run" "resources/" "repl-init-script/" "README.md" "public/" "project.clj" "old_doo/" "migrations/" "kpi-cljs/" "install-all-projects.sh" "emacs/" "doo-util/" "doo-translation/" "doo-dashboard/" "doc/" "development-mode" "dev/" "cljs-mobile/" "cljs/" "backoffice-cljs/" ".nrepl-port" ".lein-repl-history" ".lein-failures" ".gitmodules" ".gitignore" "../" "./")
+
+ ("/Users/mobyte/tmp/2delete/sync/src/" (21379 9262 0 0) "doo_web/" "doo_oauth2/" "doo_monitor/" "doo_core/" "doo_command/" "doo/" "com/" "../" "./")
+
+ ("/Users/mobyte/tmp/2delete/sync/src/doo_core/util/" (21379 9262 0 0) "uri.clj" "../" "./")
+
+ ("/Users/mobyte/tmp/2delete/sync/src/doo_core/" (21379 9262 0 0) "zookeeper.clj" "zookeeper/" "whoiswho.clj" "validation/" "util/" "user.clj" "translation.clj" "thread_pools.clj" "test_init.clj" "sync.clj" "support.clj" "sns.clj" "scope.clj" "schema.clj" "s3.clj" "s3/" "riemann_init.clj" "riemann.clj" "registration.clj" "quartz_scheduling.clj" "pubnub.clj" "prismatic_schema.clj" "postgres.clj" "pages.clj" "options.clj" "notification.clj" "notification/" "node_schedule.clj" "node_options.clj" "node.clj" "names.clj" "mongodb.clj" "memoize.clj" "membership.clj" "maintenance_mode.clj" "macros.clj" "log.clj" "log/" "language_codes.clj" "keys.clj" "json.clj" "init.clj" "history.clj" "frequency_check.clj" "email_template.clj" "downsync.clj" "domain_postgres.clj" "crypt.clj" "conventions.clj" "config.clj" "config/" "comparable_future_task.clj" "cloudwatch.clj" "changeprofile.clj" "change_email.clj" "blob.clj" "approval.clj" "api.clj" "aggregate.clj" "#zookeeper.clj#" "#repl.clj#" "../" "./")
+
+ ("/Users/mobyte/.emacs.d/" (21794 27588 0 0) "tutorial/" "tramp" "smex.el" "repl-history" "ido.last" "eshell/" "elpa/" "auto-save-list/" "ac-comphist.dat" "../" "./")
+
+ ("/Users/mobyte/repos/customer-service/" (21785 22187 0 0) "target/" "src/" "pom.xml" "package.json" "node_modules/" "node/" "mqjms.log.0" "Gruntfile.js" "customer-service.iml" "apidoc.json" ".idea/" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/mobyte/tmp/2delete/" (21775 54141 0 0) "secure-config.json" "rewe-shop-config.prod.online.plain.json" "rewe-shop-config.prod.online.json" "keyfile.bin.ori" "keyfile.bin" "../" "./")
+
+ ("/Users/mobyte/Library/Application Support/com.operasoftware.OperaDeveloper/" (21774 480 0 0) "Web Data-journal" "Web Data" "Visited Links" "update_prefs.json" "TransportSecurity" "thumbnails.db-journal" "thumbnails.db" "Sync Extension Settings/" "Sync Data/" "Storage/" "ssdfp741.14.24285090" "siteprefs.json" "session.dbak" "session.db-journal" "session.db" "QuotaManager-journal" "QuotaManager" "Preferences" "Pepper Data/" "Origin Bound Certs-journal" "Origin Bound Certs" "opera_global_storage.plist" "opera_autoupdate.log" "Opera Add-ons Downloads/" "Login Data-journal" "Login Data" "Local Storage/" "Local State" "IndexedDB/" "History-journal" "History Provider Cache" "History" "GPUCache/" "File System/" "favorites.db-journal" "favorites.db" "Favicons-journal" "Favicons" "dictionaries/" "databases/" "crash_feedback_url.txt" "Cookies-journal" "Cookies" "Certificate Revocation Lists" "browser.js" "BookmarksExtras" "Bookmarks.bak" "Bookmarks" "ab_tests.json" "../" "./")
+
+ ("/Users/mobyte/Library/Application Support/" (21774 22 0 0) "Ubiquity/" "TeamViewer/" "SyncServices/" "Stay/" "SourceTree/" "Skype/" "Quick Look/" "Postgres/" "Oracle/" "NotificationCenter/" "MPlayerX/" "Mozilla/" "MobileSync/" "Mega Limited/" "LibreOffice/" "Karabiner/" "Java/" "IntelliJIdea14/" "iCloud/" "Google/" "Fortinet/" "Firefox/" "Dropbox/" "Dock/" "CrashReporter/" "com.operasoftware.OperaDeveloper/" "com.apple.TCC/" "com.apple.spotlight.Shortcuts" "com.apple.spotlight/" "CloudDocs/" "CallHistoryTransactions/" "CallHistoryDB/" "App Store/" "Aperture/" "AddressBook/" "../" "./")
+
+ ("/Users/mobyte/Library/" (21762 63359 0 0) "WebKit/" "Voices/" "SyncedPreferences/" "Spelling/" "Sounds/" "Services/" "Screen Savers/" "Saved Application State/" "Safari/" "PubSub/" "Printers/" "Preferences/" "PreferencePanes/" "Messages/" "Mail/" "Logs/" "LaunchAgents/" "LanguageModeling/" "Keychains/" "Keyboard Layouts/" "iTunes/" "Internet Plug-Ins/" "Input Methods/" "iMovie/" "IdentityServices/" "Group Containers/" "Google/" "Fonts/" "FontCollections/" "Favorites/" "Dictionaries/" "Cookies/" "Containers/" "Compositions/" "com.apple.nsurlsessiond/" "Colors/" "ColorPickers/" "Calendars/" "Caches/" "Audio/" "Assistants/" "Application Support/" "Address Book Plug-Ins/" "Accounts/" ".localized" "../" "./")
+
+ ("/Users/mobyte/Applications/" (21741 39527 0 0) ".localized" "../" "./")
+
+ ("/Users/mobyte/repos/clj-cs/sql/" (21769 41949 0 0) "customer.sql" "../" "./")
+
+ ("/Users/mobyte/repos/customer-service/.idea/" (21772 6781 0 0) "workspace.xml" "vcs.xml" "scopes/" "modules.xml" "misc.xml" "libraries/" "encodings.xml" "copyright/" "compiler.xml" ".name" "../" "./")
+
+ ("/Users/mobyte/repos/old.customer-service/.idea/" (21742 55907 0 0) "workspace.xml" "vcs.xml" "uiDesigner.xml" "scopes/" "modules.xml" "misc.xml" "libraries/" "encodings.xml" "copyright/" "compiler.xml" ".name" "../" "./")
+
+ ("/Users/mobyte/repos/old.customer-service/" (21771 56501 0 0) "target/" "src/" "pom.xml" "package.json" "node_modules/" "node/" "mqjms.log.0" "Gruntfile.js" "customer-service.iml" "coverage-error.log" "apidoc.json" ".idea/" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/mobyte/repos/" (21772 6097 0 0) "reweadmin/" "rewe-shop/" "old.customer-service/" "log-analysis/" "graph-rest/" "emacs-config/" "customer-service/" "clj-cs/" "../" "./")
+
+ ("/Users/mobyte/repos/clj-cs/resources/" (21762 58441 0 0) "../" "./")
+
+ ("/Users/mobyte/repos/emacs-config/" (21767 63189 0 0) ".gitignore" ".git/" ".emacs.d/" ".emacs" ".#.emacs" "#.emacs#" "../" "./")
+
+ ("/Users/mobyte/.lein/" (21766 64038 0 0) "self-installs/" "repl-port" "profiles.clj" "../" "./")
+
+ ("/Users/" (21762 61907 0 0) "Shared/" "mobyte/" "gittestuser/" "emilyessenamanov/" ".localized" "../" "./")
+
+ ("/Users/mobyte/repos/customer-service/src/main/" (21741 36857 0 0) "resources/" "java/" "../" "./")
+
+ ("/Users/mobyte/repos/customer-service/src/" (21741 36857 0 0) "test/" "main/" "../" "./")
+
+ ("/Users/mobyte/repos/clj-cs/src/" (21764 45322 0 0) "log4j.properties" "clj_cs/" "../" "./")
+
+ ("/Users/mobyte/.m2/repository/ring/ring-core/1.3.2/" (21763 29706 0 0) "ring-core-1.3.2.pom.sha1" "ring-core-1.3.2.pom" "ring-core-1.3.2.jar.sha1" "ring-core-1.3.2.jar" "_maven.repositories" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t

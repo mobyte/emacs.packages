@@ -10,8 +10,8 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-archives
+;;              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (package-initialize)
 
@@ -43,10 +43,8 @@
 
 ;;* shell path
 
-(setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/emilyessenamanov/bin")
+(setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/mobyte/bin")
 (setenv "PATH" path)
-(setq exec-path (split-string path ":"))
-
 ;; (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
 ;;   (setenv "PATH" path)
 ;;   (setq exec-path 
@@ -54,9 +52,9 @@
 ;;          (split-string-and-unquote path ":")
 ;;          exec-path)))
 
-;; (let ((path (concat (getenv "PATH") ":/opt/local/bin")))
-;;   (setenv "PATH" path)
-;;   (setq exec-path (split-string path path-separator)))
+(let ((path (concat (getenv "PATH") ":/opt/local/bin")))
+  (setenv "PATH" path)
+  (setq exec-path (split-string path path-separator)))
 
 ;;* general settings
 
@@ -91,7 +89,7 @@
 (set-face-foreground 'default "white")
 (set-face-foreground 'region "gray60")
 (set-foreground-color "white")
-(set-cursor-color "red")
+(set-cursor-color "white")
 ;;(global-hl-line-mode 1)
 ;;(set-face-background 'hl-line "#330")
 (set-face-background 'region "#134F78")
@@ -283,6 +281,13 @@ current git branch as a string.  Otherwise return an empty string."
     (define-key term-mode-map
       (kbd "C-x M-O") 'clear-shell-buffer)))
 
+;; turn off shell command echo
+
+(defun my-comint-init () 
+  (setq comint-process-echoes t))
+
+(add-hook 'comint-mode-hook 'my-comint-init)
+
 ;;* clear buffer
 
 (defun clear-buffer ()
@@ -472,11 +477,46 @@ current git branch as a string.  Otherwise return an empty string."
 (setq cider-repl-history-size 1000)
 (setq cider-repl-history-file (concat (getenv "HOME") "/.emacs.d/repl-history"))
 
+(setq nrepl-hide-special-buffers t)
 (setq cider-repl-use-clojure-font-lock t)
 ;; (setq cider-repl-output-face t)
 ;; (setq cider-repl-input-face t)
 
 (setq nrepl-log-messages t)
+
+(require 'eldoc)
+(setq eldoc-idle-delay 0)
+(setq eldoc-echo-area-use-multiline-p t)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+
+(require 'clojure-mode)
+
+(define-clojure-indent
+  (defroutes 'defun)
+  (fnk 'defun)
+  (GET 2)
+  (POST 2)
+  (PUT 2)
+  (DELETE 2)
+  (HEAD 2)
+  (ANY 2)
+  (context 2))
+
+(require 'ob)
+
+(add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
+
+(defvar org-babel-default-header-args:clojure 
+  '((:results . "silent") (:tangle . "yes")))
+
+(defun org-babel-execute:clojure (body params)
+  "Evaluate a block of Clojure code with Babel."
+  (lisp-eval-string body)
+  "Done!")
+
+(provide 'ob-clojure)
+(setq org-src-fontify-natively t)
 
 ;;* ibuffer
 
@@ -584,7 +624,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (load-file "~/.emacs.d/mobyte/mobnote-mode.el")
 ;;* load org-mode settings
 
-(setq org-directory "/Users/emilyessenamanov/Documents/org")
+(setq org-directory "/Users/Documents/org")
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
