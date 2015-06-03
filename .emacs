@@ -398,6 +398,9 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;* cider
 
+(put 'when-> 'clojure-indent-function 'defun)
+(put 'domonad 'clojure-indent-function 'defun)
+
 (defun cider-connection-infos (connection-buffer)
   (with-current-buffer (get-buffer connection-buffer)
     nrepl-endpoint))
