@@ -719,3 +719,13 @@ current git branch as a string.  Otherwise return an empty string."
 ;; eval: (outline-minor-mode 1)
 ;; eval: (hide-sublevels 1)
 ;; End:
+;;* presentation toggle
+
+(defun switch-to-presentation ()
+  (interactive)
+  (if (equal (current-buffer) (get-buffer "*presentation*"))
+      (jump-to-register 113)
+      (progn (window-configuration-to-register 113)
+             (jump-to-register 112))))
+
+(global-set-key (kbd "C-x C-x") 'switch-to-presentation)
