@@ -482,8 +482,11 @@ current git branch as a string.  Otherwise return an empty string."
 
 (setq nrepl-hide-special-buffers t)
 (setq cider-repl-use-clojure-font-lock t)
-;; (setq cider-repl-output-face t)
-;; (setq cider-repl-input-face t)
+
+(add-hook 'cider-repl-mode-hook 'clojure-font-lock-setup)
+
+;;(setq cider-repl-output-face t)
+;;(setq cider-repl-input-face t)
 
 (setq nrepl-log-messages t)
 
