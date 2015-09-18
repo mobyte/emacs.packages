@@ -112,6 +112,7 @@
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
+(global-set-key (kbd "C-x C-b") nil)
 
 ;;* smex
 
@@ -334,6 +335,9 @@ current git branch as a string.  Otherwise return an empty string."
 
 (add-hook 'git-commit-mode-hook 'magit-commit-mode-hook-fn)
 
+(setq git-commit-summary-max-length 120)
+(setq magit-push-always-verify nil)
+
 ;;* paredit
 
 (autoload 'paredit-mode "paredit"
@@ -384,22 +388,6 @@ current git branch as a string.  Otherwise return an empty string."
 (add-hook 'slime-cider-mode-hook 'setup-slime-repl-paredit)
 
 ;;;;(add-hook 'clojure-mode-hook 'setup-clojure-mode-paredit)
-
-;;* doo settings
-
-(eval-after-load 'clojure-mode
-  '(define-clojure-indent
-     (testing 'defun)
-     (feature 'defun)
-     (scenario 'defun)
-     (cond-let 'defun)
-     (if-with-open 'defun)
-     (when-let* 'defun)))
-
-;;* cider
-
-(put 'when-> 'clojure-indent-function 'defun)
-(put 'domonad 'clojure-indent-function 'defun)
 
 (defun cider-connection-infos (connection-buffer)
   (with-current-buffer (get-buffer connection-buffer)
@@ -498,16 +486,27 @@ current git branch as a string.  Otherwise return an empty string."
 
 (require 'clojure-mode)
 
-(define-clojure-indent
-  (defroutes 'defun)
-  (fnk 'defun)
-  (GET 2)
-  (POST 2)
-  (PUT 2)
-  (DELETE 2)
-  (HEAD 2)
-  (ANY 2)
-  (context 2))
+(eval-after-load 'clojure-mode
+  '(define-clojure-indent
+     (wrap-result 'defun)
+     (handle-error 'defun)
+     (defroutes 'defun)
+     (testing 'defun)
+     (feature 'defun)
+     (scenario 'defun)
+     (cond-let 'defun)
+     (if-with-open 'defun)
+     (when-let* 'defun)
+     (fnk 'defun)
+     (fact 'defun)
+     (facts 'defun)
+     (GET 2)
+     (POST 2)
+     (PUT 2)
+     (DELETE 2)
+     (HEAD 2)
+     (ANY 2)
+     (context 2)))
 
 (require 'ob)
 
