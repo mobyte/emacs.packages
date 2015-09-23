@@ -94,6 +94,9 @@
 ;;(set-face-background 'hl-line "#330")
 (set-face-background 'region "#134F78")
 
+(setq mode-require-final-newline nil)
+(setq require-final-newline nil)
+
 ;;* disable emacs gui elements
 
 (menu-bar-mode nil)

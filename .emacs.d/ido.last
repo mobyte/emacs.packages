@@ -11,13 +11,13 @@
  ("/Users/mobyte/repos/sphere-hello-api/" . "clojure/")
  ("/Users/mobyte/repos/rewe-order-service/test-int/clj_cs/" . "e2e/")
  ("/Users/mobyte/repos/rewe-order-service/test-int/" . "clj_cs/")
- ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/" . "unit/")
+ ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/" . "acceptance/")
  ("/Users/mobyte/repos/rewe-order-service/resources/apidoc/" . "examples/")
  ("/Users/mobyte/repos/rewe-order-service/resources/" . "apidoc/")
  ("/Users/mobyte/repos/rewe-order-service/src/deb/" . "control/")
  ("/Users/mobyte/repos/rewe-order-service/test/" . "clj_cs/")
  ("/Users/mobyte/repos/rewe-order-service/src/" . "clj_cs/")
- ("/Users/mobyte/repos/rewe-order-service/" . "test/")
+ ("/Users/mobyte/repos/rewe-order-service/" . "test-resources/")
  ("/Users/mobyte/repos/order-service-clj/test2junit/" . "xml/")
  ("/Users/mobyte/repos/provisioning/env_int/" . "group_vars/")
  ("/Users/mobyte/repos/provisioning/" . "env_int/")
@@ -67,21 +67,23 @@
  ("/Users/mobyte/repos/customer-service/" . "bin/")
  ("/Users/mobyte/repos/clj-cs/src/" . "clj_cs/")
  ("/Users/mobyte/repos/clj-cs/" . "test/")
- ("/Users/mobyte/repos/" . "rewe-order-service/")
- ("/Users/mobyte/" . "Dropbox/")
+ ("/Users/mobyte/repos/" . "emacs-config/")
+ ("/Users/mobyte/" . "repos/")
 )
 
 ;; ----- ido-work-directory-list -----
 (
+ "/Users/mobyte/bin/"
+ "/Users/mobyte/repos/emacs-config/"
  "/Users/mobyte/Dropbox/Stories/"
- "/Users/mobyte/repos/rewe-order-service/test/clj_cs/unit/"
- "/Users/mobyte/repos/rewe-order-service/test/clj_cs/acceptance/"
- "/Users/mobyte/repos/rewe-order-service/test-resources/"
  "/Users/mobyte/repos/rewe-order-service/src/clj_cs/"
+ "/Users/mobyte/repos/rewe-order-service/test-resources/"
+ "/Users/mobyte/repos/rewe-order-service/test/clj_cs/acceptance/"
+ "/Users/mobyte/tmp/"
+ "/Users/mobyte/repos/rewe-order-service/test/clj_cs/unit/"
  "/Users/mobyte/repos/rewe-order-service/resources/apidoc/"
  "/Users/mobyte/repos/rewe-order-service/resources/apidoc/examples/"
  "/Users/mobyte/"
- "/Users/mobyte/tmp/"
  "/Users/mobyte/repos/rewe-order-service/test-int/clj_cs/e2e/"
  "/Users/mobyte/repos/rewe-order-service/test-int/clj_cs/it/"
  "/Users/mobyte/.lein/"
@@ -121,41 +123,45 @@
  "/Users/mobyte/repos/rewe-shop/rewe-storefront/src/main/java/com/rewe/digital/domain/"
  "/appuser@172.30.122.241:/home/appuser/.ssh/"
  "/appuser@"
- "/appuser:"
- "/Users/mobyte/tmp/delete/"
 )
 
 ;; ----- ido-work-file-list -----
 (
- "nosok.txt"
- "order_validation_test.clj"
- "create_order_test.clj"
- "test-order-create-request.json"
- "http.clj"
- "order-service-spec.raml"
- "modify_order_example.json"
- "cancel_order_test.clj"
+ "list-git"
  ".emacs"
- "load-all-tests.clj"
+ "nosok.txt"
+ "nosok (digital0080's conflicted copy 2015-09-19).txt"
+ "order_to_map.clj"
+ "order-details-response.json"
+ "valid-order-create-request-map.clj"
+ "map_to_order.clj"
+ "cancel_order_test.clj"
 )
 
 ;; ----- ido-dir-file-cache -----
 (
- ("/Users/mobyte/Dropbox/Stories/" (22010 58352 0 0) "story-competition.txt" "rasskaz.txt" "rasskaz.odt" "nosok.txt" "../" "./")
+ ("/Users/mobyte/bin/" (22015 44545 0 0) "winrar" "update.sh" "start-postgres.sh" "setJava7" "screen-sharing" "running-server.sh" "run-ui-test" "run-mongo.sh" "run-get-test" "rollback.sh" "postgres_stop.sh" "postgres_start.sh" "pcurl" "mnt.sh" "list-git" "lein" "kill-running-service" "grep_liquibase_ids" "gitt" "ggit" "drip" "delete/" "clean_update_shop.sh" "clean-install" "../" "./")
 
- ("/Users/mobyte/repos/rewe-order-service/" (22011 43548 0 0) "Vagrantfile" "test-results/" "test-resources/" "test-int/" "test/" "target/" "src/" "sql/" "rewe_order_service.iml" "resources/" "README.md" "project.clj" "package.json" "order-service.log" "mqjms.log.0.lck" "mqjms.log.0.9.lck" "mqjms.log.0.9" "mqjms.log.0.8.lck" "mqjms.log.0.8" "mqjms.log.0.7.lck" "mqjms.log.0.7" "mqjms.log.0.6.lck" "mqjms.log.0.6" "mqjms.log.0.5.lck" "mqjms.log.0.5" "mqjms.log.0.4.lck" "mqjms.log.0.4" "mqjms.log.0.3.lck" "mqjms.log.0.3" "mqjms.log.0.2.lck" "mqjms.log.0.2" "mqjms.log.0.14.lck" "mqjms.log.0.14" "mqjms.log.0.13.lck" "mqjms.log.0.13" "mqjms.log.0.12.lck" "mqjms.log.0.12" "mqjms.log.0.11.lck" "mqjms.log.0.11" "mqjms.log.0.10.lck" "mqjms.log.0.10" "mqjms.log.0.1.lck" "mqjms.log.0.1" "mqjms.log.0" "logs/" "LICENSE" "lein" "install-vagrant-box.sh" "install/" "gulpfile.js" "build.xml" "build.sh" "apidoc.json" "ansible/" ".nrepl-port" ".lein-repl-history" ".lein-failures" ".lein-env" ".idea/" ".gitignore" ".git/" "../" "./")
+ ("/Users/mobyte/Dropbox/" (22013 48342 0 0) "Work/" "urls.kdb" "Stories/" "stats/" "repos/" "Public/" "programming/" "Photos/" "opera/" "notes_dir/" "music/" "movie_list.org" "keepass/" "Info/" "import_test/" "Icon
+" "help/" "Getting Started.pdf" "dot_files/" "done.org" "Documents/" "clj-dojo/" "Camera Uploads/" "c605b45b905e0054174514895d2c0b8b.gif.gpg" "buffer/" "books/" "bin/" "backup/" ".DS_Store" ".dropbox.cache/" ".dropbox" "../" "./")
+
+ ("/Users/mobyte/Dropbox/Stories/" (22013 50702 0 0) "story-competition.txt" "rasskaz.txt" "rasskaz.odt" "nosok.txt" "nosok (digital0080's conflicted copy 2015-09-19).txt" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/test-resources/" (22011 61893 0 0) "valid-order-create-request-map.clj" "test-order-create-request.json" "order-details-response.json" "invalid-order-create-request-map.clj" "cs-order-details-map.clj" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/src/clj_cs/" (22011 54361 0 0) "visual.clj" "util.clj" "run.clj" "order_to_map.clj" "order_schema.clj" "order.clj" "oauth.clj" "modify_command.clj" "middleware.clj" "metrics.clj" "map_to_order.clj" "logging.clj" "index_res.clj" "http.clj" "health_check.clj" "cs_order_convertor.clj" "cs.clj" "crypto.clj" "configuration.clj" "command_schema.clj" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/" (22011 54332 0 0) "Vagrantfile" "test-results/" "test-resources/" "test-int/" "test/" "target/" "src/" "sql/" "rewe_order_service.iml" "resources/" "README.md" "project.clj" "package.json" "order-service.log" "mqjms.log.0.lck" "mqjms.log.0.9.lck" "mqjms.log.0.9" "mqjms.log.0.8.lck" "mqjms.log.0.8" "mqjms.log.0.7.lck" "mqjms.log.0.7" "mqjms.log.0.6.lck" "mqjms.log.0.6" "mqjms.log.0.5.lck" "mqjms.log.0.5" "mqjms.log.0.4.lck" "mqjms.log.0.4" "mqjms.log.0.3.lck" "mqjms.log.0.3" "mqjms.log.0.2.lck" "mqjms.log.0.2" "mqjms.log.0.15.lck" "mqjms.log.0.15" "mqjms.log.0.14.lck" "mqjms.log.0.14" "mqjms.log.0.13.lck" "mqjms.log.0.13" "mqjms.log.0.12.lck" "mqjms.log.0.12" "mqjms.log.0.11.lck" "mqjms.log.0.11" "mqjms.log.0.10.lck" "mqjms.log.0.10" "mqjms.log.0.1.lck" "mqjms.log.0.1" "mqjms.log.0" "logs/" "LICENSE" "lein" "install-vagrant-box.sh" "install/" "gulpfile.js" "build.xml" "build.sh" "apidoc.json" "ansible/" ".nrepl-port" ".lein-repl-history" ".lein-failures" ".lein-env" ".idea/" ".gitignore" ".git/" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/unit/" (22011 54804 0 0) "timeslot_validation.clj" "order_validation_test.clj" "order_test.clj" "order_authorization_test.clj" "health_check_test.clj" "handle_cs_error_test.clj" "gtin_nan_validation_test.clj" "correlation_id_test.clj" "configuration_test.clj" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/acceptance/" (22010 54131 0 0) "update_time_slot_test.clj" "public_endpoint_test.clj" "order_history_test.clj" "order_details_test.clj" "index_res_test.clj" "create_order_test.clj" "cancel_order_test.clj" "../" "./")
+
+ ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/" (22010 53807 0 0) "unit/" "test_util.clj" "order_details_object.clj" "acceptance/" "../" "./")
+
+ ("/Users/mobyte/" (22011 48765 0 0) "winrar" "VirtualBox VMs/" "update.sh" "tmp/" "start-postgres.sh" "src/" "setJava7" "screen-sharing" "scala-2.11.5/" "Samsung/" "running-server.sh" "run-ui-test" "run-mongo.sh" "run-get-test" "ROOT.war" "rollback.sh" "repos/" "Public/" "ppmhhincfabcahokokgpdcckmjghpian/" "postgres_stop.sh" "postgres_start.sh" "Pictures/" "pcurl" "nohup.out" "mymusic/" "Music/" "Movies/" "mnt.sh" "mnt/" "MEGA/" "log.log" "Library/" "kill-running-service" "id_rsa.pub" "grep_liquibase_ids" "Google Drive/" "gitt" "ggit" "dwhelper/" "dump.rdb" "Dropbox/" "Downloads/" "Documents/" "Desktop/" "customer-service/" "clean_update_shop.sh" "clean-install" "bin/" "Applications/" "apache-tomcat-7.0.55.tar" "apache-tomcat-7.0.55/" "apache-tomcat-7/" ".zinc/" ".viminfo" ".vagrant.d/" ".Trash/" ".subversion/" ".ssh/" ".sqlworkbench/" ".smex-items" ".sbt/" ".rnd" ".psql_history" ".oracle_jre_usage/" ".npm/" ".node-gyp/" ".m2/" ".local/" ".lesshst" ".leinrc" ".lein/" ".keepassx/" ".ivy2/" ".IntelliJIdea14/" ".hgignore_global" ".gitconfig" ".gem/" ".emacs.d/" ".emacs" ".DS_Store" ".dropbox/" ".drip/" ".cups/" ".config/" ".CFUserTextEncoding" ".cache/" ".bashrc" ".bash_profile" ".bash_history" ".ansible/" "../" "./")
 
  ("/Users/mobyte/repos/rewe-order-service/test-int/clj_cs/e2e/" (22010 54144 0 0) "order_test_e2e.clj" "../" "./")
-
- ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/unit/" (22010 51601 0 0) "timeslot_validation.clj" "order_validation_test.clj" "order_test.clj" "order_authorization_test.clj" "health_check_test.clj" "handle_cs_error_test.clj" "gtin_nan_validation_test.clj" "correlation_id_test.clj" "configuration_test.clj" "../" "./")
-
- ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/acceptance/" (22010 51601 0 0) "update_time_slot_test.clj" "public_endpoint_test.clj" "order_history_test.clj" "order_details_test.clj" "index_res_test.clj" "create_order_test.clj" "cancel_order_test.clj" "../" "./")
-
- ("/Users/mobyte/repos/rewe-order-service/test/clj_cs/" (22010 51601 0 0) "unit/" "test_util.clj" "order_details_object.clj" "acceptance/" "../" "./")
-
- ("/Users/mobyte/repos/rewe-order-service/test-resources/" (22010 51605 0 0) "valid-order-create-request-map.clj" "test-order-create-request.json" "order-details-response.json" "invalid-order-create-request-map.clj" "cs-order-details-map.clj" "../" "./")
-
- ("/Users/mobyte/repos/rewe-order-service/src/clj_cs/" (22010 50847 0 0) "visual.clj" "util.clj" "run.clj" "order_to_map.clj" "order_schema.clj" "order.clj" "oauth.clj" "modify_command.clj" "middleware.clj" "metrics.clj" "map_to_order.clj" "logging.clj" "index_res.clj" "http.clj" "health_check.clj" "cs_order_convertor.clj" "cs.clj" "crypto.clj" "configuration.clj" "command_schema.clj" "../" "./")
 
  ("/Users/mobyte/repos/rewe-order-service/resources/apidoc/examples/" (22010 48449 0 0) "update_order_cancel_example.json" "order_details_response.json" "order_created_example.json" "modify_order_example.json" "list_orders_response.json" "invalid_create_order_response.json" "create_order_example.json" "../" "./")
 
@@ -164,8 +170,6 @@
  ("/Users/mobyte/repos/rewe-order-service/test-int/clj_cs/it/" (22010 49091 0 0) "oauth_test.clj" "cs_test_it.clj" "cs_metrics_test.clj" "../" "./")
 
  ("/Users/mobyte/.lein/" (22010 33817 0 0) "self-installs/" "repl-port" "profiles.clj" "../" "./")
-
- ("/Users/mobyte/" (22010 47736 0 0) "winrar" "VirtualBox VMs/" "update.sh" "tmp/" "start-postgres.sh" "src/" "setJava7" "screen-sharing" "scala-2.11.5/" "Samsung/" "running-server.sh" "run-ui-test" "run-mongo.sh" "run-get-test" "ROOT.war" "rollback.sh" "repos/" "Public/" "ppmhhincfabcahokokgpdcckmjghpian/" "postgres_stop.sh" "postgres_start.sh" "Pictures/" "pcurl" "nohup.out" "mymusic/" "Music/" "Movies/" "mnt.sh" "mnt/" "MEGA/" "log.log" "Library/" "kill-running-service" "id_rsa.pub" "grep_liquibase_ids" "Google Drive/" "gitt" "ggit" "dwhelper/" "dump.rdb" "Dropbox/" "Downloads/" "Documents/" "Desktop/" "customer-service/" "clean_update_shop.sh" "clean-install" "bin/" "Applications/" "apache-tomcat-7.0.55.tar" "apache-tomcat-7.0.55/" "apache-tomcat-7/" ".zinc/" ".viminfo" ".vagrant.d/" ".Trash/" ".subversion/" ".ssh/" ".sqlworkbench/" ".smex-items" ".sbt/" ".rnd" ".psql_history" ".oracle_jre_usage/" ".npm/" ".node-gyp/" ".m2/" ".local/" ".lesshst" ".leinrc" ".lein/" ".keepassx/" ".ivy2/" ".IntelliJIdea14/" ".hgignore_global" ".gitconfig" ".gem/" ".emacs.d/" ".emacs" ".DS_Store" ".dropbox/" ".drip/" ".cups/" ".config/" ".CFUserTextEncoding" ".cache/" ".bashrc" ".bash_profile" ".bash_history" ".ansible/" "../" "./")
 
  ("/Users/mobyte/tmp/" (22010 33884 0 0) "zipcode" "wire-mock.txt" "togglz_cookie.txt" "toggle_url.txt" "timeslots_review.org" "testclj/" "test_register_action_timing.txt" "story-competition.txt" "setenv.sh" "rpn.org" "rpn.html" "rewe-shop/" "review-remarks.org" "retro.org" "remove-old-branches.sh" "remarks_from_Bjorn.org" "popov.txt" "pass4smth" "order_request_map.clj" "oauth2_requests.txt" "mockapi.req.txt" "manual_deployment.org" "manual-recursion-js-test.js" "logs_401-537.txt" "logs_401-537.org" "logs_401-537.odt" "logs_401-537.csv" "logs_301-400.txt" "logs_301-400.org" "logs_301-400.odt" "logs_301-400.ods" "logs_301-400.csv" "logs_1-100.csv" "logs.txt" "logs.res.txt" "logs.org" "logs.odt" "logs.ods" "logs.html" "logs-grep-results.txt" "logs-grep-results.org" "logs-grep-results.html" "logs-grep-results.csv" "logs/" "logging_entries_1-100.csv" "load-all-tests.clj" "links" "knowledge/" "keys/" "info_to_tax.txt" "id_rsa.pub" "http_it_test_for_order_history.clj" "grunt.txt" "groovy_object2json_serialization.txt" "fullfillment_squad.txt" "error-on-dev2.txt" "done.org" "distractions.org" "delete/" "customer_service_health_check.json" "customer-service/" "cs-order-params.org" "configs/" "cache.clj" "bamboo-backup.txt" "backup.clj" "backup/" "a.out" "2delete/" "123.html" "123" "1.html" "1.el" "1.clj" "1.c" "1" "#logs-grep-results.txt#" "../" "./")
 
@@ -184,9 +188,6 @@
  ("/Users/mobyte/repos/provisioning/env_int/group_vars/" (21998 32388 0 0) "all" "../" "./")
 
  ("/Users/mobyte/Documents/" (22002 28546 0 0) "Untitled 1.ods" "tested.xcf" "Test Types for Shop QA 2015.key" "team values testing pyramid.png" "team values testing pyramid.odg" "Tax declaration/" "RPN Cs Mock Integration Test Proof.key" "RPN Cs Mock Integration Test Proof (short).pptx" "RPN Cs Mock Integration Test Proof (short).pdf" "RPN Cs Mock Integration Test Proof (short).key" "OrdersBrightTags_RPN.key" "ms rpn.key" "Manual Deployment RPN.pptx" "Manual Deployment RPN.pdf" "Manual Deployment RPN.key" "Mama (4VOGPZ).pdf" "logs.ods" "LG seriew.odt" "KLM - My Trip Emil Yessenamanov.pdf" "IT_standup_2015-04-13 copy.m4a" "Emil (4P3QWW).pdf" "Dina and Alissa(4QI794).pdf" "Customer Service User Deletion RPN.key" "Customer Service CS connection RPN.key/" "clojure presentation/" "clojure lisp presenataion.key" "clojure brownbag presentation.key" "Clojure brown bag.key" "Clojure brown bag (cont).key" "android_mobyte_downloads/" ".localized" ".DS_Store" "../" "./")
-
- ("/Users/mobyte/Dropbox/" (22006 26370 0 0) "Work/" "urls.kdb" "Stories/" "stats/" "repos/" "Public/" "programming/" "Photos/" "opera/" "notes_dir/" "music/" "movie_list.org" "keepass/" "Info/" "import_test/" "Icon
-" "help/" "Getting Started.pdf" "dot_files/" "done.org" "Documents/" "clj-dojo/" "Camera Uploads/" "c605b45b905e0054174514895d2c0b8b.gif.gpg" "buffer/" "books/" "bin/" "backup/" ".DS_Store" ".dropbox.cache/" ".dropbox" "../" "./")
 
  ("/Users/mobyte/repos/rewe-order-service/src/deb/default/" (21973 32587 0 0) "rewe-order-service" "../" "./")
 

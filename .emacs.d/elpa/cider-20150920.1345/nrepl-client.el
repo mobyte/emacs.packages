@@ -1052,7 +1052,10 @@ the port, and the client buffer."
     (with-current-buffer serv-buf
       (setq nrepl-project-dir directory)
       (setq nrepl-post-client-callback callback)
-      ;; ensure that `nrepl-start-client-process' sees right things:
+      ;; Ensure that `nrepl-start-client-process' sees right things.  This
+      ;; causes warnings about making a local within a let-bind.  This is safe
+      ;; as long as `serv-buf' is not the buffer where the let-binding was
+      ;; started. http://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Buffer_002dLocal.html
       (setq-local nrepl-create-client-buffer-function
                   nrepl-create-client-buffer-function)
       (setq-local nrepl-use-this-as-repl-buffer
@@ -1181,7 +1184,9 @@ Set this to nil to prevent truncation."
   "Pretty print nREPL OBJECT, delimited using FOREGROUND."
   (if (not (and (listp object)
                 (memq (car object) '(<- ---> dict))))
-      (progn (pp object (current-buffer))
+      (progn (when (stringp object)
+               (setq object (substring-no-properties object)))
+             (pp object (current-buffer))
              (unless (listp object) (insert "\n")))
     (let* ((head (format "(%s" (car object))))
       (cl-flet ((color (str)

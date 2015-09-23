@@ -31,6 +31,7 @@
 ;;; Code:
 
 (require 'cider-client)
+(require 'cider-popup)
 (require 'cider-util)
 (require 'cider-stacktrace)
 (require 'cider-test)
@@ -49,9 +50,9 @@
 (require 'spinner)
 
 (defconst cider-read-eval-buffer "*cider-read-eval*")
-(defconst cider-doc-buffer "*cider-doc*")
 (defconst cider-result-buffer "*cider-result*")
 (defconst cider-nrepl-session-buffer "*cider-nrepl-session*")
+(add-to-list 'cider-ancillary-buffers cider-nrepl-session-buffer)
 
 (defcustom cider-prefer-local-resources nil
   "Prefer local resources to remote (tramp) ones when both are available."
@@ -106,19 +107,6 @@ If the symbol `always-save', save the file without confirmation."
                  (const always-save :tag "Save the file without confirmation"))
   :group 'cider
   :package-version '(cider . "0.6.0"))
-
-(defcustom cider-prompt-for-symbol t
-  "Controls when to prompt for symbol when a command requires one.
-
-When non-nil, always prompt, and use the symbol at point as the default
-value at the prompt.
-
-When nil, attempt to use the symbol at point for the command, and only
-prompt if that throws an error."
-  :type '(choice (const :tag "always" t)
-                 (const :tag "dwim" nil))
-  :group 'cider
-  :package-version '(cider . "0.9.0"))
 
 (defcustom cider-completion-use-context t
   "When true, uses context at point to improve completion suggestions."
@@ -283,12 +271,6 @@ This should never be set in Clojure buffers, as there the namespace
 should be extracted from the buffer's ns form.")
 
 (defvar cider-version)
-(defun cider-ensure-op-supported (op)
-  "Check for support of middleware op OP.
-Signal an error if it is not supported."
-  (unless (cider-nrepl-op-supported-p op)
-    (error "Can't find nREPL middleware providing op \"%s\".  Please, install (or update) cider-nrepl %s and restart CIDER" op (upcase cider-version))))
-
 (defun cider--check-required-nrepl-ops ()
   "Check whether all required nREPL ops are present."
   (let* ((current-connection (cider-current-connection))
@@ -599,6 +581,12 @@ of the namespace in the Clojure source buffer."
   (interactive "P")
   (cider--switch-to-repl-buffer (cider-current-repl-buffer) set-namespace))
 
+(defun cider-load-buffer-and-switch-to-repl-buffer (&optional set-namespace)
+  "Load the current buffer into the relevant REPL buffer and switch to it."
+  (interactive "P")
+  (cider-load-buffer)
+  (cider-switch-to-relevant-repl-buffer set-namespace))
+
 (defun cider-switch-to-last-clojure-buffer ()
   "Switch to the last Clojure buffer.
 The default keybinding for this command is
@@ -807,13 +795,6 @@ create a valid path."
     (if (string-match "^/\\([a-zA-Z]:/.*\\)" filename)
         (match-string 1 filename)
       filename)))
-
-(defun cider--tooling-file-p (file-name)
-  "Return t if FILE-NAME is not a 'real' source file.
-Currently, only check if the relative file name starts with 'form-init'
-which nREPL uses for temporary evaluation file names."
-  (let ((fname (file-name-nondirectory file-name)))
-    (string-match-p "^form-init" fname)))
 
 (defun cider-find-file (url)
   "Return a buffer visiting the file URL if it exists, or nil otherwise.
@@ -1199,8 +1180,9 @@ The formatting is performed by `cider-annotate-completion-function'."
 
 (defun cider-complete-at-point ()
   "Complete the symbol at point."
-  (let ((sap (symbol-at-point)))
-    (when (and sap (not (nth 3 (syntax-ppss))) (cider-connected-p))
+  (-when-let (sap (cider-symbol-at-point))
+    (when (and (cider-connected-p)
+               (not (or (cider-in-string-p) (cider-in-comment-p))))
       (let ((bounds (bounds-of-thing-at-point 'symbol)))
         (list (car bounds) (cdr bounds)
               (completion-table-dynamic #'cider-complete)
@@ -1231,27 +1213,6 @@ in the buffer."
       (format "%s: %s"
               (cider-eldoc-format-thing thing)
               (cider-eldoc-format-arglist arglist 0)))))
-
-(defun cider-javadoc-handler (symbol-name)
-  "Invoke the nREPL \"info\" op on SYMBOL-NAME if available."
-  (when symbol-name
-    (cider-ensure-op-supported "info")
-    (let* ((info (cider-var-info symbol-name))
-           (url (nrepl-dict-get info "javadoc")))
-      (if url
-          (browse-url url)
-        (user-error "No Javadoc available for %s" symbol-name)))))
-
-(defun cider-javadoc (arg)
-  "Open Javadoc documentation in a popup buffer.
-
-Prompts for the symbol to use, or uses the symbol at point, depending on
-the value of `cider-prompt-for-symbol'. With prefix arg ARG, does the
-opposite of what that option dictates."
-  (interactive "P")
-  (funcall (cider-prompt-for-symbol-function arg)
-           "Javadoc for"
-           #'cider-javadoc-handler))
 
 (defun cider-stdin-handler (&optional buffer)
   "Make a stdin response handler for BUFFER."
@@ -1595,106 +1556,6 @@ evaluation command. Honor `cider-auto-jump-to-error'."
                          (cider-current-connection)
                          (cider-current-session))))
 
-
-;;;; Popup buffers
-(define-minor-mode cider-popup-buffer-mode
-  "Mode for CIDER popup buffers"
-  nil
-  (" cider-tmp")
-  '(("q" .  cider-popup-buffer-quit-function)))
-
-(defvar-local cider-popup-buffer-quit-function 'cider-popup-buffer-quit
-  "The function that is used to quit a temporary popup buffer.")
-
-(defun cider-popup-buffer-quit-function (&optional kill-buffer-p)
-  "Wrapper to invoke the function `cider-popup-buffer-quit-function'.
-KILL-BUFFER-P is passed along."
-  (interactive)
-  (funcall cider-popup-buffer-quit-function kill-buffer-p))
-
-(defun cider-popup-buffer (name &optional select mode ancillary)
-  "Create new popup buffer called NAME.
-If SELECT is non-nil, select the newly created window.
-If major MODE is non-nil, enable it for the popup buffer.
-If ANCILLARY is non-nil, the buffer is added to `cider-ancillary-buffers'
-and automatically removed when killed."
-  (-> (cider-make-popup-buffer name mode ancillary)
-      (cider-popup-buffer-display select)))
-
-(defun cider-popup-buffer-display (buffer &optional select)
-  "Display BUFFER.
-If SELECT is non-nil, select the BUFFER."
-  (let ((window (get-buffer-window buffer)))
-    (when window
-      (with-current-buffer buffer
-        (set-window-point window (point))))
-    ;; If the buffer we are popping up is already displayed in the selected
-    ;; window, the below `inhibit-same-window' logic will cause it to be
-    ;; displayed twice - so we early out in this case. Note that we must check
-    ;; `selected-window', as async request handlers are executed in the context
-    ;; of the current connection buffer (i.e. `current-buffer' is dynamically
-    ;; bound to that).
-    (unless (eq window (selected-window))
-      ;; Non nil `inhibit-same-window' ensures that current window is not covered
-      (if select
-          (pop-to-buffer buffer `(nil . ((inhibit-same-window . ,pop-up-windows))))
-        (display-buffer buffer `(nil . ((inhibit-same-window . ,pop-up-windows)))))))
-  buffer)
-
-(defun cider-popup-buffer-quit (&optional kill)
-  "Quit the current (temp) window and bury its buffer using `quit-restore-window'.
-If prefix argument KILL is non-nil, kill the buffer instead of burying it."
-  (interactive)
-  (quit-restore-window (selected-window) (if kill 'kill 'append)))
-
-(defvar-local cider-popup-output-marker nil)
-
-(defvar cider-ancillary-buffers
-  (list cider-error-buffer
-        cider-doc-buffer
-        cider-test-report-buffer
-        cider-nrepl-session-buffer
-        nrepl-message-buffer-name))
-
-(defun cider-make-popup-buffer (name &optional mode ancillary)
-  "Create a temporary buffer called NAME using major MODE (if specified).
-If ANCILLARY is non-nil, the buffer is added to `cider-ancillary-buffers'
-and automatically removed when killed."
-  (with-current-buffer (get-buffer-create name)
-    (kill-all-local-variables)
-    (setq buffer-read-only nil)
-    (erase-buffer)
-    (when mode
-      (funcall mode))
-    (cider-popup-buffer-mode 1)
-    (setq cider-popup-output-marker (point-marker))
-    (setq buffer-read-only t)
-    (when ancillary
-      (add-to-list 'cider-ancillary-buffers name)
-      (add-hook 'kill-buffer-hook
-                (lambda () (setq cider-ancillary-buffers (remove name cider-ancillary-buffers)))
-                nil 'local))
-    (current-buffer)))
-
-(defun cider-emit-into-popup-buffer (buffer value &optional face)
-  "Emit into BUFFER the provided VALUE."
-  ;; Long string output renders emacs unresponsive and users might intentionally
-  ;; kill the frozen popup buffer. Therefore, we don't re-create the buffer and
-  ;; silently ignore the output.
-  (when (buffer-live-p buffer)
-    (with-current-buffer buffer
-      (let ((inhibit-read-only t)
-            (buffer-undo-list t)
-            (moving (= (point) cider-popup-output-marker)))
-        (save-excursion
-          (goto-char cider-popup-output-marker)
-          (let ((value-str (format "%s" value)))
-            (when face (add-face-text-property 0 (length value-str) face nil value-str))
-            (insert value-str))
-          (indent-sexp)
-          (set-marker cider-popup-output-marker (point)))
-        (when moving (goto-char cider-popup-output-marker))))))
-
 (defun cider-emit-into-color-buffer (buffer value)
   "Emit into color BUFFER the provided VALUE."
   (with-current-buffer buffer
@@ -1776,7 +1637,10 @@ EVAL-BUFFER is the buffer where the spinner was started."
     ;; we've got status "done" from nrepl
     ;; stop the spinner
     (when (and (buffer-live-p eval-buffer)
-               (member "done" (nrepl-dict-get response "status")))
+               (let ((status (nrepl-dict-get response "status")))
+                 (or (member "done" status)
+                     (member "eval-error" status)
+                     (member "error" status))))
       (with-current-buffer eval-buffer
         (spinner-stop)))
     (funcall original-callback response)))
@@ -2027,14 +1891,6 @@ On failure, read a symbol name using PROMPT and call CALLBACK with that."
   (condition-case nil (funcall callback (cider--kw-to-symbol (cider-symbol-at-point)))
     ('error (funcall callback (cider-read-from-minibuffer prompt)))))
 
-(defun cider--should-prompt-for-symbol (&optional invert)
-  (if invert (not cider-prompt-for-symbol) cider-prompt-for-symbol))
-
-(defun cider-prompt-for-symbol-function (&optional invert)
-  (if (cider--should-prompt-for-symbol invert)
-      #'cider-read-symbol-name
-    #'cider-try-symbol-at-point))
-
 (defun cider-sync-request:toggle-trace-var (symbol)
   "Toggle var tracing for SYMBOL."
   (cider-ensure-op-supported "toggle-trace-var")
@@ -2084,28 +1940,6 @@ Defaults to the current ns.  With prefix arg QUERY, prompts for a ns."
       (pcase ns-status
         ("not-found" (error "ns %s not found" ns))
         (_ (message "ns %s %s" ns ns-status))))))
-
-(defun cider-create-doc-buffer (symbol)
-  "Populates *cider-doc* with the documentation for SYMBOL."
-  (-when-let (info (cider-var-info symbol))
-    (cider-docview-render (cider-make-popup-buffer cider-doc-buffer) symbol info)))
-
-(defun cider-doc-lookup (symbol)
-  "Look up documentation for SYMBOL."
-  (-if-let (buffer (cider-create-doc-buffer symbol))
-      (cider-popup-buffer-display buffer t)
-    (user-error "Symbol %s not resolved" symbol)))
-
-(defun cider-doc (&optional arg)
-  "Open Clojure documentation in a popup buffer.
-
-Prompts for the symbol to use, or uses the symbol at point, depending on
-the value of `cider-prompt-for-symbol'. With prefix arg ARG, does the
-opposite of what that option dictates."
-  (interactive "P")
-  (funcall (cider-prompt-for-symbol-function arg)
-           "Doc for"
-           #'cider-doc-lookup))
 
 (defun cider-undef ()
   "Undefine the SYMBOL."
