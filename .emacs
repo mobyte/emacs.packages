@@ -59,6 +59,8 @@
 ;;* general settings
 
 (setq visible-bell t)
+(setq visible-bell nil) ;; The default
+(setq ring-bell-function 'ignore)
 
 ;;* custom settings
 
