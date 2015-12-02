@@ -8,7 +8,7 @@
 ;;       Phil Hagelberg <technomancy@gmail.com>
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20151127.516
+;; Package-Version: 20151201.515
 ;; Keywords: languages clojure clojurescript lisp
 ;; Version: 5.0.1
 ;; Package-Requires: ((emacs "24.3"))
@@ -1017,32 +1017,8 @@ nil."
                         (zero-or-more "^:"
                                       (one-or-more (not (any whitespace)))))
                     (one-or-more (any whitespace "\n")))
-      ;; why is this here? oh (in-ns 'foo) or (ns+ :user)
-      (zero-or-one (any ":'"))
-      (group (one-or-more (not (any "()\"" whitespace))) word-end)))
-
-;; for testing clojure-namespace-name-regex, you can evaluate this code and make
-;; sure foo (or whatever the namespace name is) shows up in results. some of
-;; these currently fail.
-;; (mapcar (lambda (s) (let ((n (string-match clojure-namespace-name-regex s)))
-;;                       (if n (match-string 4 s))))
-;;         '("(ns foo)"
-;;           "(ns
-;; foo)"
-;;           "(ns foo.baz)"
-;;           "(ns ^:bar foo)"
-;;           "(ns ^:bar ^:baz foo)"
-;;           "(ns ^{:bar true} foo)"
-;;           "(ns #^{:bar true} foo)"
-;;           "(ns #^{:fail {}} foo)"
-;;           "(ns ^{:fail2 {}} foo.baz)"
-;;           "(ns ^{} foo)"
-;;           "(ns ^{:skip-wiki true}
-;;   aleph.netty
-;; "
-;;           "(ns
-;;  foo)"
-;;     "foo"))
+      (zero-or-one (any ":'")) ;; (in-ns 'foo) or (ns+ :user)
+      (group (one-or-more (not (any "()\"" whitespace))) symbol-end)))
 
 
 
