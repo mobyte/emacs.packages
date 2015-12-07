@@ -620,12 +620,8 @@ If no DWIM context is found, nil is returned."
     (magit-section-case
       ([* unstaged] 'unstaged)
       ([* staged] 'staged)
-      (unpushed (format "%s...%s"
-                        (magit-get-tracked-branch)
-                        (magit-get-current-branch)))
-      (unpulled (format "%s...%s"
-                        (magit-get-current-branch)
-                        (magit-get-tracked-branch)))
+      (unpushed (magit-section-value it))
+      (unpulled (magit-section-value it))
       (branch (let ((current (magit-get-current-branch))
                     (atpoint (magit-section-value it)))
                 (if (equal atpoint current)
@@ -721,22 +717,6 @@ a commit read from the minibuffer."
   (magit-diff-setup nil nil args files))
 
 ;;;###autoload
-(defun magit-diff-unpushed (&optional args files)
-  "Show unpushed changes."
-  (interactive (magit-diff-arguments))
-  (-if-let (tracked (magit-get-tracked-ref))
-      (magit-diff-setup (concat tracked "...") nil args files)
-    (user-error "No upstream set")))
-
-;;;###autoload
-(defun magit-diff-unpulled (&optional args files)
-  "Show unpulled changes."
-  (interactive (magit-diff-arguments))
-  (-if-let (tracked (magit-get-tracked-ref))
-      (magit-diff-setup (concat "..." tracked) nil args files)
-    (user-error "No upstream set")))
-
-;;;###autoload
 (defun magit-diff-while-committing (&optional args files)
   "While committing, show the changes that are about to be committed.
 While amending, invoking the command again toggles between
@@ -785,7 +765,8 @@ If there is no revision at point or with a prefix argument prompt
 for a revision."
   (interactive
    (let* ((mcommit (magit-section-when module-commit))
-          (atpoint (or (and magit-blame-mode (magit-blame-chunk-get :hash))
+          (atpoint (or (and (bound-and-true-p magit-blame-mode)
+                            (magit-blame-chunk-get :hash))
                        mcommit
                        (magit-branch-or-commit-at-point)
                        (magit-tag-at-point))))
@@ -794,6 +775,7 @@ for a revision."
                   (magit-diff-arguments))
             (and mcommit (list (magit-section-parent-value
                                 (magit-current-section)))))))
+  (require 'magit)
   (magit-with-toplevel
     (when module
       (setq default-directory
@@ -1179,7 +1161,7 @@ Staging and applying changes is documented in info node
 (defun magit-diff-refresh-buffer (rev-or-range const _args files)
   "Refresh the current `magit-diff-mode' buffer.
 
-In such buffer the buffer-local value of `magit-refresh-args',
+In such buffers the buffer-local value of `magit-refresh-args'
 has the same form as the arguments of this function.  The value
 is set in `magit-mode-setup'."
   (setq header-line-format
@@ -1682,7 +1664,7 @@ or a ref which is not a branch, then it inserts nothing."
     map)
   "Keymap for the `unstaged' section.")
 
-(magit-define-section-jumper unstaged "Unstaged changes")
+(magit-define-section-jumper magit-jump-to-unstaged "Unstaged changes" unstaged)
 
 (defun magit-insert-unstaged-changes ()
   "Insert section showing unstaged changes."
@@ -1702,7 +1684,7 @@ or a ref which is not a branch, then it inserts nothing."
     map)
   "Keymap for the `staged' section.")
 
-(magit-define-section-jumper staged "Staged changes")
+(magit-define-section-jumper magit-jump-to-staged "Staged changes" staged)
 
 (defun magit-insert-staged-changes ()
   "Insert section showing staged changes."
@@ -1845,13 +1827,12 @@ are highlighted."
       t)))
 
 (defun magit-diff-highlight-recursive (section &optional selection)
-  (if (magit-section-match '(module-commit diffstat commit-header) section)
-      (magit-section-highlight section nil)
-    (pcase (magit-diff-scope section)
-      (`list (magit-diff-highlight-list section selection))
-      (`file (magit-diff-highlight-file section selection))
-      (`hunk (magit-diff-highlight-heading section selection)
-             (magit-diff-paint-hunk section selection t)))))
+  (pcase (magit-diff-scope section)
+    (`list (magit-diff-highlight-list section selection))
+    (`file (magit-diff-highlight-file section selection))
+    (`hunk (magit-diff-highlight-heading section selection)
+           (magit-diff-paint-hunk section selection t))
+    (_     (magit-section-highlight section nil))))
 
 (defun magit-diff-highlight-list (section &optional selection)
   (let ((beg (magit-section-start   section))

@@ -384,7 +384,9 @@ repository are reverted if `magit-revert-buffers' is non-nil.
 
 See `magit-start-process' for more information."
   (message "Running %s %s" magit-git-executable
-           (mapconcat 'identity (-flatten args) " "))
+           (let ((m (mapconcat #'identity (-flatten args) " ")))
+             (remove-list-of-text-properties 0 (length m) '(face) m)
+             m))
   (magit-start-git nil args))
 
 (defun magit-run-git-async-no-revert (&rest args)
@@ -681,7 +683,8 @@ tracked in the current repository are reverted if
   "Use `auth-source-search' to get a password.
 If found, return the password.  Otherwise, return nil."
   (require 'auth-source)
-  (let ((secret (plist-get (car (auth-source-search :max 1 :host key))
+  (let ((secret (plist-get (car (auth-source-search :max 1 :host key
+                                                    :require '(:host)))
                            :secret)))
     (if (functionp secret)
         (funcall secret)
@@ -792,6 +795,8 @@ as argument."
 
 (define-error 'magit-git-error "Git error")
 
+(defvar-local magit-this-error nil)
+
 (defun magit-process-finish (arg &optional process-buf command-buf
                                  default-dir section)
   (unless (integerp arg)
@@ -840,11 +845,13 @@ as argument."
                    "Git failed")))
       (if magit-process-raise-error
           (signal 'magit-git-error msg)
+        (--when-let (magit-mode-get-buffer 'magit-status-mode)
+          (setq magit-this-error msg))
         (message "%s ... [%s buffer %s for details]" msg
                  (-if-let (key (and (buffer-live-p command-buf)
                                     (with-current-buffer command-buf
                                       (car (where-is-internal
-                                            'magit-process-display-buffer)))))
+                                            'magit-process-buffer)))))
                      (format "Hit %s to see" (key-description key))
                    "See")
                  (buffer-name process-buf)))))

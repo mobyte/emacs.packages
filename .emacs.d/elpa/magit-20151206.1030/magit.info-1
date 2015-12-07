@@ -1776,13 +1776,25 @@ default the following functions are also members of that hook:
      HEADING is non-nil use that as section heading instead of
      "Stashes:".
 
- -- Function: magit-insert-unpulled-commits
+ -- Function: magit-insert-unpulled-from-upstream
 
-     Insert section showing unpulled commits.
+     Insert section showing commits that haven’t been pulled from the
+     upstream branch yet.
 
- -- Function: magit-insert-unpushed-commits
+ -- Function: magit-insert-unpulled-from-pushremote
 
-     Insert section showing unpushed commits.
+     Insert section showing commits that haven’t been pulled from the
+     push-remote branch yet.
+
+ -- Function: magit-insert-unpushed-to-upstream
+
+     Insert section showing commits that haven’t been pushed to the
+     upstream yet.
+
+ -- Function: magit-insert-unpushed-to-pushremote
+
+     Insert section showing commits that haven’t been pushed to the
+     push-remote yet.
 
    The following functions can also be added to the above hook:
 
@@ -1863,13 +1875,33 @@ variable.
 
    By default the following functions are members of the above hook:
 
- -- Function: magit-insert-head-header
+ -- Function: magit-insert-error-header
 
-     Insert a header line about the ‘HEAD’ commit.
+     Insert a header line showing the message about the Git error that
+     just occured.
 
- -- Function: magit-insert-upstream-header
+     This function is only aware of the last error that occur when Git
+     was run for side-effects.  If, for example, an error occurs while
+     generating a diff, then that error won’t be inserted.  Refreshing
+     the status buffer causes this section to disappear again.
 
-     Insert a header line about the upstream branch and its tip.
+ -- Function: magit-insert-diff-filter-header
+
+     Insert a header line showing the effective diff filters.
+
+ -- Function: magit-insert-head-branch-header
+
+     Insert a header line about the current branch or detached ‘HEAD’.
+
+ -- Function: magit-insert-upstream-branch-header
+
+     Insert a header line about the branch that is usually pulled into
+     the current branch.
+
+ -- Function: magit-insert-push-branch-header
+
+     Insert a header line about the branch that the current branch is
+     usually pushed to.
 
  -- Function: magit-insert-tags-header
 
@@ -2226,14 +2258,6 @@ the default value of ‘magit-diff-arguments’ is used instead.
 ‘d p’     (‘magit-diff-paths’)
 
      Show changes between any two files on disk.
-
-‘M-x magit-diff-unpushed’     (‘magit-diff-unpushed’)
-
-     Show unpushed changes.
-
-‘M-x magit-diff-unpulled’     (‘magit-diff-unpulled’)
-
-     Show unpulled changes.
 
    All of the above suffix commands update the repository’s diff buffer.
 The diff popup also features two commands which show differences in
@@ -3431,12 +3455,184 @@ File: magit.info,  Node: Branching,  Next: Merging,  Prev: Committing,  Up: Mani
 6.5 Branching
 =============
 
-Also see *note (gitman)git-branch:: and *note (gitman)git-checkout:: .
+The upstream branch of some local branch is the branch into which the
+commits on that local branch should eventually be merged, usually
+something like ‘origin/master’.  For the ‘master’ branch itself the
+upstream branch and the branch it is being pushed to, are usually the
+same remote branch.  But for a feature branch the upstream branch and
+the branch it is being pushed to should differ.
+
+   Feature branches too should _eventually_ end up in a remote branch
+such as ‘origin/master’ or ‘origin/maint’.  Such a branch should
+therefore be used as the upstream.  But feature branches shouldn’t be
+pushed directly to such branches.  Instead a feature branch ‘my-feature’
+is usually pushed to ‘my-fork/my-feature’ or ‘origin/my-feature’.  After
+the new feature has been reviewed, the maintainer merges the feature
+into ‘master’.  And finally ‘master’ (not ‘my-feature’ itself) is pushed
+to ‘origin/master’.
+
+   But new features seldom are perfect on the first try, and so feature
+branches usually have to be improved and re-pushed many times.  Pushing
+should therefore be easy to do, and for that reason some users have
+concluded that the remote branch to which a feature branch is being
+pushed should be set as the upstream.  Luckily Git has long ago gained
+support for a push-remote which can be configured separately from the
+upstream branch, using the variables ‘branch.<name>.pushRemote’ and
+‘remote.pushDefault’, so we no longer have to choose which of the two
+remotes should be used as "the remote".
+
+   Each of the fetching, pulling, and pushing popups features three
+commands which act on the current branch and some other branch.  Of
+these, ‘p’ is bound to command which acts on the push-remote, ‘u’ is
+bound to the command which acts on the upstream, and ‘e’ is bound to a
+command which acts on any other branch.  The status buffer shows
+unpushed and unpulled for both the push-remote and the upstream.  In
+other words; embrace the fact that two remotes can be configure for any
+local branch.
+
+   It’s also easy to configure these two remotes.  The values of all the
+variables that are related to fetching, pulling, and pushing (as well as
+some other branch-related variables) can be inspected and changed in the
+branching popup.
 
 ‘b’     (‘magit-branch-popup’)
 
-     This prefix command shows the following suffix commands along with
-     the appropriate infix arguments in a popup buffer.
+     This prefix command shows the following suffix commands in a popup
+     buffer.  It also displays the values of the following variables and
+     allows changing their values.
+
+   The following variables are used to configure a specific branch.  The
+values are being displayed for the current branch (if any).  To change
+the value for another branch use a prefix argument.
+
+ -- Variable: branch.NAME.merge
+
+     Together with ‘branch.NAME.remote’ this variable defines the
+     upstream branch of the local branch named NAME. The value of this
+     variable is the full reference of the upstream _branch_.
+
+ -- Variable: branch.NAME.remote
+
+     Together with ‘branch.NAME.merge’ this variable defines the
+     upstream branch of the local branch named NAME. The value of this
+     variable is the name of the upstream _remote_.
+
+ -- Variable: branch.NAME.rebase
+
+     This variable controls whether pulling into the branch named NAME
+     is done by rebasing or by merging the fetched branch.
+
+        • When ‘true’ then pulling is done by rebasing.
+
+        • When ‘false’ then pulling is done by merging.
+
+        • When undefined then the value of ‘pull.rebase’ is used.  The
+          default of that variable is ‘false’.
+
+ -- Variable: branch.NAME.pushRemote
+
+     This variable specifies the remote that the branch named NAME is
+     usually pushed to.  The value has to be the name of an existing
+     remote.
+
+     It is not possible to specify the name of _branch_ to push the
+     local branch to.  The name of the remote branch is always the same
+     as the name of the local branch.
+
+     If this variable is undefined but ‘remote.pushDefault’ is defined,
+     then the value of the latter is used.  By default
+     ‘remote.pushDefault’ is undefined.
+
+ -- Variable: branch.NAME.description
+
+     This variable can be used to describe the branch named NAME. That
+     description is used e.g.  when turning the branch into a series of
+     patches.
+
+   The following variables specify defaults which are used if the above
+branch-specific variables are not set.
+
+ -- Variable: pull.rebase
+
+     This variable specifies whether pulling is done by rebasing or by
+     merging.  It can be overwritten using ‘branch.NAME.rebase’.
+
+        • When ‘true’ then pulling is done by rebasing.
+
+        • When ‘false’ (the default) then pulling is done by merging.
+     Since it is never a good idea to merge the upstream branch into a
+     feature or hotfix branch and most branches are such branches, you
+     should consider setting this to ‘true’, and ‘branch.master.rebase’
+     to ‘false’.
+
+ -- Variable: remote.pushDefault
+
+     This variable specifies what remote the local branches are usually
+     pushed to.  This can be overwritten per branch using
+     ‘branch.NAME.pushRemote’.
+
+   The following variables are used during the creation of a branch and
+control whether the various branch-specific variables are automatically
+set at this time.
+
+ -- Variable: branch.autoSetupMerge
+
+     This variable specifies under what circumstances creating a branch
+     NAME should result in the variables ‘branch.NAME.merge’ and
+     ‘branch.NAME.remote’ being set according to the starting point used
+     to create the branch.  If the starting point isn’t a branch, then
+     these variables are never set.
+
+        • When ‘always’ then the variables are set regardless of whether
+          the starting point is a local or a remote branch.
+
+        • When ‘true’ (the default) then the variable are set when the
+          staring point is a remote branch, but not when it is a local
+          branch.
+
+        • When ‘false’ then the variables are never set.
+
+ -- Variable: branch.autoSetupRebase
+
+     This variable specifies whether creating a branch NAME should
+     result in the variable ‘branch.NAME.rebase’ being set to ‘true’.
+
+        • When ‘always’ then the variable is set regardless of whether
+          the starting point is a local or a remote branch.
+
+        • When ‘local’ then the variable are set when the starting point
+          is a local branch, but not when it is a remote branch.
+
+        • When ‘remote’ then the variable are set when the starting
+          point is a remote branch, but not when it is a local branch.
+
+        • When ‘never’ (the default) then the variable is never set.
+
+ -- Variable: branch.autoSetupPush
+
+     This variable specifies whether creating a branch NAME should
+     result in the variable ‘branch.NAME.pushRemote’ being set to what
+     value.
+
+     This variable should either be undefined, or it should be the name
+     of an existing branch, in which case ‘branch.NAME.pushRemote’ is
+     set to the same value.  Any other value, i.e.  a non-existend
+     remote, is ignored.
+
+     This variable is only used by Magit, Git knows nothing about it.
+
+   Note that the respective commands always change the repository-local
+values.  If you want to change the global value which is used when the
+local value is undefined, then you have to do so on the command line,
+e.g.:
+
+     git config --global remote.autoSetupMerge always
+
+   For more information about these variables you should also see
+
+   *note (gitman)git-config:: .  Also see *note (gitman)git-branch:: ,
+
+   *note (gitman)git-checkout:: , and *note Pushing: Pushing.
 
 ‘b b’     (‘magit-checkout’)
 
@@ -3446,7 +3642,7 @@ Also see *note (gitman)git-branch:: and *note (gitman)git-checkout:: .
      else then ‘HEAD’ becomes detached.  Checkout fails if the working
      tree or the staging area contain changes.
 
-‘b c’     (‘magit-branch’)
+‘b n’     (‘magit-branch’)
 
      Create a new branch.  The user is asked for a branch or arbitrary
      revision to use as the starting point of the new branch.  When a
@@ -3454,7 +3650,7 @@ Also see *note (gitman)git-branch:: and *note (gitman)git-checkout:: .
      the new branch.  The name of the new branch is also read in the
      minibuffer.
 
-‘b B’     (‘magit-branch-and-checkout’)
+‘b c’     (‘magit-branch-and-checkout’)
 
      This command creates a new branch like ‘magit-branch’, but then
      also checks it out.
@@ -3492,33 +3688,17 @@ Also see *note (gitman)git-branch:: and *note (gitman)git-checkout:: .
      branches, then offer to delete those.  Otherwise, prompt for a
      single branch to be deleted, defaulting to the branch at point.
 
-‘b u’     (‘magit-branch-set-upstream’)
-
-     Change the upstream branch of a branch.  Both branches are read in
-     the minibuffer, while providing reasonable defaults.
-
-‘b U’     (‘magit-branch-unset-upstream’)
-
-     Unset the upstream branch of a branch read in the minibuffer and
-     defaulting to the branch at point or the current branch.
-
 ‘b r’     (‘magit-branch-rename’)
 
      Rename a branch.  The branch and the new name are read in the
      minibuffer.  With prefix argument the branch is renamed even if
      that name conflicts with an existing branch.
 
-‘b e’     (‘magit-branch-edit-description’)
-
-     Edit the description of a branch.  The branch is read in the
-     minibuffer defaulting to the branch at point or the current branch.
-     The description is edited in a regular buffer similar to how commit
-     messages are edited.
-
  -- User Option: magit-branch-read-upstream-first
 
      When creating a branch, whether to read the upstream branch before
-     the name of the branch that is to be created.
+     the name of the branch that is to be created.  The default is
+     ‘nil’, and I recommend you leave it at that.
 
 
 File: magit.info,  Node: Merging,  Next: Rebasing,  Prev: Branching,  Up: Manipulating
@@ -3596,10 +3776,20 @@ Also see *note (gitman)git-rebase:: .
    When no rebase is in progress, then the popup buffer features the
 following commands.
 
-‘r r’     (‘magit-rebase’)
+‘r p’     (‘magit-rebase-onto-pushremote’)
 
-     Start a non-interactive rebase sequence.  All commits not in
-     UPSTREAM are rebased.
+     Rebase the current branch onto ‘branch.<name>.pushRemote’.  If that
+     variable is unset, then rebase onto ‘remote.pushDefault’.
+
+‘r u’     (‘magit-rebase-onto-upstream’)
+
+     Rebase the current branch onto its upstream branch.
+
+‘r e’     (‘magit-rebase’)
+
+     Rebase the current branch onto a branch read in the minibuffer.
+     All commits that are reachable from head but not from the selected
+     branch TARGET are being rebased."
 
 ‘r o’     (‘magit-rebase-subset’)
 
@@ -3612,9 +3802,9 @@ This can be used to turn one of the above non-interactive rebase
 variants into an interactive rebase.
 
    For example if you want to clean up a feature branch and at the same
-time rebase it onto ‘master’, then you could use ‘r-ir’.  But we
-recommend that you instead do that in two steps.  First use ‘rs’ to
-cleanup the feature branch, and then in a second step ‘rl’ to rebase it
+time rebase it onto ‘master’, then you could use ‘r-iu’.  But we
+recommend that you instead do that in two steps.  First use ‘ri’ to
+cleanup the feature branch, and then in a second step ‘ru’ to rebase it
 onto ‘master’.  That way if things turn out to be more complicated than
 you thought and/or you make a mistake and have to start over, then you
 only have to redo half the work.
@@ -3627,20 +3817,11 @@ is not enabled in the popup.
 
      Start an interactive rebase sequence.
 
-‘r l’     (‘magit-rebase-unpushed’)
-
-     Start an interactive rebase sequence of unpushed commits.  This is
-     like ‘magit-rebase-interactive’, but if the upstream of the current
-     branch is configured, then all commits since the merge-base are
-     rebased.  If there is no upstream or no merge-base, then the user
-     has to select the first commit to be rebased like for
-     ‘magit-rebase-interactive’.
-
 ‘r f’     (‘magit-rebase-autosquash’)
 
      Combine squash and fixup commits with their intended targets.
 
-‘r e’     (‘magit-rebase-edit-commit’)
+‘r m’     (‘magit-rebase-edit-commit’)
 
      Edit a single older commit using rebase.
 
@@ -4206,23 +4387,25 @@ Also see *note (gitman)git-fetch:: .
      This prefix command shows the following suffix commands along with
      the appropriate infix arguments in a popup buffer.
 
-‘f f’     (‘magit-fetch-current’)
+‘f p’     (‘magit-fetch-from-pushremote’)
 
-     Fetch from the upstream repository of the current branch.  If
-     ‘HEAD’ is detached or if the upstream is not configured, then read
-     the remote.
+     Fetch from the push-remote of the current branch.
 
-‘f o’     (‘magit-fetch’)
+‘f u’     (‘magit-fetch-from-upstream’)
+
+     Fetch from the push-remote of the current branch.
+
+‘f e’     (‘magit-fetch’)
 
      Fetch from another repository.
 
 ‘f a’     (‘magit-fetch-all’)
 
-     Fetch from all configured remotes.
+     Fetch from all remotes.
 
 ‘f m’     (‘magit-submodule-fetch’)
 
-     Fetch all submodules.  With a prefix argument fetch all remotes or
+     Fetch all submodules.  With a prefix argument fetch all remotes of
      all submodules.
 
 
@@ -4235,16 +4418,20 @@ Also see *note (gitman)git-pull:: .
 
 ‘F’     (‘magit-pull-popup’)
 
-     This prefix command shows the following suffix commands along with
-     the appropriate infix arguments in a popup buffer.
+     This prefix command shows the following suffix commands in a popup
+     buffer.
 
-‘F F’     (‘magit-pull-current’)
+‘F p’     (‘magit-pull-from-pushremote’)
 
-     Fetch and merge into current branch.
+     Pull from the push-remote of the current branch.
 
-‘F o’     (‘magit-pull’)
+‘F u’     (‘magit-pull-from-upstream’)
 
-     Fetch from another repository and merge a fetched branch.
+     Pull from the upstream of the current branch.
+
+‘F e’     (‘magit-pull’)
+
+     Pull from a branch read in the minibuffer.
 
 
 File: magit.info,  Node: Pushing,  Next: Creating and sending patches,  Prev: Pulling,  Up: Transferring
@@ -4259,37 +4446,23 @@ Also see *note (gitman)git-push:: .
      This prefix command shows the following suffix commands along with
      the appropriate infix arguments in a popup buffer.
 
-‘P P’     (‘magit-push-current’)
+‘P p’     (‘magit-push-current-to-pushremote’)
 
-     Push the current branch to its upstream branch.  If the upstream
-     isn’t set, then read the remote branch.
+     Push the current branch to ‘branch.<name>.pushRemote’ or if that is
+     unset to ‘remote.pushDefault’.
+
+‘P u’     (‘magit-push-current-to-upstream’)
+
+     Push the current branch to its upstream branch.
+
+‘P e’     (‘magit-push-current’)
+
+     Push the current branch to a branch read in the minibuffer.
 
 ‘P o’     (‘magit-push’)
 
-     Push a branch to its upstream branch.  If the upstream isn’t set,
-     then read the remote branch.
-
-‘P e’     (‘magit-push-elsewhere’)
-
-     Push a branch or commit to some remote branch.  Read the local and
-     remote branch.
-
-‘P Q’     (‘magit-push-quickly’)
-
-     Push the current branch to some remote.  When the Git variable
-     ‘magit.pushRemote’ is set, then push to that remote.  If that
-     variable is undefined or the remote does not exist, then push to
-     "origin".  If that also doesn’t exist then raise an error.  The
-     local branch is pushed to the remote branch with the same name.
-
-‘P i’     (‘magit-push-implicitly’)
-
-     Push without explicitly specifying what to push.  This runs ‘git
-     push -v’.  What is being pushed depends on various Git variables as
-     described in the *note (gitman)git-push:: and *note
-     (gitman)git-config::
-
-     manpages.
+     Push an arbitrary branch or commit somewhere.  Both the source and
+     the target are read in the minibuffer.
 
 ‘P m’     (‘magit-push-matching’)
 
@@ -4306,26 +4479,6 @@ Also see *note (gitman)git-push:: .
 ‘P T’     (‘magit-push-tag’)
 
      Push a tag to another repository.
-
- -- User Option: magit-push-always-verify
-
-     Whether certain commands require verification before pushing.
-
-     Starting with ‘v2.1.0’ some of the push commands are supposed to
-     push to the configured upstream branch without requiring user
-     confirmation or offering to push somewhere else.
-
-     This has taken a few users by surprise, and they suggested that we
-     force users to opt-in to this behavior.  Unfortunately adding this
-     option means that now other users will complain about us needlessly
-     forcing them to set an option.  This is an attempt to make everyone
-     happy and like all such attempts it is prone to fail.  Before
-     complaining about having to set this option, please consider that
-     other users are less experienced than you and have different needs.
-
-     You should set the value of this option to nil, causing all push
-     commands to behave as intended.  But first read the description of
-     each command above.
 
 
 File: magit.info,  Node: Creating and sending patches,  Next: Applying patches,  Prev: Pushing,  Up: Transferring
@@ -6288,23 +6441,20 @@ Appendix B Keystroke Index
 * A a <1>:                               Cherry picking.      (line  43)
 * A s:                                   Cherry picking.      (line  39)
 * B:                                     Bisecting.           (line   8)
-* b:                                     Branching.           (line   8)
+* b:                                     Branching.           (line  46)
 * B b:                                   Bisecting.           (line  31)
-* b b:                                   Branching.           (line  13)
-* b B:                                   Branching.           (line  29)
-* b c:                                   Branching.           (line  21)
-* b d:                                   Branching.           (line  61)
-* b e:                                   Branching.           (line  83)
+* b b:                                   Branching.           (line 185)
+* b c:                                   Branching.           (line 201)
+* b d:                                   Branching.           (line 233)
 * B g:                                   Bisecting.           (line  36)
 * B k:                                   Bisecting.           (line  41)
+* b n:                                   Branching.           (line 193)
 * B r:                                   Bisecting.           (line  47)
-* b r:                                   Branching.           (line  77)
+* b r:                                   Branching.           (line 239)
 * B s:                                   Bisecting.           (line  16)
-* b s:                                   Branching.           (line  34)
+* b s:                                   Branching.           (line 206)
 * B u:                                   Bisecting.           (line  24)
-* b u:                                   Branching.           (line  67)
-* b U:                                   Branching.           (line  72)
-* b x:                                   Branching.           (line  45)
+* b x:                                   Branching.           (line 217)
 * c:                                     Initiating a commit. (line   8)
 * c <1>:                                 Editing rebase sequences.
                                                               (line  72)
@@ -6376,7 +6526,7 @@ Appendix B Keystroke Index
                                                               (line  89)
 * d:                                     Diffing.             (line  20)
 * D:                                     Refreshing diffs.    (line  11)
-* d c:                                   Diffing.             (line  75)
+* d c:                                   Diffing.             (line  67)
 * d d:                                   Diffing.             (line  25)
 * D f:                                   Refreshing diffs.    (line  45)
 * D g:                                   Refreshing diffs.    (line  16)
@@ -6385,7 +6535,7 @@ Appendix B Keystroke Index
 * D r:                                   Refreshing diffs.    (line  40)
 * d s:                                   Diffing.             (line  49)
 * D s:                                   Refreshing diffs.    (line  21)
-* d t:                                   Diffing.             (line  80)
+* d t:                                   Diffing.             (line  72)
 * D t:                                   Refreshing diffs.    (line  36)
 * d u:                                   Diffing.             (line  55)
 * d w:                                   Diffing.             (line  43)
@@ -6410,12 +6560,14 @@ Appendix B Keystroke Index
                                                               (line  63)
 * f <1>:                                 Fetching.            (line   8)
 * F:                                     Pulling.             (line   8)
-* f a:                                   Fetching.            (line  23)
-* f f:                                   Fetching.            (line  13)
-* F F:                                   Pulling.             (line  13)
-* f m:                                   Fetching.            (line  27)
-* f o:                                   Fetching.            (line  19)
-* F o:                                   Pulling.             (line  17)
+* f a:                                   Fetching.            (line  25)
+* f e:                                   Fetching.            (line  21)
+* F e:                                   Pulling.             (line  21)
+* f m:                                   Fetching.            (line  29)
+* f p:                                   Fetching.            (line  13)
+* F p:                                   Pulling.             (line  13)
+* f u:                                   Fetching.            (line  17)
+* F u:                                   Pulling.             (line  17)
 * g:                                     Automatic refresh and revert.
                                                               (line  68)
 * G:                                     Automatic refresh and revert.
@@ -6478,8 +6630,6 @@ Appendix B Keystroke Index
 * M-x magit-describe-section:            Section types and values.
                                                               (line  13)
 * M-x magit-describe-section <1>:        Matching sections.   (line   6)
-* M-x magit-diff-unpulled:               Diffing.             (line  67)
-* M-x magit-diff-unpushed:               Diffing.             (line  63)
 * M-x magit-find-file:                   Visiting blobs.      (line   6)
 * M-x magit-find-file-other-window:      Visiting blobs.      (line  11)
 * M-x magit-init:                        Repository setup.    (line   6)
@@ -6520,14 +6670,13 @@ Appendix B Keystroke Index
 * P <1>:                                 Pushing.             (line   8)
 * p <3>:                                 Minor mode for buffers visiting blobs.
                                                               (line  12)
-* P e:                                   Pushing.             (line  23)
-* P i:                                   Pushing.             (line  36)
-* P m:                                   Pushing.             (line  45)
-* P o:                                   Pushing.             (line  18)
-* P P:                                   Pushing.             (line  13)
-* P Q:                                   Pushing.             (line  28)
-* P t:                                   Pushing.             (line  51)
-* P T:                                   Pushing.             (line  57)
+* P e:                                   Pushing.             (line  22)
+* P m:                                   Pushing.             (line  31)
+* P o:                                   Pushing.             (line  26)
+* P p:                                   Pushing.             (line  13)
+* P t:                                   Pushing.             (line  37)
+* P T:                                   Pushing.             (line  43)
+* P u:                                   Pushing.             (line  18)
 * q:                                     Quitting Windows.    (line   6)
 * q <1>:                                 Log Buffer.          (line  12)
 * q <2>:                                 Blaming.             (line  70)
@@ -6536,17 +6685,18 @@ Appendix B Keystroke Index
 * r:                                     Rebasing.            (line   8)
 * r <1>:                                 Editing rebase sequences.
                                                               (line  51)
-* r a:                                   Rebasing.            (line  83)
-* r e:                                   Rebasing.            (line  60)
-* r e <1>:                               Rebasing.            (line  79)
-* r f:                                   Rebasing.            (line  56)
-* r i:                                   Rebasing.            (line  43)
-* r l:                                   Rebasing.            (line  47)
-* r o:                                   Rebasing.            (line  21)
-* r r:                                   Rebasing.            (line  16)
-* r r <1>:                               Rebasing.            (line  71)
-* r s:                                   Rebasing.            (line  75)
-* r w:                                   Rebasing.            (line  64)
+* r a:                                   Rebasing.            (line  84)
+* r e:                                   Rebasing.            (line  25)
+* r e <1>:                               Rebasing.            (line  80)
+* r f:                                   Rebasing.            (line  57)
+* r i:                                   Rebasing.            (line  53)
+* r m:                                   Rebasing.            (line  61)
+* r o:                                   Rebasing.            (line  31)
+* r p:                                   Rebasing.            (line  16)
+* r r:                                   Rebasing.            (line  72)
+* r s:                                   Rebasing.            (line  76)
+* r u:                                   Rebasing.            (line  21)
+* r w:                                   Rebasing.            (line  65)
 * RET:                                   Diff buffer.         (line   6)
 * RET <1>:                               References buffer.   (line  99)
 * RET <2>:                               Blaming.             (line  29)
@@ -6717,17 +6867,14 @@ Appendix C Command Index
                                                               (line  45)
 * magit-blob-previous <1>:               Minor mode for buffers visiting blobs.
                                                               (line  12)
-* magit-branch:                          Branching.           (line  21)
-* magit-branch-and-checkout:             Branching.           (line  29)
-* magit-branch-delete:                   Branching.           (line  61)
-* magit-branch-edit-description:         Branching.           (line  83)
-* magit-branch-popup:                    Branching.           (line   8)
-* magit-branch-rename:                   Branching.           (line  77)
-* magit-branch-reset:                    Branching.           (line  45)
-* magit-branch-set-upstream:             Branching.           (line  67)
-* magit-branch-spinoff:                  Branching.           (line  34)
-* magit-branch-unset-upstream:           Branching.           (line  72)
-* magit-checkout:                        Branching.           (line  13)
+* magit-branch:                          Branching.           (line 193)
+* magit-branch-and-checkout:             Branching.           (line 201)
+* magit-branch-delete:                   Branching.           (line 233)
+* magit-branch-popup:                    Branching.           (line  46)
+* magit-branch-rename:                   Branching.           (line 239)
+* magit-branch-reset:                    Branching.           (line 217)
+* magit-branch-spinoff:                  Branching.           (line 206)
+* magit-checkout:                        Branching.           (line 185)
 * magit-checkout-file:                   Resetting.           (line  37)
 * magit-cherry:                          Logging.             (line  60)
 * magit-cherry-apply:                    Cherry picking.      (line  22)
@@ -6774,8 +6921,6 @@ Appendix C Command Index
 * magit-diff-staged:                     Diffing.             (line  49)
 * magit-diff-switch-range-type:          Refreshing diffs.    (line  40)
 * magit-diff-toggle-refine-hunk:         Refreshing diffs.    (line  36)
-* magit-diff-unpulled:                   Diffing.             (line  67)
-* magit-diff-unpushed:                   Diffing.             (line  63)
 * magit-diff-unstaged:                   Diffing.             (line  55)
 * magit-diff-visit-file:                 Diff buffer.         (line   6)
 * magit-diff-visit-file-worktree:        Diff buffer.         (line  21)
@@ -6795,9 +6940,10 @@ Appendix C Command Index
 * magit-ediff-show-unstaged:             Ediffing.            (line  50)
 * magit-ediff-show-working-tree:         Ediffing.            (line  58)
 * magit-ediff-stage:                     Ediffing.            (line  45)
-* magit-fetch:                           Fetching.            (line  19)
-* magit-fetch-all:                       Fetching.            (line  23)
-* magit-fetch-current:                   Fetching.            (line  13)
+* magit-fetch:                           Fetching.            (line  21)
+* magit-fetch-all:                       Fetching.            (line  25)
+* magit-fetch-from-pushremote:           Fetching.            (line  13)
+* magit-fetch-from-upstream:             Fetching.            (line  17)
 * magit-fetch-popup:                     Fetching.            (line   8)
 * magit-file-popup:                      Minor mode for buffers visiting files.
                                                               (line  19)
@@ -6861,30 +7007,31 @@ Appendix C Command Index
                                                               (line  63)
 * magit-process:                         Viewing Git output.  (line  11)
 * magit-process-kill:                    Viewing Git output.  (line  19)
-* magit-pull:                            Pulling.             (line  17)
-* magit-pull-current:                    Pulling.             (line  13)
+* magit-pull:                            Pulling.             (line  21)
+* magit-pull-from-pushremote:            Pulling.             (line  13)
+* magit-pull-from-upstream:              Pulling.             (line  17)
 * magit-pull-popup:                      Pulling.             (line   8)
-* magit-push:                            Pushing.             (line  18)
-* magit-push-current:                    Pushing.             (line  13)
-* magit-push-elsewhere:                  Pushing.             (line  23)
-* magit-push-implicitly:                 Pushing.             (line  36)
-* magit-push-matching:                   Pushing.             (line  45)
+* magit-push:                            Pushing.             (line  26)
+* magit-push-current:                    Pushing.             (line  22)
+* magit-push-current-to-pushremote:      Pushing.             (line  13)
+* magit-push-current-to-upstream:        Pushing.             (line  18)
+* magit-push-matching:                   Pushing.             (line  31)
 * magit-push-popup:                      Pushing.             (line   8)
-* magit-push-quickly:                    Pushing.             (line  28)
-* magit-push-tag:                        Pushing.             (line  57)
-* magit-push-tags:                       Pushing.             (line  51)
-* magit-rebase:                          Rebasing.            (line  16)
-* magit-rebase-abort:                    Rebasing.            (line  83)
-* magit-rebase-autosquash:               Rebasing.            (line  56)
-* magit-rebase-continue:                 Rebasing.            (line  71)
-* magit-rebase-edit:                     Rebasing.            (line  79)
-* magit-rebase-edit-commit:              Rebasing.            (line  60)
-* magit-rebase-interactive:              Rebasing.            (line  43)
+* magit-push-tag:                        Pushing.             (line  43)
+* magit-push-tags:                       Pushing.             (line  37)
+* magit-rebase:                          Rebasing.            (line  25)
+* magit-rebase-abort:                    Rebasing.            (line  84)
+* magit-rebase-autosquash:               Rebasing.            (line  57)
+* magit-rebase-continue:                 Rebasing.            (line  72)
+* magit-rebase-edit:                     Rebasing.            (line  80)
+* magit-rebase-edit-commit:              Rebasing.            (line  61)
+* magit-rebase-interactive:              Rebasing.            (line  53)
+* magit-rebase-onto-pushremote:          Rebasing.            (line  16)
+* magit-rebase-onto-upstream:            Rebasing.            (line  21)
 * magit-rebase-popup:                    Rebasing.            (line   8)
-* magit-rebase-reword-commit:            Rebasing.            (line  64)
-* magit-rebase-skip:                     Rebasing.            (line  75)
-* magit-rebase-subset:                   Rebasing.            (line  21)
-* magit-rebase-unpushed:                 Rebasing.            (line  47)
+* magit-rebase-reword-commit:            Rebasing.            (line  65)
+* magit-rebase-skip:                     Rebasing.            (line  76)
+* magit-rebase-subset:                   Rebasing.            (line  31)
 * magit-reflog-current:                  Reflog.              (line  11)
 * magit-reflog-head:                     Reflog.              (line  19)
 * magit-reflog-other:                    Reflog.              (line  15)
@@ -6953,7 +7100,7 @@ Appendix C Command Index
                                                               (line  38)
 * magit-shell-command-topdir:            Running Git manually.
                                                               (line  33)
-* magit-show-commit:                     Diffing.             (line  75)
+* magit-show-commit:                     Diffing.             (line  67)
 * magit-show-commit <1>:                 Blaming.             (line  29)
 * magit-show-refs:                       References buffer.   (line  24)
 * magit-show-refs-current:               References buffer.   (line  19)
@@ -6981,12 +7128,12 @@ Appendix C Command Index
 * magit-stash-list:                      Stashing.            (line  76)
 * magit-stash-pop:                       Stashing.            (line  64)
 * magit-stash-popup:                     Stashing.            (line   8)
-* magit-stash-show:                      Diffing.             (line  80)
+* magit-stash-show:                      Diffing.             (line  72)
 * magit-stash-show <1>:                  Stashing.            (line  80)
 * magit-stash-worktree:                  Stashing.            (line  25)
 * magit-status:                          Status buffer.       (line  22)
 * magit-submodule-add:                   Submodules.          (line  13)
-* magit-submodule-fetch:                 Fetching.            (line  27)
+* magit-submodule-fetch:                 Fetching.            (line  29)
 * magit-submodule-fetch <1>:             Submodules.          (line  37)
 * magit-submodule-init:                  Submodules.          (line  24)
 * magit-submodule-init <1>:              Submodules.          (line  41)
@@ -7096,18 +7243,24 @@ Appendix D Function Index
 * magit-insert-bisect-log:               Status sections.     (line  46)
 * magit-insert-bisect-output:            Status sections.     (line  38)
 * magit-insert-bisect-rest:              Status sections.     (line  42)
-* magit-insert-head-header:              Status header sections.
+* magit-insert-diff-filter-header:       Status header sections.
+                                                              (line  37)
+* magit-insert-error-header:             Status header sections.
                                                               (line  27)
+* magit-insert-head-branch-header:       Status header sections.
+                                                              (line  41)
 * magit-insert-heading:                  Creating sections.   (line  41)
 * magit-insert-local-branches:           References sections. (line  17)
 * magit-insert-merge-log:                Status sections.     (line  18)
+* magit-insert-push-branch-header:       Status header sections.
+                                                              (line  50)
 * magit-insert-rebase-sequence:          Status sections.     (line  23)
-* magit-insert-recent-commits:           Status sections.     (line  91)
+* magit-insert-recent-commits:           Status sections.     (line 103)
 * magit-insert-remote-branches:          References sections. (line  21)
 * magit-insert-remote-header:            Status header sections.
-                                                              (line  45)
+                                                              (line  65)
 * magit-insert-repo-header:              Status header sections.
-                                                              (line  41)
+                                                              (line  61)
 * magit-insert-section:                  Creating sections.   (line   6)
 * magit-insert-sequencer-sequence:       Status sections.     (line  33)
 * magit-insert-staged-changes:           Status sections.     (line  59)
@@ -7116,21 +7269,23 @@ Appendix D Function Index
                                                               (line  11)
 * magit-insert-tags:                     References sections. (line  25)
 * magit-insert-tags-header:              Status header sections.
-                                                              (line  35)
-* magit-insert-tracked-files:            Status sections.     (line  80)
-* magit-insert-unpulled-cherries:        Status sections.     (line 102)
-* magit-insert-unpulled-commits:         Status sections.     (line  70)
-* magit-insert-unpulled-module-commits:  Status sections.     (line 109)
-* magit-insert-unpulled-or-recent-commits: Status sections.   (line  84)
-* magit-insert-unpushed-cherries:        Status sections.     (line 114)
-* magit-insert-unpushed-commits:         Status sections.     (line  74)
-* magit-insert-unpushed-module-commits:  Status sections.     (line 122)
+                                                              (line  55)
+* magit-insert-tracked-files:            Status sections.     (line  92)
+* magit-insert-unpulled-cherries:        Status sections.     (line 114)
+* magit-insert-unpulled-from-pushremote: Status sections.     (line  75)
+* magit-insert-unpulled-from-upstream:   Status sections.     (line  70)
+* magit-insert-unpulled-module-commits:  Status sections.     (line 121)
+* magit-insert-unpulled-or-recent-commits: Status sections.   (line  96)
+* magit-insert-unpushed-cherries:        Status sections.     (line 126)
+* magit-insert-unpushed-module-commits:  Status sections.     (line 134)
+* magit-insert-unpushed-to-pushremote:   Status sections.     (line  85)
+* magit-insert-unpushed-to-upstream:     Status sections.     (line  80)
 * magit-insert-unstaged-changes:         Status sections.     (line  55)
 * magit-insert-untracked-files:          Status sections.     (line  50)
-* magit-insert-upstream-header:          Status header sections.
-                                                              (line  31)
+* magit-insert-upstream-branch-header:   Status header sections.
+                                                              (line  45)
 * magit-insert-user-header:              Status header sections.
-                                                              (line  53)
+                                                              (line  73)
 * magit-log-maybe-show-more-commits:     Section movement.    (line  57)
 * magit-log-maybe-update-blob-buffer:    Section movement.    (line  69)
 * magit-log-maybe-update-revision-buffer: Section movement.   (line  63)
