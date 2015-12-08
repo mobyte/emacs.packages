@@ -111,7 +111,7 @@ Then show the status buffer for the new repository."
   :switches '((?p "Prune deleted branches" "--prune"))
   :actions  '("Fetch from"
               (?p magit-get-push-remote    magit-fetch-from-pushremote)
-              (?u magit-get-tracked-remote magit-fetch-from-upstream)
+              (?u magit-get-remote         magit-fetch-from-upstream)
               (?e "elsewhere"              magit-fetch)
               (?a "all remotes"            magit-fetch-all)
               "Fetch"
@@ -127,9 +127,9 @@ Then show the status buffer for the new repository."
 (defun magit-fetch-from-pushremote (args)
   "Fetch from the push-remote of the current branch."
   (interactive (list (magit-fetch-arguments)))
-  (--if-let (magit-get-remote)
+  (--if-let (magit-get-push-remote)
       (magit-git-fetch it args)
-    (-if-let (magit-get-current-branch)
+    (--if-let (magit-get-current-branch)
         (user-error "No push-remote is configured for %s" it)
       (user-error "No branch is checked out"))))
 
@@ -139,7 +139,7 @@ Then show the status buffer for the new repository."
   (interactive (list (magit-fetch-arguments)))
   (--if-let (magit-get-remote)
       (magit-git-fetch it args)
-    (-if-let (magit-get-current-branch)
+    (--if-let (magit-get-current-branch)
         (user-error "No upstream is configured for %s" it)
       (user-error "No branch is checked out"))))
 
@@ -208,7 +208,7 @@ Then show the status buffer for the new repository."
   (interactive (list (magit-pull-arguments)))
   (--if-let (magit-get-tracked-branch)
       (magit-git-pull it args)
-    (-if-let (magit-get-current-branch)
+    (--if-let (magit-get-current-branch)
         (user-error "No upstream is configured for %s" it)
       (user-error "No branch is checked out"))))
 

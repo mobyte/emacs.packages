@@ -1,5 +1,5 @@
 {:user
- {:plugins [[cider/cider-nrepl "0.10.0"]]
+ {:plugins [[cider/cider-nrepl "0.11.0-SNAPSHOT"]]
   :repl-options {:nrepl-middleware
                  [cider.nrepl.middleware.apropos/wrap-apropos
                   cider.nrepl.middleware.classpath/wrap-classpath
