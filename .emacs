@@ -513,10 +513,10 @@ current git branch as a string.  Otherwise return an empty string."
      (ANY 2)
      (context 2)))
 
-(defun restart-repl ()
-  (interactive)
-  (cider-quit)
-  (cider-jack-in))
+;; (defun restart-repl ()
+;;   (interactive)
+;;   (cider-quit)
+;;   (cider-jack-in))
 
 (require 'ob)
 
