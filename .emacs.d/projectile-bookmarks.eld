@@ -1,1 +1,0 @@
-("~/repos/rewe-order-service/" "~/repos/emacs-config/" "~/tmp/")

@@ -345,6 +345,8 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;* paredit
 
+(projectile-global-mode)
+
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
@@ -371,6 +373,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;;; repl mode
 
+;;(add-hook 'clojure-mode-hook 'projectile-mode)
 
 (defun setup-slime-repl-paredit ()
   (define-key slime-repl-mode-map
