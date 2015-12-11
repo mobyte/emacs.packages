@@ -376,11 +376,11 @@ current git branch as a string.  Otherwise return an empty string."
 ;;(add-hook 'clojure-mode-hook 'projectile-mode)
 
 (defun setup-slime-repl-paredit ()
-  (define-key slime-repl-mode-map
+  (define-key cider-repl-mode-map
     (kbd "DEL") 'paredit-backward-delete)
-  (define-key slime-repl-mode-map
+  (define-key cider-repl-mode-map
     (kbd "{") 'paredit-open-curly)
-  (define-key slime-repl-mode-map
+  (define-key cider-repl-mode-map
     (kbd "}") 'paredit-close-curly)
   (modify-syntax-entry ?\{ "(}")
   (modify-syntax-entry ?\} "){")
@@ -391,9 +391,9 @@ current git branch as a string.  Otherwise return an empty string."
   (modify-syntax-entry ?^ "'")
   (modify-syntax-entry ?= "'"))
 
-(add-hook 'slime-repl-mode-hook 'setup-slime-repl-paredit)
-(add-hook 'slime-nrepl-mode-hook 'setup-slime-repl-paredit)
-(add-hook 'slime-cider-mode-hook 'setup-slime-repl-paredit)
+(add-hook 'cider-repl-mode-hook 'setup-slime-repl-paredit)
+;(add-hook 'slime-nrepl-mode-hook 'setup-slime-repl-paredit)
+;(add-hook 'slime-cider-mode-hook 'setup-slime-repl-paredit)
 
 ;;;;(add-hook 'clojure-mode-hook 'setup-clojure-mode-paredit)
 
