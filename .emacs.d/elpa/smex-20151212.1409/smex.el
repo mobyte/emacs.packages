@@ -4,7 +4,7 @@
 ;;
 ;; Author: Cornelius Mika <cornelius.mika@gmail.com> and contributors
 ;; URL: http://github.com/nonsequitur/smex/
-;; Package-Version: 20150822.1146
+;; Package-Version: 20151212.1409
 ;; Package-Requires: ((emacs "24"))
 ;; Version: 3.0
 ;; Keywords: convenience, usability
@@ -261,8 +261,8 @@ Set this to nil to disable fuzzy matching."
             (error (if (smex-save-file-not-empty-p)
                        (error "Invalid data in smex-save-file (%s). Can't restore history."
                               smex-save-file)
-                     (if (not (boundp 'smex-history)) (setq smex-history))
-                     (if (not (boundp 'smex-data))    (setq smex-data))))))
+                     (unless (boundp 'smex-history) (setq smex-history nil))
+                     (unless (boundp 'smex-data)    (setq smex-data nil))))))
       (setq smex-history nil smex-data nil))))
 
 (defun smex-save-history ()
