@@ -45,6 +45,7 @@
 
 (setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/mobyte/bin")
 (setenv "PATH" path)
+(setenv "BOOT_JVM_OPTIONS" "-XX:-OmitStackTraceInFastThrow")
 ;; (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
 ;;   (setenv "PATH" path)
 ;;   (setq exec-path 
