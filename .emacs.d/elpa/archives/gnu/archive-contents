@@ -318,7 +318,7 @@
        ((:url . "http://elpa.gnu.org/packages/fsm.html")
 	(:keywords "extensions"))])
  (ggtags .
-	 [(0 8 10)
+	 [(0 8 11)
 	  ((emacs
 	    (24))
 	   (cl-lib
