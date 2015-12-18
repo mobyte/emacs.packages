@@ -61,9 +61,17 @@
   :link '(url-link :tag "Github" "https://github.com/clojure-emacs/cider")
   :link '(emacs-commentary-link :tag "Commentary" "cider"))
 
-(defcustom cider-prompt-for-project-on-connect t
-  "Controls whether to prompt for associated project on `cider-connect'."
-  :type 'boolean
+(defcustom cider-prompt-for-project-on-connect 'when-needed
+  "Controls whether to prompt for associated project on `cider-connect'.
+
+When set to when-needed, the project will be derived from the buffer you're
+visiting, when invoking `cider-connect'.
+When set to t, you'll always to prompted to select the matching project.
+When set to nil, you'll never be prompted to select a project and no
+project inference will take place."
+  :type '(choice (const :tag "always" t)
+                 (const when-needed)
+                 (const :tag "never" nil))
   :group 'cider
   :package-version '(cider . "0.10.0"))
 
@@ -323,9 +331,14 @@ gets associated with it."
            (conn (process-buffer (nrepl-start-client-process host port))))
       (if project-dir
           (cider-assoc-project-with-connection project-dir conn)
-        (when (and cider-prompt-for-project-on-connect
-                   (y-or-n-p "Do you want to associate the new connection with a local project? "))
-          (cider-assoc-project-with-connection nil conn))))))
+        (let ((project-dir (clojure-project-dir)))
+          (cond
+           ;; associate only if we're in a project
+           ((and project-dir (null cider-prompt-for-project-on-connect)) (cider-assoc-project-with-connection project-dir conn))
+           ;; associate if we're in a project, prompt otherwise
+           ((eq cider-prompt-for-project-on-connect 'when-needed) (cider-assoc-project-with-connection project-dir conn))
+           ;; always prompt
+           (t (cider-assoc-project-with-connection nil conn))))))))
 
 (defun cider-current-host ()
   "Retrieve the current host."
@@ -473,7 +486,7 @@ In case `default-directory' is non-local we assume the command is available."
          (missing-ops (seq-remove (lambda (op) (nrepl-op-supported-p op current-connection))
                                   cider-required-nrepl-ops)))
     (when missing-ops
-      (cider-repl-readme-warning "cider-nrepl-middleware"
+      (cider-repl-readme-warning "setting-up-ciders-nrepl-middleware"
                                  "The following required nREPL ops are not supported: \n%s\nPlease, install (or update) cider-nrepl %s and restart CIDER"
                                  (cider-string-join missing-ops " ")
                                  (upcase cider-version)))))
@@ -497,7 +510,7 @@ In case `default-directory' is non-local we assume the command is available."
      (let ((middleware-version (read result)))
        (unless (and middleware-version (equal cider-version middleware-version))
          ;; FIXME: Add a proper readme section about this.
-         (cider-repl-readme-warning "cider-nrepl-middleware"
+         (cider-repl-readme-warning "setting-up-ciders-nrepl-middleware"
                                     "CIDER's version (%s) does not match cider-nrepl's version (%s). Things will break!"
                                     cider-version middleware-version))))
    '()
