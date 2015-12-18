@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20151217.16
+;; Package-Version: 20151217.1352
 ;; Keywords: project, convenience
 ;; Version: 0.13.0
 ;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
@@ -2184,6 +2184,19 @@ Should be set via .dir-locals.el.")
                (file-name-as-directory projectile-project-compilation-dir)))
     (projectile-project-root)))
 
+(defun projectile-maybe-read-command (arg default-cmd prompt)
+  "Prompt user for command unless DEFAULT-CMD is an Elisp function."
+  (if (and (or (stringp default-cmd) (null default-cmd))
+           (or compilation-read-command arg))
+      (projectile-read-command prompt default-cmd)
+    default-cmd))
+
+(defun projectile-run-compilation (cmd)
+  "Run external or Elisp compilation command CMD."
+  (if (functionp cmd)
+      (funcall cmd)
+    (compilation-start cmd)))
+
 (defun projectile-compile-project (arg &optional dir)
   "Run project compilation command.
 
@@ -2194,16 +2207,13 @@ with a prefix ARG."
   (let* ((project-root (projectile-project-root))
          (default-directory (or dir (projectile-compilation-dir)))
          (default-cmd (projectile-compilation-command default-directory))
-         (compilation-cmd (if (or compilation-read-command arg)
-                              (projectile-read-command "Compile command: "
-                                                       default-cmd)
-                            default-cmd)))
+         (compilation-cmd (projectile-maybe-read-command arg default-cmd "Compile command: ")))
     (puthash default-directory compilation-cmd projectile-compilation-cmd-map)
     (save-some-buffers (not compilation-ask-about-save)
                        (lambda ()
                          (projectile-project-buffer-p (current-buffer)
                                                       project-root)))
-    (compilation-start compilation-cmd)))
+    (projectile-run-compilation compilation-cmd)))
 
 (defadvice compilation-find-file (around projectile-compilation-find-file)
   "Try to find a buffer for FILENAME, if we cannot find it,
@@ -2235,13 +2245,10 @@ with a prefix ARG."
   (interactive "P")
   (let* ((project-root (projectile-project-root))
          (default-cmd (projectile-test-command project-root))
-         (test-cmd (if (or compilation-read-command arg)
-                       (projectile-read-command "Test command: "
-                                                default-cmd)
-                     default-cmd))
+         (test-cmd (projectile-maybe-read-command arg default-cmd "Test command: "))
          (default-directory project-root))
     (puthash project-root test-cmd projectile-test-cmd-map)
-    (compilation-start test-cmd)))
+    (projectile-run-compilation test-cmd)))
 
 (defun projectile-run-project (arg)
   "Run project run command.
@@ -2252,13 +2259,10 @@ with a prefix ARG."
   (interactive "P")
   (let* ((project-root (projectile-project-root))
          (default-cmd (projectile-run-command project-root))
-         (run-cmd (if (or compilation-read-command arg)
-                      (projectile-read-command "Run command: "
-                                               default-cmd)
-                    default-cmd))
+         (run-cmd (projectile-maybe-read-command arg default-cmd "Run command: "))
          (default-directory project-root))
     (puthash project-root run-cmd projectile-run-cmd-map)
-    (compilation-start run-cmd)))
+    (projectile-run-compilation run-cmd)))
 
 (defun projectile-relevant-known-projects ()
   "Return a list of known projects except the current one (if present)."
