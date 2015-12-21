@@ -320,21 +320,27 @@ TYPE can be any of the possible values of `cider-repl-type'."
     ("cljs" "ClojureScript")
     (_ "Unknown")))
 
+(defun cider-project-name (project-dir)
+  "Extract the project name from PROJECT-DIR."
+  (if (and project-dir (not (equal project-dir "")))
+      (file-name-nondirectory (directory-file-name project-dir))
+    "-"))
+
 (defun cider--connection-pp (connection)
   "Print an nREPL CONNECTION to the current buffer."
   (let* ((buffer-read-only nil)
          (buffer (get-buffer connection))
+         (project-name (cider-project-name (buffer-local-value 'nrepl-project-dir buffer)))
+         (repl-type (cider-client-name-repl-type (buffer-local-value 'cider-repl-type buffer)))
          (endpoint (buffer-local-value 'nrepl-endpoint buffer)))
     (insert
-     (format "%s %-30s %-16s %5s   %-16s %-10s"
+     (format "%s %-30s %-16s %5s   %-16s %s"
              (if (equal connection (car cider-connections)) "*" " ")
              (buffer-name connection)
              (car endpoint)
              (prin1-to-string (cadr endpoint))
-             (with-current-buffer buffer
-               (or (cider--project-name nrepl-project-dir) "-"))
-             (with-current-buffer buffer
-               (cider-client-name-repl-type cider-repl-type))))))
+             project-name
+             repl-type))))
 
 (defun cider--update-connections-display (ewoc connections)
   "Update the connections EWOC to show CONNECTIONS."
