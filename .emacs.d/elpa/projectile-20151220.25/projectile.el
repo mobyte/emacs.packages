@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20151217.1352
+;; Package-Version: 20151220.25
 ;; Keywords: project, convenience
 ;; Version: 0.13.0
 ;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
@@ -229,6 +229,8 @@ Two example filter functions are shipped by default -
     "Cargo.toml"         ; Cargo project file
     "mix.exs"            ; Elixir mix project file
     "stack.yaml"         ; Haskell's stack tool based project
+    "TAGS"               ; etags/ctags are usually in the root of project
+    "GTAGS"              ; GNU Global tags
     )
   "A list of files considered to mark the root of a project.
 The topmost match has precedence."
@@ -2676,7 +2678,9 @@ is chosen."
 
 ;;;###autoload
 (defcustom projectile-mode-line
-  '(:eval (format " Projectile[%s]" (projectile-project-name)))
+  '(:eval (if (file-remote-p default-directory)
+              " Projectile"
+            (format " Projectile[%s]" (projectile-project-name))))
   "Mode line lighter for Projectile.
 
 The value of this variable is a mode line template as in

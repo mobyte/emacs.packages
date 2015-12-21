@@ -641,6 +641,10 @@ string \"true\", otherwise return nil."
 (defun magit-rev-equal (a b)
   (magit-git-success "diff" "--quiet" a b))
 
+(defun magit-rev-ancestor-p (a b)
+  "Return non-nil if commit A is an ancestor of commit B."
+  (magit-git-success "merge-base" "--is-ancestor" a b))
+
 (defun magit-rev-head-p (rev)
   (or (equal rev "HEAD")
       (and rev
@@ -689,6 +693,12 @@ string \"true\", otherwise return nil."
       (when (member branch (magit-list-local-branch-names))
         branch))))
 
+(defun magit-remote-branch-at-point ()
+  (magit-section-when branch
+    (let ((branch (magit-section-value it)))
+      (when (member branch (magit-list-remote-branch-names))
+        branch))))
+
 (defun magit-commit-at-point ()
   (or (magit-section-when commit)
       (and (derived-mode-p 'magit-revision-mode)
@@ -729,7 +739,7 @@ which is different from the current branch and still exists."
       (cl-incf i))
     prev))
 
-(cl-defun magit-get-tracked-ref
+(cl-defun magit-get-upstream-ref
     (&optional (branch (magit-get-current-branch)))
   (when branch
     (let ((remote (magit-get "branch" branch "remote"))
@@ -739,7 +749,7 @@ which is different from the current branch and still exists."
               ((string-prefix-p "refs/heads/" merge)
                (concat "refs/remotes/" remote "/" (substring merge 11))))))))
 
-(cl-defun magit-get-tracked-branch
+(cl-defun magit-get-upstream-branch
     (&optional (branch (magit-get-current-branch)))
   (when branch
     (let ((remote (magit-get "branch" branch "remote"))
@@ -750,7 +760,7 @@ which is different from the current branch and still exists."
             (propertize merge 'face 'magit-branch-local)
           (propertize (concat remote "/" merge) 'face 'magit-branch-remote))))))
 
-(cl-defun magit-get-tracked-remote
+(cl-defun magit-get-upstream-remote
     (&optional (branch (magit-get-current-branch)))
   (when branch
     (magit-get "branch" branch "remote")))
@@ -764,6 +774,12 @@ which is different from the current branch and still exists."
     (&optional (branch (magit-get-current-branch)))
   (-when-let (remote (and branch (magit-get-push-remote branch)))
     (concat remote "/" branch)))
+
+(defun magit-get-@{push}-branch (&optional branch)
+  (let ((ref (magit-rev-parse "--symbolic-full-name"
+                              (concat branch "@{push}"))))
+    (when (and ref (string-prefix-p "refs/remotes/" ref))
+      (substring ref 13))))
 
 (defun magit-get-remote (&optional branch)
   (when (or branch (setq branch (magit-get-current-branch)))
@@ -848,7 +864,7 @@ where COMMITS is the number of commits in TAG but not in REV."
                    (magit-git-lines "branch" "--no-merged" commit))))
 
 (defun magit-list-unmerged-to-upstream-branches ()
-  (--filter (-when-let (upstream (magit-get-tracked-branch it))
+  (--filter (-when-let (upstream (magit-get-upstream-branch it))
               (member it (magit-list-unmerged-branches upstream)))
             (magit-list-local-branch-names)))
 
@@ -909,6 +925,11 @@ where COMMITS is the number of commits in TAG but not in REV."
 (defun magit-local-branch-p (branch)
   (and (or (member branch (magit-list-local-branches))
            (member branch (magit-list-local-branch-names))) t))
+
+(defun magit-branch-set-face (branch)
+  (propertize branch 'face (if (magit-local-branch-p branch)
+                               'magit-branch-local
+                             'magit-branch-remote)))
 
 (defun magit-remote-p (string)
   (car (member string (magit-list-remotes))))
@@ -1216,6 +1237,14 @@ Return a list of two integers: (A>B B>A)."
     (magit-git-string "config" "--unset" (mapconcat 'identity keys "."))))
 
 ;;; magit-git.el ends soon
+
+(define-obsolete-function-alias 'magit-get-tracked-ref
+  'magit-get-upstream-ref "Magit 2.4.0")
+(define-obsolete-function-alias 'magit-get-tracked-branch
+  'magit-get-upstream-branch "Magit 2.4.0")
+(define-obsolete-function-alias 'magit-get-tracked-remote
+  'magit-get-upstream-remote "Magit 2.4.0")
+
 (provide 'magit-git)
 ;; Local Variables:
 ;; indent-tabs-mode: nil
