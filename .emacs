@@ -441,36 +441,58 @@ current git branch as a string.  Otherwise return an empty string."
 
 (setq cider-auto-select-error-buffer t)
 
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-repl-mode))
+;; auto complete
 
-;;; complete.el -- Auto completion
+(add-hook 'after-init-hook 'global-company-mode)
 
-(require 'auto-complete-config)
-(ac-config-default)
-(setq ac-auto-start nil)
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
-(define-key ac-completing-map "\M-/" 'ac-stop) ; use M-/ to stop completion
-(define-key ac-mode-map (kbd "C-\\") 'auto-complete)
-(define-key ac-completing-map (kbd "TAB") nil)
-(define-key ac-completing-map (kbd "RET") 'ac-complete)
-(define-key ac-completing-map (kbd "C-\\") 'ac-complete)
+;; (define-key company-active-map (kbd "C-n") 'company-complete-common-or-cycle)
+;; (define-key company-active-map (kbd "C-p") 'company-complete-common-or-previous-cycle)
 
-(require 'ac-cider)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-mode))
+(require 'color)
+(let ((bg (face-attribute 'default :background)))
+  (custom-set-faces
+   `(company-tooltip ((t (:inherit default))))
+   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
+   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
+   `(company-tooltip-selection ((t (:inherit font-lock-function-name-face :background ,(color-lighten-name bg 25)))))
+   `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
 
+;; (require 'auto-complete-config)
 
-(defun set-auto-complete-as-completion-at-point-function ()
-  (setq completion-at-point-functions '(auto-complete)))
+;; (eval-after-load "auto-complete"
+;;   '(add-to-list 'ac-modes 'cider-repl-mode))
 
-(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;; (ac-config-default)
+;; (setq ac-auto-start nil)
 
-(add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;; (define-key ac-completing-map "\M-/" 'ac-stop) ; use M-/ to stop completion
+;; (define-key ac-mode-map (kbd "C-\\") 'auto-complete)
+;; (define-key ac-completing-map (kbd "TAB") nil)
+;; (define-key ac-completing-map (kbd "RET") 'ac-complete)
+;; (define-key ac-completing-map (kbd "C-\\") 'ac-complete)
 
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+;; (require 'ac-cider)
+;; (add-hook 'cider-mode-hook 'ac-cider-setup)
+;; (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+;; (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+;; (eval-after-load "auto-complete"
+;;   '(progn
+;;      (add-to-list 'ac-modes 'cider-mode)
+;;      (add-to-list 'ac-modes 'cider-repl-mode)))
+
+;; (defun set-auto-complete-as-completion-at-point-function ()
+;;   (setq completion-at-point-functions '(auto-complete)))
+
+;; (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+;; (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
+
+;; (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
 ;;; repl history
 
@@ -491,7 +513,7 @@ current git branch as a string.  Otherwise return an empty string."
 (setq eldoc-idle-delay 0)
 (setq eldoc-echo-area-use-multiline-p t)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+;; (define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
 
 (require 'clojure-mode)
 
