@@ -83,7 +83,8 @@
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
+ '(initial-frame-alist (quote ((fullscreen . maximized)))))
 
 (set-default-font "Monaco 16")
 (set-background-color "black")
@@ -773,3 +774,5 @@ current git branch as a string.  Otherwise return an empty string."
              (jump-to-register 112))))
 
 (global-set-key (kbd "C-x C-x") 'switch-to-presentation)
+
+(split-window-right)
