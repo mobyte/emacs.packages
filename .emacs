@@ -443,7 +443,10 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; auto complete
 
+(require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+(require 'company-etags)
+(add-to-list 'company-etags-modes 'clojure-mode)
 
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)
