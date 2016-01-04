@@ -1,6 +1,6 @@
 ;;; cider-debug.el --- CIDER interaction with the cider.debug nREPL middleware  -*- lexical-binding: t; -*-
 
-;; Copyright © 2015 Artur Malabarba
+;; Copyright © 2015-2016 Artur Malabarba
 
 ;; Author: Artur Malabarba <bruce.connor.am@gmail.com>
 
@@ -536,8 +536,7 @@ needed.  It is expected to contain at least \"key\", \"input-type\", and
              (setq cider--debug-mode-response response)
              (cider--debug-mode 1)))
           (when inspect
-            (cider-inspector--value-handler nil inspect)
-            (cider-inspector--done-handler (current-buffer))))
+            (cider-inspector--value-handler nil inspect)))
       ;; If something goes wrong, we send a "quit" or the session hangs.
       (error (cider-debug-mode-send-reply ":quit" key)
              (message "Error encountered while handling the debug message: %S" e)))))

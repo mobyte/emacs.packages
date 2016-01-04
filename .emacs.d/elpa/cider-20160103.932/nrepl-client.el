@@ -1,7 +1,7 @@
 ;;; nrepl-client.el --- Client for Clojure nREPL -*- lexical-binding: t -*-
 
-;; Copyright © 2012-2015 Tim King, Phil Hagelberg
-;; Copyright © 2013-2015 Bozhidar Batsov, Hugo Duncan, Steve Purcell
+;; Copyright © 2012-2016 Tim King, Phil Hagelberg
+;; Copyright © 2013-2016 Bozhidar Batsov, Hugo Duncan, Steve Purcell
 ;;
 ;; Author: Tim King <kingtim@gmail.com>
 ;;         Phil Hagelberg <technomancy@gmail.com>
@@ -802,7 +802,8 @@ values of *1, *2, etc."
         (setq nrepl-versions versions)))))
 
 (defun nrepl--clear-client-sessions (conn-buffer)
-  "Clear client nREPL sessions in CONN-BUFFER."
+  "Clear information about nREPL sessions in CONN-BUFFER.
+CONN-BUFFER refers to a (presumably) dead connection, which we can eventually reuse."
   (with-current-buffer conn-buffer
     (setq nrepl-session nil)
     (setq nrepl-tooling-session nil)))

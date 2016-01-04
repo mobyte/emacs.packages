@@ -1,7 +1,7 @@
 ;;; cider-inspector.el --- Object inspector -*- lexical-binding: t -*-
 
-;; Copyright © 2013-2015 Vital Reactor, LLC
-;; Copyright © 2014-2015 Bozhidar Batsov
+;; Copyright © 2013-2016 Vital Reactor, LLC
+;; Copyright © 2014-2016 Bozhidar Batsov
 
 ;; Author: Ian Eslick <ian@vitalreactor.com>
 ;;         Bozhidar Batsov <bozhidar@batsov.com>
@@ -113,18 +113,14 @@ With a second prefix argument it prompts for an expression to eval and inspect."
 ;; Operations
 (defun cider-inspector--value-handler (_buffer value)
   (cider-make-popup-buffer cider-inspector-buffer 'cider-inspector-mode)
-  (cider-irender cider-inspector-buffer value))
+  (cider-inspector-render cider-inspector-buffer value)
+  (cider-popup-buffer-display cider-inspector-buffer t))
 
 (defun cider-inspector--out-handler (_buffer value)
   (cider-emit-interactive-eval-output value))
 
 (defun cider-inspector--err-handler (_buffer err)
   (cider-emit-interactive-eval-err-output err))
-
-(defun cider-inspector--done-handler (buffer)
-  (when (get-buffer cider-inspector-buffer)
-    (with-current-buffer buffer
-      (cider-popup-buffer-display cider-inspector-buffer t))))
 
 (defun cider-inspector-response-handler (buffer)
   "Create an inspector response handler for BUFFER.
@@ -139,7 +135,7 @@ Used for all inspector nREPL ops."
                                #'cider-inspector--value-handler
                                #'cider-inspector--out-handler
                                #'cider-inspector--err-handler
-                               #'cider-inspector--done-handler))
+                               #'identity))
 
 (defun cider-inspect-expr (expr ns)
   "Evaluate EXPR in NS and inspect its value."
@@ -203,33 +199,33 @@ Current page will be reset to zero."
    (cider-inspector-response-handler (current-buffer))))
 
 ;; Render Inspector from Structured Values
-(defun cider-irender (buffer str)
+(defun cider-inspector-render (buffer str)
   (with-current-buffer buffer
     (cider-inspector-mode)
     (let ((inhibit-read-only t))
       (condition-case nil
-          (cider-irender* (car (read-from-string str)))
+          (cider-inspector-render* (car (read-from-string str)))
         (error (insert "\nInspector error for: " str))))
     (goto-char (point-min))))
 
-(defun cider-irender* (elements)
+(defun cider-inspector-render* (elements)
   (dolist (el elements)
-    (cider-irender-el* el)))
+    (cider-inspector-render-el* el)))
 
-(defun cider-irender-el* (el)
+(defun cider-inspector-render-el* (el)
   (cond ((symbolp el) (insert (symbol-name el)))
         ((stringp el) (insert (propertize el 'font-lock-face 'font-lock-keyword-face)))
         ((and (consp el) (eq (car el) :newline))
          (insert "\n"))
         ((and (consp el) (eq (car el) :value))
-         (cider-irender-value (cadr el) (cl-caddr el)))
+         (cider-inspector-render-value (cadr el) (cl-caddr el)))
         (t (message "Unrecognized inspector object: %s" el))))
 
-(defun cider-irender-value (value idx)
+(defun cider-inspector-render-value (value idx)
   (cider-propertize-region
       (list 'cider-value-idx idx
             'mouse-face 'highlight)
-    (cider-irender-el* (cider-font-lock-as-clojure value))))
+    (cider-inspector-render-el* (cider-font-lock-as-clojure value))))
 
 
 ;; ===================================================
@@ -304,7 +300,7 @@ If ARG is negative, move forwards."
 
 (defun cider-inspector-operate-on-point ()
   "Invoke the command for the text at point.
-1. If point is on a value then recursivly call the inspector on
+1. If point is on a value then recursively call the inspector on
 that value.
 2. If point is on an action then call that action.
 3. If point is on a range-button fetch and insert the range."
