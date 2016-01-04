@@ -311,9 +311,9 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;* auto completion keys
 
-(require 'auto-complete-config)
-(define-key ac-completing-map (kbd "C-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-p") 'ac-previous)
+;; (require 'auto-complete-config)
+;; (define-key ac-completing-map (kbd "C-n") 'ac-next)
+;; (define-key ac-completing-map (kbd "C-p") 'ac-previous)
 
 ;;* highlight line
 
@@ -445,6 +445,9 @@ current git branch as a string.  Otherwise return an empty string."
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+
+(add-hook 'clojure-mode-hook #'eldoc-mode)
+
 (require 'company-etags)
 (add-to-list 'company-etags-modes 'clojure-mode)
 
