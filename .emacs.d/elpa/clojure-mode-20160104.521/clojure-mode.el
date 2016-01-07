@@ -8,9 +8,9 @@
 ;;       Phil Hagelberg <technomancy@gmail.com>
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20160103.606
+;; Package-Version: 20160104.521
 ;; Keywords: languages clojure clojurescript lisp
-;; Version: 5.1.0-cvs
+;; Version: 5.1.0
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This file is not part of GNU Emacs.
@@ -78,7 +78,7 @@
   :link '(url-link :tag "Github" "https://github.com/clojure-emacs/clojure-mode")
   :link '(emacs-commentary-link :tag "Commentary" "clojure-mode"))
 
-(defconst clojure-mode-version "5.1.0-snapshot"
+(defconst clojure-mode-version "5.1.0"
   "The current version of `clojure-mode'.")
 
 (defface clojure-keyword-face
@@ -407,7 +407,7 @@ Called by `imenu--generic-function'."
 (eval-and-compile
   (defconst clojure--sym-forbidden-rest-chars "][\";\'@\\^`~\(\)\{\}\\,\s\t\n\r"
     "A list of chars that a Clojure symbol cannot contain.
-See definiton of 'macros': URL `http://git.io/vRGLD'.")
+See definition of 'macros': URL `http://git.io/vRGLD'.")
   (defconst clojure--sym-forbidden-1st-chars (concat clojure--sym-forbidden-rest-chars "0-9")
     "A list of chars that a Clojure symbol cannot start with.
 See the for-loop: URL `http://git.io/vRGTj' lines: URL
