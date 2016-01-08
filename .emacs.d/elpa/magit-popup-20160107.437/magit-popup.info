@@ -422,6 +422,13 @@ File: magit-popup.info,  Node: Other options,  Prev: Customizing existing popups
      The Emacs package used to display man-pages, one of ‘man’ or
      ‘woman’.
 
+ -- User Option: magit-popup-display-buffer-action
+
+     The option controls how the window used to display a popup buffer
+     is created.  Popup buffers are displayed using ‘display-buffer’
+     with the value of this option as ACTION argument.  You can also set
+     this to nil and instead add an entry to ‘display-buffer-alist’.
+
    To emphasize the default action by making it bold use this:
 
      (button-type-put 'magit-popup-action-button 'format " %k %D")
@@ -691,9 +698,9 @@ Node: Introduction2168
 Node: Usage4745
 Node: Customizing existing popups9402
 Node: Other options14930
-Node: Defining prefix and suffix commands16636
-Node: Defining prefix commands18732
-Node: Defining suffix commands25412
+Node: Defining prefix and suffix commands16979
+Node: Defining prefix commands19075
+Node: Defining suffix commands25755
 
 End Tag Table
 
