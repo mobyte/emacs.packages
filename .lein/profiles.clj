@@ -1,5 +1,6 @@
 {:user
- {:plugins [[cider/cider-nrepl "0.11.0-SNAPSHOT"]]
+ {:plugins [[cider/cider-nrepl "0.11.0-SNAPSHOT"]
+            [refactor-nrepl "2.0.0-SNAPSHOT"]]
   :repl-options {:nrepl-middleware
                  [cider.nrepl.middleware.apropos/wrap-apropos
                   cider.nrepl.middleware.classpath/wrap-classpath
@@ -15,7 +16,8 @@
                   cider.nrepl.middleware.stacktrace/wrap-stacktrace
                   cider.nrepl.middleware.test/wrap-test
                   cider.nrepl.middleware.trace/wrap-trace
-                  cider.nrepl.middleware.undef/wrap-undef]}
+                  cider.nrepl.middleware.undef/wrap-undef
+                  refactor-nrepl.middleware/wrap-refactor]}
   :dependencies [[org.clojure/tools.nrepl "0.2.12"]
                  [spyscope "0.1.5"]
                  [org.clojure/tools.namespace "0.2.11"]
