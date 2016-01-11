@@ -444,15 +444,15 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; clj-refactor-mode
 
-(require 'clj-refactor)
+;; (require 'clj-refactor)
 
-(defun my-clojure-mode-hook ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c C-r"))
+;; (defun my-clojure-mode-hook ()
+;;     (clj-refactor-mode 1)
+;;     (yas-minor-mode 1) ; for adding require/use/import statements
+;;     ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+;;     (cljr-add-keybindings-with-prefix "C-c C-r"))
 
-(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+;; (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
 ;; auto complete
 
