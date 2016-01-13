@@ -5,15 +5,15 @@
 ;;     '("marmalade" .
 ;;       "http://marmalade-repo.org/packages/"))
 
-;; Other places to find .el files
-(add-to-list 'load-path "~/emacs.d")
-
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 (package-initialize)
+
+;; Other places to find .el files
+(add-to-list 'load-path "~/.emacs.d")
 
 ;;* outline config
 
