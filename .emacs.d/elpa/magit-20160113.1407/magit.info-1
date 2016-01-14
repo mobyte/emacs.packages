@@ -4091,7 +4091,7 @@ either because the user has to deal with a conflict or explicitly
 requested that rebase stops at that commit, then point is placed on the
 commit that separates the two groups, i.e.  on ‘HEAD’.  The commits
 above it have not been applied yet, while it and the commits below it
-have already been applied.  In between these two groups or applied and
+have already been applied.  In between these two groups of applied and
 yet-to-be applied commits, there sometimes is a commit which has been
 dropped.
 
@@ -4204,7 +4204,7 @@ you will acquire a good enough understanding through practice.
 
    For other sequence operations such as cherry-picking, a similar
 section is displayed, but they lack some of the features described
-below, due to limitations in the git commands used to implement them.
+above, due to limitations in the git commands used to implement them.
 Most importantly these sequences only support "picking" a commit but not
 other actions such as "rewording", and they do not keep track of the
 commits which have already been applied.
