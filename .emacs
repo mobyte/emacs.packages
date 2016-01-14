@@ -13,7 +13,7 @@
 (package-initialize)
 
 ;; Other places to find .el files
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/opt")
 
 ;;* outline config
 
