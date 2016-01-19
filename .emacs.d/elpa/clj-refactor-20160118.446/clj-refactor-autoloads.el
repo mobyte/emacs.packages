@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22172 38097
+;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22173 58805
 ;;;;;;  0 0))
 ;;; Generated autoloads from clj-refactor.el
 
@@ -34,23 +34,29 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-rename-file-or-d
 (autoload 'cljr-add-require-to-ns "clj-refactor" "\
 Add a require statement to the ns form in current buffer.
 
+With a prefix act on the cljs part of the ns declaration.
+
 See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-require-to-ns
 
-\(fn)" t nil)
+\(fn CLJS\\?)" t nil)
 
 (autoload 'cljr-add-use-to-ns "clj-refactor" "\
 Add a use statement to the buffer's ns form.
 
+With a prefix act on the cljs part of the ns declaration.
+
 See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-use-to-ns
 
-\(fn)" t nil)
+\(fn CLJS\\?)" t nil)
 
 (autoload 'cljr-add-import-to-ns "clj-refactor" "\
 Add an import statement to the buffer's ns form.
 
+With a prefix act on the cljs part of the ns declaration.
+
 See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-import-to-ns
 
-\(fn)" t nil)
+\(fn &optional CLJS\\?)" t nil)
 
 (autoload 'cljr-stop-referring "clj-refactor" "\
 Stop referring to vars in the namespace at point.
@@ -364,7 +370,7 @@ A mode to keep the clj-refactor keybindings.
 
 ;;;***
 
-;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22172 38097 840822
+;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22173 58805 96496
 ;;;;;;  0))
 
 ;;;***
