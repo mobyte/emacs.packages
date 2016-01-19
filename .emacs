@@ -454,6 +454,12 @@ current git branch as a string.  Otherwise return an empty string."
 
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
+;; do not group required namespaces by prefix
+(setq cljr-favor-prefix-notation nil)
+
+;; do not warn
+(setq cljr-warn-on-eval nil)
+
 ;; auto complete
 
 (require 'company)
