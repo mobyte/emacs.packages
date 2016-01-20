@@ -442,6 +442,8 @@ current git branch as a string.  Otherwise return an empty string."
 
 (setq cider-auto-select-error-buffer t)
 
+(setq nrepl-sync-request-timeout nil)
+
 ;; clj-refactor-mode
 
 (require 'clj-refactor)
