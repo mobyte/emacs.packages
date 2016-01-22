@@ -449,18 +449,18 @@ current git branch as a string.  Otherwise return an empty string."
 (require 'clj-refactor)
 
 (defun my-clojure-mode-hook ()
-    (clj-refactor-mode 1)
-    (yas-minor-mode 1) ; for adding require/use/import statements
-    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-    (cljr-add-keybindings-with-prefix "C-c C-r"))
+  (clj-refactor-mode 1)
+  ;; do not group required namespaces by prefix
+  (setq cljr-favor-prefix-notation nil)
+  ;; do not warn
+  (setq cljr-warn-on-eval nil)
+  (setq cljr-warn-on-analyzer-needs-eval nil)
+  (yas-minor-mode 1) ; for adding require/use/import statements
+  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+  (cljr-add-keybindings-with-prefix "C-c C-r"))
 
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
-;; do not group required namespaces by prefix
-(setq cljr-favor-prefix-notation nil)
-
-;; do not warn
-(setq cljr-warn-on-eval nil)
 
 ;; auto complete
 
