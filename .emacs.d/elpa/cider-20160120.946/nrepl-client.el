@@ -37,7 +37,7 @@
 ;; The nREPL communication process can be broadly represented as follows:
 ;;
 ;;    1) The server process is started as an Emacs subprocess (usually by
-;;      `cider-jack-in', which in turn fires up leiningen or boot). Note that
+;;      `cider-jack-in', which in turn fires up leiningen or boot).  Note that
 ;;       if a connection was established using `cider-connect' there won't be
 ;;       a server process.
 ;;
@@ -1192,9 +1192,12 @@ operations.")
     (`response (cons '<- (cdr msg)))))
 
 (defun nrepl-log-message (msg type)
-  "Log the given MSG to the buffer given by `nrepl-message-buffer-name-template'.
+  "Log the nREPL MSG.
 
-TYPE is either request or response."
+TYPE is either request or response.
+
+The message is logged to a buffer described by
+`nrepl-message-buffer-name-template'."
   (when nrepl-log-messages
     (with-current-buffer (nrepl-messages-buffer msg)
       (setq buffer-read-only nil)
