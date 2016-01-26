@@ -41,7 +41,9 @@
                 clojure.core >
                 [clojure.pprint pprint]
                 [clojure.tools.namespace.repl refresh]
-                [clojure.java.shell sh])]
+                [clojure.tools.namespace.repl refresh-all]
+                [clojure.java.shell sh]
+                [clojure.repl doc])]
   ;; :test-paths ["test-int"]
   ;; :source-paths ["src-int"]
   :jvm-opts ["-Djsse.enableSNIExtension=false"]}}
