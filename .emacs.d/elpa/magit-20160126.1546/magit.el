@@ -1349,21 +1349,10 @@ changes.
       (magit-call-git "branch" (concat "--set-upstream-to=" it) branch))
     (magit-refresh)))
 
-(defun magit-branch-read-starting-point (prompt)
-  (or (magit-completing-read (concat prompt " starting at")
-                             (cons "HEAD" (magit-list-refnames))
-                             nil nil nil 'magit-revision-history
-                             (or (magit-remote-branch-at-point)
-                                 (magit-local-branch-at-point)
-                                 (magit-commit-at-point)
-                                 (magit-stash-at-point)
-                                 (magit-get-current-branch)))
-      (user-error "Nothing selected")))
-
 (defun magit-branch-read-args (prompt)
   (let ((args (magit-branch-arguments)) start branch)
     (cond (magit-branch-read-upstream-first
-           (setq start  (magit-branch-read-starting-point prompt))
+           (setq start  (magit-read-starting-point prompt))
            (setq branch (magit-read-string-ns
                          "Branch name"
                          (and (member start (magit-list-remote-branch-names))
@@ -1372,7 +1361,7 @@ changes.
                                          "/")))))
           (t
            (setq branch (magit-read-string-ns "Branch name"))
-           (setq start  (magit-branch-read-starting-point prompt))))
+           (setq start  (magit-read-starting-point prompt))))
     (list branch start args)))
 
 ;;;###autoload
@@ -1412,18 +1401,19 @@ of the new branch, instead of the starting-point itself."
     (magit-run-git "checkout" "-b" branch)))
 
 ;;;###autoload
-(defun magit-branch-reset (branch to &optional args)
+(defun magit-branch-reset (branch to &optional args set-upstream)
   "Reset a branch to the tip of another branch or any other commit.
-
-When resetting to another branch, then also set that branch as
-the upstream of the branch being reset.
 
 When the branch being reset is the current branch, then do a
 hard reset.  If there are any uncommitted changes, then the user
 has to confirming the reset because those changes would be lost.
 
 This is useful when you have started work on a feature branch but
-realize it's all crap and want to start over."
+realize it's all crap and want to start over.
+
+When resetting to another branch and a prefix argument is used,
+then also set the target branch as the upstream of the branch
+that is being reset."
   (interactive
    (let* ((atpoint (magit-branch-at-point))
           (branch  (magit-read-local-branch "Reset branch" atpoint)))
@@ -1433,19 +1423,17 @@ realize it's all crap and want to start over."
                                   nil nil nil 'magit-revision-history
                                   (or (and (not (equal branch atpoint)) atpoint)
                                       (magit-get-upstream-branch branch)))
-           (magit-branch-arguments))))
+           (magit-branch-arguments)
+           current-prefix-arg)))
   (unless (member "--force" args)
     (setq args (cons "--force" args)))
-  (if (magit-branch-p to)
-      (unless (member "--track" args)
-        (setq args (cons "--track" args)))
-    (setq args (delete "--track" args)))
   (if (equal branch (magit-get-current-branch))
       (if (and (magit-anything-modified-p)
                (not (yes-or-no-p "Uncommitted changes will be lost.  Proceed?")))
           (user-error "Abort")
         (magit-reset-hard to)
-        (magit-set-branch*merge/remote branch to))
+        (when (and set-upstream (magit-branch-p to))
+          (magit-set-branch*merge/remote branch to)))
     (magit-branch branch to args)))
 
 ;;;###autoload
@@ -2943,14 +2931,6 @@ Git, and Emacs in the echo area."
         (push magit-version debug))
       (message "Cannot determine Magit's version %S" debug))
     magit-version))
-
-(defun magit-git-version (&optional numeric)
-  (--when-let (let (magit-git-global-arguments)
-                (ignore-errors (substring (magit-git-string "version") 12)))
-    (if numeric
-        (and (string-match "^\\([0-9]+\\.[0-9]+\\.[0-9]+\\)" it)
-             (match-string 1 it))
-      it)))
 
 (defun magit-startup-asserts ()
   (let ((version (magit-git-version t)))

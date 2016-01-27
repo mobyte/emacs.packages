@@ -1057,6 +1057,28 @@ the visiting buffer before you could continue making changes.
      This option controls for how many seconds Emacs waits before
      resuming suspended reverts.
 
+ -- User Option: auto-revert-buffer-list-filter
+
+     This option specifies an additional filter used by
+     ‘auto-revert-buffers’ to determine whether a buffer should be
+     reverted or not.
+
+     This option is provided by ‘magit’, which also redefines
+     ‘auto-revert-buffers’ to respect it.  Magit users who do not turn
+     on the local mode ‘auto-revert-mode’ themselves, are best served by
+     setting the value to ‘magit-auto-revert-repository-buffers-p’.
+
+     However the default is nil, to not disturb users who do use the
+     local mode directly.  If you experience delays when running Magit
+     commands, then you should consider using one of the predicates
+     provided by Magit - especially if you also use Tramp.
+
+     Users who do turn on ‘auto-revert-mode’ in buffers in which Magit
+     doesn’t do that for them, should likely not use any filter.  Users
+     who turn on ‘global-auto-revert-mode’, do not have to worry about
+     this option, because it is disregarded if the global mode is
+     enabled.
+
  -- User Option: auto-revert-verbose
 
      This option controls whether Emacs reports when a buffer has been
@@ -3067,6 +3089,9 @@ the heading of a sibling section of the same type.
 once, a hunk, multiple hunks at once, and on parts of a hunk.  These
 apply variants are described in the next section.
 
+   You can also use Ediff to stage and unstage.  See *note Ediffing:
+Ediffing.
+
 ‘s’     (‘magit-stage’)
 
      Add the change at point to the staging area.
@@ -3082,19 +3107,51 @@ apply variants are described in the next section.
 
      Remove the change at point from the staging area.
 
+     Only staged changes can be unstaged.  But by default this command
+     performs an action that is somewhat similar to unstaging, when it
+     is called on a committed change: it reverses the change in the
+     index but not in the working tree.
+
 ‘U’     (‘magit-unstage-all’)
 
      Remove all changes from the staging area.
+
+ -- User Option: magit-unstage-committed
+
+     This option controls whether ‘magit-unstage’ "unstages" committed
+     changes by reversing them in the index but not the working tree.
+     The alternative is to raise an error.
+
+‘M-x magit-reverse-in-index’     (‘magit-reverse-in-index’)
+
+     This command reverses the committed change at point in the index
+     but not the working tree.  By default no key is bound directly to
+     this command, but it is indirectly called when ‘u’
+     (‘magit-unstage’) is pressed on a committed change.
+
+     This allows extracting a change from ‘HEAD’, while leaving it in
+     the working tree, so that it can later be committed using a
+     separate commit.  A typical workflow would be:
+
+        • Optionally make sure that there are no uncommitted changes.
+
+        • Visit the ‘HEAD’ commit and navigate to the change that should
+          not have been included in that commit.
+
+        • Type ‘u’ (‘magit-unstage’) to reverse it in the index.  This
+          assumes that ‘magit-unstage-committed-changes’ is non-nil.
+
+        • Type ‘c e’ to extend ‘HEAD’ with the staged changes, including
+          those that were already staged before.
+
+        • Optionally stage the remaining changes using ‘s’ or ‘S’ and
+          then type ‘c c’ to create a new commit.
 
 ‘M-x magit-reset-index’     (‘magit-reset-index’)
 
      Reset the index to some commit.  The commit is read from the user
      and defaults to the commit at point.  If there is no commit at
      point, then it defaults to ‘HEAD’.
-
-   To stage a smaller unit than a range of lines, similar to ‘git add
---patch’ followed by ‘e’ would do, then you can use ‘magit-ediff-stage’
-to do so.
 
 * Menu:
 
@@ -3716,6 +3773,17 @@ e.g.:
 
    *note (gitman)git-checkout:: , and *note Pushing: Pushing.
 
+ -- User Option: magit-prefer-remote-upstream
+
+     This option controls whether commands that read a branch from the
+     user and then set it as the upstream branch, offer a local or a
+     remote branch as default completion candidate, when they have the
+     choice.
+
+     This affects all commands that use ‘magit-read-upstream-branch’ or
+     ‘magit-read-starting-point’, which includes all commands that
+     change the upstream and many which create new branches.
+
 ‘b b’     (‘magit-checkout’)
 
      Checkout a revision read in the minibuffer and defaulting to the
@@ -3763,9 +3831,6 @@ e.g.:
      This command resets a branch, defaulting to the branch at point, to
      the tip of another branch or any other commit.
 
-     When resetting to another branch, then that branch is also set as
-     the upstream of the branch being reset.
-
      When the branch being reset is the current branch, then a hard
      reset is performed.  If there are any uncommitted changes, then the
      user has to confirming the reset because those changes would be
@@ -3773,6 +3838,10 @@ e.g.:
 
      This is useful when you have started work on a feature branch but
      realize it’s all crap and want to start over.
+
+     When resetting to another branch and a prefix argument is used,
+     then the target branch is set as the upstream of the branch that is
+     being reset.
 
 ‘b d’     (‘magit-branch-delete’)
 
@@ -5363,6 +5432,20 @@ check whether those additions impacts performance significantly.
 Setting ‘magit-refresh-verbose’ and then inspecting the output in the
 ‘*Messages*’ buffer, should help doing so.
 
+   Magit also reverts buffers which visit files located inside the
+current repository, when the visited file changes on disk.  That is
+implemented on top of ‘auto-revert-mode’ from the built-in library
+‘autorevert’.  To figure out whether that impacts performance, check
+whether performance is significantly worse, when many buffers exist
+and/or when some buffers visit files using Tramp.  If so, then this
+should help.
+
+     (setq auto-revert-buffer-list-filter
+           'magit-auto-revert-repository-buffers-p)
+
+   For alternative approaches see *note Automatic Reverting of
+File-Visiting Buffers: Automatic Reverting of File-Visiting Buffers.
+
    If you have enabled any features that are disabled by default, then
 you should check whether they impact performance significantly.  It’s
 likely that they were not enabled by default because it is known that
@@ -5433,11 +5516,11 @@ anymore.  Consider leaving it at that.
 Diff Performance
 ................
 
-   • ‘magit-diff-highlight-hunk-body’,
-     ‘magit-diff-highlight-indentation’,
-     ‘magit-diff-highlight-trailing’, and ‘magit-diff-paint-whitespace’
-
-   • ‘magit-diff-refine-hunk’
+If diffs are slow, then consider turning off some optional diff features
+by setting all or some of the following variables to ‘nil’:
+‘magit-diff-highlight-indentation’, ‘magit-diff-highlight-trailing’,
+‘magit-diff-paint-whitespace’, ‘magit-diff-highlight-hunk-body’, and
+‘magit-diff-refine-hunk’.
 
 Refs Buffer Performance
 .......................
@@ -6640,18 +6723,18 @@ Appendix B Keystroke Index
 * B:                                     Bisecting.           (line   8)
 * b:                                     Branching.           (line  45)
 * B b:                                   Bisecting.           (line  31)
-* b b:                                   Branching.           (line 171)
-* b c:                                   Branching.           (line 189)
-* b d:                                   Branching.           (line 229)
+* b b:                                   Branching.           (line 182)
+* b c:                                   Branching.           (line 200)
+* b d:                                   Branching.           (line 241)
 * B g:                                   Bisecting.           (line  36)
 * B k:                                   Bisecting.           (line  41)
-* b n:                                   Branching.           (line 179)
+* b n:                                   Branching.           (line 190)
 * B r:                                   Bisecting.           (line  47)
-* b r:                                   Branching.           (line 235)
+* b r:                                   Branching.           (line 247)
 * B s:                                   Bisecting.           (line  16)
-* b s:                                   Branching.           (line 196)
+* b s:                                   Branching.           (line 207)
 * B u:                                   Bisecting.           (line  24)
-* b x:                                   Branching.           (line 213)
+* b x:                                   Branching.           (line 224)
 * c:                                     Initiating a commit. (line   8)
 * c <1>:                                 Editing rebase sequences.
                                                               (line  72)
@@ -6834,9 +6917,11 @@ Appendix B Keystroke Index
 * M-x magit-reset-hard:                  Resetting.           (line  32)
 * M-x magit-reset-head:                  Resetting.           (line  21)
 * M-x magit-reset-index:                 Staging and unstaging.
-                                                              (line  45)
+                                                              (line  84)
 * M-x magit-reset-index <1>:             Resetting.           (line  14)
 * M-x magit-reset-soft:                  Resetting.           (line  26)
+* M-x magit-reverse-in-index:            Staging and unstaging.
+                                                              (line  59)
 * M-x magit-stage-file:                  Staging from file-visiting buffers.
                                                               (line  10)
 * M-x magit-toggle-buffer-lock:          Modes and Buffers.   (line  17)
@@ -6900,9 +6985,9 @@ Appendix B Keystroke Index
 * RET <3>:                               Editing rebase sequences.
                                                               (line  16)
 * s:                                     Staging and unstaging.
-                                                              (line  26)
+                                                              (line  29)
 * S:                                     Staging and unstaging.
-                                                              (line  30)
+                                                              (line  33)
 * s <1>:                                 Editing rebase sequences.
                                                               (line  59)
 * s-<tab>:                               Section visibility.  (line  22)
@@ -6927,9 +7012,9 @@ Appendix B Keystroke Index
 * T T:                                   Notes.               (line  13)
 * TAB:                                   Section visibility.  (line   9)
 * u:                                     Staging and unstaging.
-                                                              (line  37)
+                                                              (line  40)
 * U:                                     Staging and unstaging.
-                                                              (line  41)
+                                                              (line  49)
 * v:                                     Applying.            (line  41)
 * V:                                     Reverting.           (line   6)
 * V A:                                   Reverting.           (line  30)
@@ -7066,14 +7151,14 @@ Appendix C Command Index
                                                               (line  45)
 * magit-blob-previous <1>:               Minor mode for buffers visiting blobs.
                                                               (line  12)
-* magit-branch:                          Branching.           (line 179)
-* magit-branch-and-checkout:             Branching.           (line 189)
-* magit-branch-delete:                   Branching.           (line 229)
+* magit-branch:                          Branching.           (line 190)
+* magit-branch-and-checkout:             Branching.           (line 200)
+* magit-branch-delete:                   Branching.           (line 241)
 * magit-branch-popup:                    Branching.           (line  45)
-* magit-branch-rename:                   Branching.           (line 235)
-* magit-branch-reset:                    Branching.           (line 213)
-* magit-branch-spinoff:                  Branching.           (line 196)
-* magit-checkout:                        Branching.           (line 171)
+* magit-branch-rename:                   Branching.           (line 247)
+* magit-branch-reset:                    Branching.           (line 224)
+* magit-branch-spinoff:                  Branching.           (line 207)
+* magit-checkout:                        Branching.           (line 182)
 * magit-checkout-file:                   Resetting.           (line  37)
 * magit-cherry:                          Logging.             (line  60)
 * magit-cherry-apply:                    Cherry picking.      (line  22)
@@ -7251,10 +7336,12 @@ Appendix C Command Index
 * magit-reset-hard:                      Resetting.           (line  32)
 * magit-reset-head:                      Resetting.           (line  21)
 * magit-reset-index:                     Staging and unstaging.
-                                                              (line  45)
+                                                              (line  84)
 * magit-reset-index <1>:                 Resetting.           (line  14)
 * magit-reset-soft:                      Resetting.           (line  26)
 * magit-reverse:                         Applying.            (line  41)
+* magit-reverse-in-index:                Staging and unstaging.
+                                                              (line  59)
 * magit-revert:                          Reverting.           (line  14)
 * magit-revert-no-commit:                Reverting.           (line  20)
 * magit-revert-popup:                    Reverting.           (line   6)
@@ -7311,13 +7398,13 @@ Appendix C Command Index
 * magit-snapshot-index:                  Stashing.            (line  46)
 * magit-snapshot-worktree:               Stashing.            (line  51)
 * magit-stage:                           Staging and unstaging.
-                                                              (line  26)
+                                                              (line  29)
 * magit-stage-file:                      Staging from file-visiting buffers.
                                                               (line  10)
 * magit-stage-file <1>:                  Minor mode for buffers visiting files.
                                                               (line  24)
 * magit-stage-modified:                  Staging and unstaging.
-                                                              (line  30)
+                                                              (line  33)
 * magit-stash:                           Stashing.            (line  13)
 * magit-stash-apply:                     Stashing.            (line  58)
 * magit-stash-branch:                    Stashing.            (line  84)
@@ -7349,9 +7436,9 @@ Appendix C Command Index
 * magit-toggle-buffer-lock:              Modes and Buffers.   (line  17)
 * magit-toggle-margin:                   Refreshing logs.     (line  36)
 * magit-unstage:                         Staging and unstaging.
-                                                              (line  37)
+                                                              (line  40)
 * magit-unstage-all:                     Staging and unstaging.
-                                                              (line  41)
+                                                              (line  49)
 * magit-unstage-file:                    Staging from file-visiting buffers.
                                                               (line  18)
 * magit-unstage-file <1>:                Minor mode for buffers visiting files.
