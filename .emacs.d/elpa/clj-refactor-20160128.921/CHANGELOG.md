@@ -1,7 +1,9 @@
 # Changelog
 
 ## Up next
-
+- [#267](https://github.com/clojure-emacs/clj-refactor.el/issues/267)
+ Add `cljr-require-macro` which requires a macro into the current
+ namespace.
 - Add prefix variant to `cljr-add-import-to-ns` for insertion of imports in the cljs part of the ns declaration.
 - Add prefix variant to `cljr-add-use-to-ns` for insertion of 'use' in the cljs part of the ns declaration.
 - Add prefix variant to `cljr-add-require` for insertion of requires in the cljs part of the ns declaration.
@@ -19,8 +21,13 @@
 - [refactor-nrepl#99](https://github.com/clojure-emacs/refactor-nrepl/issues/99) if cljr-thread-first-all or cljr-thread-last-all is called with a prefix the last expression is not threaded. cljr-thread-all-but-last defcustom has the same effect without the prefix
 - [hydra](https://github.com/abo-abo/hydra) menus for discoverability: they help to (re)learn clj-refactor key bindings. See: [parent hydra](https://github.com/clojure-emacs/clj-refactor.el/wiki/Hydra).
 
+# Bugs fixed
+
+- [#285](https://github.com/clojure-emacs/clj-refactor.el/issues/285) clean-ns did the wrong thing unless the code was loaded.
+
 ### Changes
 
+- [#265](https://github.com/clojure-emacs/clj-refactor.el/issues/265) Feedback to the user is lost among other general messages from emacs.
 - Make `cljr-clean-ns` the only default function used by `cljr-project-clean`.
 - Remove `cljr-remove-unused-requires` which is replaced by `cljr-clean-ns`.
 - Remove `cljr-replace-use` which is replaced by `cljr-clean-ns`.

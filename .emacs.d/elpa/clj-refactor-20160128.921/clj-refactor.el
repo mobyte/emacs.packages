@@ -255,6 +255,7 @@ won't run if there is a broken namespace in the project."
 (defvar cljr--change-signature-buffer "*cljr-change-signature*")
 (defvar cljr--manual-intervention-buffer "*cljr-manual-intervention*")
 (defvar cljr--find-symbol-buffer "*cljr-find-usages*")
+(defvar cljr--post-command-messages nil "Message(s) to display after the current command is done.")
 
 ;;; Buffer Local Declarations
 
@@ -340,6 +341,7 @@ Otherwise open the file and do the changes non-interactively."
     ("pf" . (cljr-promote-function "Promote function" ?p ("code" "toplevel-form")))
     ("rf" . (cljr-rename-file-or-dir "Rename file-or-dir" ?r ("project" "toplevel-form")))
     ("rl" . (cljr-remove-let "Remove let" ?r ("code")))
+    ("rm" . (cljr-require-macro "Add to or extend the require-macros form" ?M ("ns")))
     ("rs" . (cljr-rename-symbol "Rename symbol" ?s ("project" "code")))
     ("sc" . (cljr-show-changelog "Show the project's changelog" ?c ("cljr")))
     ("sp" . (cljr-sort-project-dependencies "Sort project dependencies" ?S ("project")))
@@ -395,9 +397,13 @@ Otherwise open the file and do the changes non-interactively."
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 _ai_: Add import to ns                             _am_: Add missing libspec                          _ap_: Add project dependency
 _ar_: Add require to ns                            _au_: Add use to ns                                _cn_: Clean ns
-_sr_: Stop referring
+_rm_: Require a macro into the ns                  _sr_: Stop referring
 "
-  ("ai" cljr-add-import-to-ns) ("am" cljr-add-missing-libspec) ("ap" cljr-add-project-dependency) ("ar" cljr-add-require-to-ns) ("au" cljr-add-use-to-ns) ("cn" cljr-clean-ns) ("sr" cljr-stop-referring) ("q" nil "quit"))
+  ("ai" cljr-add-import-to-ns) ("am" cljr-add-missing-libspec)
+  ("ap" cljr-add-project-dependency) ("ar" cljr-add-require-to-ns)
+  ("au" cljr-add-use-to-ns) ("cn" cljr-clean-ns)
+  ("rm" cljr-require-macro) ("sr" cljr-stop-referring)
+  ("q" nil "quit"))
 
 (defhydra hydra-cljr-code-menu (:color pink :hint nil)
   "
@@ -410,7 +416,15 @@ _pf_: Promote function                             _rl_: Remove let             
 _tf_: Thread first all                             _th_: Thread                                       _tl_: Thread last all
 _ua_: Unwind all                                   _uw_: Unwind
 "
-  ("cc" cljr-cycle-coll) ("ci" cljr-cycle-if) ("ct" cljr-cycle-thread) ("dk" cljr-destructure-keys) ("el" cljr-expand-let) ("fu" cljr-find-usages) ("il" cljr-introduce-let) ("is" cljr-inline-symbol) ("ml" cljr-move-to-let) ("pf" cljr-promote-function) ("rl" cljr-remove-let) ("rs" cljr-rename-symbol) ("tf" cljr-thread-first-all) ("th" cljr-thread) ("tl" cljr-thread-last-all) ("ua" cljr-unwind-all) ("uw" cljr-unwind) ("q" nil "quit"))
+  ("cc" cljr-cycle-coll) ("ci" cljr-cycle-if)
+  ("ct" cljr-cycle-thread) ("dk" cljr-destructure-keys)
+  ("el" cljr-expand-let) ("fu" cljr-find-usages)
+  ("il" cljr-introduce-let) ("is" cljr-inline-symbol)
+  ("ml" cljr-move-to-let) ("pf" cljr-promote-function)
+  ("rl" cljr-remove-let) ("rs" cljr-rename-symbol)
+  ("tf" cljr-thread-first-all) ("th" cljr-thread)
+  ("tl" cljr-thread-last-all) ("ua" cljr-unwind-all)
+  ("uw" cljr-unwind) ("q" nil "quit"))
 
 (defhydra hydra-cljr-project-menu (:color pink :hint nil)
   "
@@ -421,7 +435,12 @@ _hd_: Hotload dependency                           _is_: Inline symbol          
 _pc_: Project clean                                _rf_: Rename file-or-dir _rs_: Rename symbol       _sp_: Sort project dependencies
 _up_: Update project dependencies
 "
-  ("ap" cljr-add-project-dependency) ("cs" cljr-change-function-signature) ("fu" cljr-find-usages) ("hd" cljr-hotload-dependency) ("is" cljr-inline-symbol) ("mf" cljr-move-form) ("pc" cljr-project-clean) ("rf" cljr-rename-file-or-dir) ("rs" cljr-rename-symbol) ("sp" cljr-sort-project-dependencies) ("up" cljr-update-project-dependencies) ("q" nil "quit"))
+  ("ap" cljr-add-project-dependency) ("cs" cljr-change-function-signature)
+  ("fu" cljr-find-usages) ("hd" cljr-hotload-dependency)
+  ("is" cljr-inline-symbol) ("mf" cljr-move-form)
+  ("pc" cljr-project-clean) ("rf" cljr-rename-file-or-dir)
+  ("rs" cljr-rename-symbol) ("sp" cljr-sort-project-dependencies)
+  ("up" cljr-update-project-dependencies) ("q" nil "quit"))
 
 (defhydra hydra-cljr-toplevel-form-menu (:color pink :hint nil)
   "
@@ -432,7 +451,12 @@ _ec_: Extract constant                             _ed_: Extract form as def    
 _fe_: Create function from example                 _is_: Inline symbol                                _mf_: Move form
 _pf_: Promote function                             _rf_: Rename file-or-dir                           _ad_: Add declaration
 "
-  ("as" cljr-add-stubs) ("cp" cljr-cycle-privacy) ("cs" cljr-change-function-signature) ("ec" cljr-extract-constant) ("ed" cljr-extract-def) ("ef" cljr-extract-function) ("fe" cljr-create-fn-from-example) ("is" cljr-inline-symbol) ("mf" cljr-move-form) ("pf" cljr-promote-function) ("rf" cljr-rename-file-or-dir) ("ad" cljr-add-declaration) ("q" nil "quit"))
+  ("as" cljr-add-stubs) ("cp" cljr-cycle-privacy)
+  ("cs" cljr-change-function-signature) ("ec" cljr-extract-constant)
+  ("ed" cljr-extract-def) ("ef" cljr-extract-function)
+  ("fe" cljr-create-fn-from-example) ("is" cljr-inline-symbol)
+  ("mf" cljr-move-form) ("pf" cljr-promote-function)
+  ("rf" cljr-rename-file-or-dir) ("ad" cljr-add-declaration) ("q" nil "quit"))
 
 (defhydra hydra-cljr-cljr-menu (:color pink :hint nil)
   "
@@ -475,6 +499,7 @@ _s_: Refactor related functions
   "Bind keys in `cljr--all-helpers' under a MODIFIER key."
   (cljr--add-keybindings (-partial 'cljr--key-pairs-with-modifier modifier)))
 
+
 ;; ------ utilities -----------
 
 (defun cljr--extract-sexp ()
@@ -597,16 +622,6 @@ list of (fn args) to pass to `apply''"
   (cljr--make-room-for-toplevel-form)
   (insert form))
 
-(defun cljr-show-changelog ()
-  "Show the changelog for `clj-refactor'.
-
-See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-show-changelog"
-  (interactive)
-  (find-file (format "%s/CHANGELOG.md" (file-name-directory (locate-library "clj-refactor"))))
-  (when (fboundp 'markdown-mode)
-    (markdown-mode))
-  (view-mode 1))
-
 (defun cljr--goto-toplevel-forward ()
   "Move forward and up until we reach toplevel."
   (paredit-forward-up (cljr--depth-at-point)))
@@ -717,6 +732,27 @@ All config settings are included in the created msg."
            "false")
          kvs))
 
+(defun cljr--post-command-message (format-string &rest args)
+  "Display msg in a post command hook, to ensure it doesn't drown
+  in emacs' general chatter."
+  (push (apply #'format format-string args)
+        cljr--post-command-messages))
+
+(defun cljr--post-command-hook ()
+  (-map #'message cljr--post-command-messages)
+  (setq cljr--post-command-messages nil))
+
+(defun cljr-show-changelog ()
+  "Show the changelog for `clj-refactor'.
+
+See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-show-changelog"
+  (interactive)
+  (find-file (format "%s/CHANGELOG.md" (file-name-directory (locate-library "clj-refactor"))))
+  (when (fboundp 'markdown-mode)
+    (markdown-mode))
+  (view-mode 1))
+
+
 ;; ------ reify protocol defrecord -----------
 
 (defun cljr--goto-reify ()
@@ -838,9 +874,9 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-rename-file-or-d
                                "touched"))
                (changed-files-count (length changed-files)))
           (cond
-           ((null changed-files) (message "Rename complete! No files affected."))
-           ((= changed-files-count 1) (message "Renamed %s to %s." old-path new-path))
-           (t (message "Rename complete! %s files affected." changed-files-count)))
+           ((null changed-files) (cljr--post-command-message "Rename complete! No files affected."))
+           ((= changed-files-count 1) (cljr--post-command-message "Renamed %s to %s." old-path new-path))
+           (t (cljr--post-command-message "Rename complete! %s files affected." changed-files-count)))
           (when (and (> changed-files-count 0) (not cljr-warn-on-eval))
             (cljr--warm-ast-cache)))
         (if affected-buffers
@@ -1045,7 +1081,8 @@ word test in it and whether the file lives under the test/ directory."
 (defun cljr--maybe-clean-ns ()
   (when (and cljr-auto-clean-ns (cider-connected-p)
              (cljr--op-supported? "clean-ns"))
-    (cljr-clean-ns)))
+    (let ((*cljr--noninteractive* t))
+      (cljr-clean-ns))))
 
 (defvar cljr--tmp-marker (make-marker))
 
@@ -1121,6 +1158,18 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-import-to-ns
   (cljr--pop-tmp-marker-after-yasnippet)
   (cljr--add-yas-ns-updated-hook)
   (yas-expand-snippet "$1"))
+
+;;;###autoload
+(defun cljr-require-macro ()
+  "Add a require statement for a macro to the ns form in current buffer.
+
+See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-require-macro"
+  (interactive)
+  (set-marker cljr--tmp-marker (point))
+  (cljr--insert-in-ns ":require-macros")
+  (cljr--pop-tmp-marker-after-yasnippet)
+  (cljr--add-yas-ns-updated-hook)
+  (yas-expand-snippet cljr--add-require-snippet))
 
 ;;;###autoload
 (defun cljr-stop-referring ()
@@ -1345,7 +1394,7 @@ optionally including those that are declared private."
   (cljr--goto-declare)
   (backward-char)
   (insert " " def)
-  (message "Added declaration for %s" def))
+  (cljr--post-command-message "Added declaration for %s" def))
 
 ;;;###autoload
 (defun cljr-add-declaration ()
@@ -1356,9 +1405,9 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-declaration"
   (save-excursion
     (-if-let (def (cljr--name-of-current-def))
         (if (cljr--already-declared? def)
-            (message "%s is already declared" def)
+            (user-error "%s is already declared" def)
           (cljr--add-declaration def))
-      (message "Not inside a def form."))))
+      (user-error "Not inside a def form."))))
 
 ;; ------ extract constant ----------------
 
@@ -1941,7 +1990,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-cycle-coll"
       (insert "#{" (substring (cljr--delete-and-extract-sexp) 1 -1) "}"))
 
      ((equal 1 (point))
-      (message "beginning of file reached, this was probably a mistake.")))))
+      (error "Beginning of file reached, this was probably a mistake.")))))
 
 (defun cljr--goto-if ()
   (while (not (or (cljr--toplevel-p)
@@ -2112,7 +2161,7 @@ form."
               (insert libspec)
               (ignore-errors (cljr--maybe-eval-ns-form))
               (cljr--indent-defun)
-              (message "Required %s" libspec))))))))
+              (cljr--post-command-message "Required %s" libspec))))))))
 
 (defun cljr--in-namespace-declaration? (s)
   (save-excursion
@@ -2144,7 +2193,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-project-clean"
             (ignore-errors (-map 'funcall cljr-project-clean-functions))))))
     (if (and (cider-connected-p) (not cljr-warn-on-eval) (cljr--op-supported? "warm-ast-cache"))
         (cljr--warm-ast-cache))
-    (message "Project clean done.")))
+    (cljr--post-command-message "Project clean done.")))
 
 (defun cljr--extract-dependency-name ()
   (assert (cljr--looking-at-dependency-vector-p))
@@ -2361,7 +2410,7 @@ possible choices. If the choice is trivial, return it."
     (paredit-backward-down)
     (newline-and-indent)
     (insert "[" artifact " \"" version "\"]")
-    (message "Added %s version %s as a project dependency" artifact version)
+    (cljr--post-command-message "Added %s version %s as a project dependency" artifact version)
     (when cljr-hotload-dependencies
       (paredit-backward-down)
       (cljr-hotload-dependency))))
@@ -2622,25 +2671,26 @@ root."
             (cljr--first-line match))))
 
 (defun cljr--format-and-insert-symbol-occurrence (occurrence-resp)
-  (let* ((occurrence (edn-read (nrepl-dict-get occurrence-resp "occurrence")))
-         (count (nrepl-dict-get occurrence-resp "count"))
-         (occurrence-id (when occurrence
-                          (format "%s%s"
-                                  (gethash :file occurrence)
-                                  (gethash :line-beg occurrence)))))
-    (cljr--maybe-rethrow-error occurrence-resp)
-    (when count
-      (setq cljr--num-syms count))
-    (when occurrence
-      (incf cjr--occurrence-count)
-      (when (not (member occurrence-id cljr--occurrence-ids))
-        (setq cljr--occurrence-ids
-              (cons occurrence-id cljr--occurrence-ids))
-        (->> occurrence
-             cljr--format-symbol-occurrence
-             cljr--insert-in-find-symbol-buffer)))
-    (when (= cjr--occurrence-count cljr--num-syms)
-      (cljr--finalise-find-symbol-buffer cljr--num-syms))))
+  ;; The middleware sends either an occurrence or a final count, never
+  ;; both in the same message.
+  (cljr--maybe-rethrow-error occurrence-resp)
+  (-if-let (count (nrepl-dict-get occurrence-resp "count"))
+      (progn
+        (setq cljr--num-syms count)
+        (when (= cjr--occurrence-count cljr--num-syms)
+          (cljr--finalise-find-symbol-buffer cljr--num-syms)))
+    (-when-let (occurrence-data (nrepl-dict-get occurrence-resp "occurrence"))
+      (let* ((occurrence (edn-read occurrence-data))
+             (occurrence-id (format "%s%s"
+                                    (gethash :file occurrence)
+                                    (gethash :line-beg occurrence))))
+        (incf cjr--occurrence-count)
+        (unless (member occurrence-id cljr--occurrence-ids)
+          (setq cljr--occurrence-ids
+                (cons occurrence-id cljr--occurrence-ids))
+          (->> occurrence
+               cljr--format-symbol-occurrence
+               cljr--insert-in-find-symbol-buffer))))))
 
 (defun cljr--finalise-find-symbol-buffer (total)
   (with-current-buffer "*cljr-find-usages*"
@@ -2735,7 +2785,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-rename-symbol"
            (buffer-of-symbol (cider-find-var-file (concat ns "/" symbol-name)))
            (tooling-buffer-p (cider--tooling-file-p (buffer-name buffer-of-symbol))))
       (cljr--rename-occurrences ns occurrences new-name)
-      (message "Renamed %s occurrences of %s" (length occurrences) name)
+      (cljr--post-command-message "Renamed %s occurrences of %s" (length occurrences) name)
       (when (and (> (length occurrences) 0) (not cljr-warn-on-eval))
         (cljr--warm-ast-cache)))))
 
@@ -2781,7 +2831,9 @@ removed."
                                           "prune-ns-form" (if no-prune? "false"
                                                             "true"))
                         "ns"))
-      (cljr--replace-ns new-ns))))
+      (cljr--replace-ns new-ns))
+    (unless *cljr--noninteractive*
+      (cljr--post-command-message "Namespace form cleaned!"))))
 
 ;;;###autoload
 (defun cljr-clean-ns ()
@@ -2790,6 +2842,7 @@ removed."
 See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-clean-ns"
   (interactive)
   (cljr--ensure-op-supported "clean-ns")
+  (cider-eval-ns-form :sync)
   (cljr--clean-ns))
 
 (defun cljr--narrow-candidates (candidates symbol)
@@ -2803,7 +2856,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-clean-ns"
 (defun cljr--insert-libspec-verbosely (libspec)
   (insert (format "%s" libspec))
   (cljr--indent-defun)
-  (message "%s added to ns" libspec))
+  (cljr--post-command-message "%s added to ns" libspec))
 
 (defun cljr--insert-missing-import (missing)
   (save-excursion
@@ -2897,12 +2950,12 @@ Date. -> Date
 
 (defun cljr--call-middleware-to-resolve-missing (symbol)
   ;; Just so this part can be mocked out in a step definition
-  (-> (cljr--create-msg "resolve-missing"
-                        "symbol" symbol
-                        "session" (cider-current-session))
-      (cljr--call-middleware-sync
-       "candidates")
-      edn-read))
+  (-when-let (candidates (-> (cljr--create-msg "resolve-missing"
+                                               "symbol" symbol
+                                               "session" (cider-current-session))
+                             (cljr--call-middleware-sync
+                              "candidates")))
+    (edn-read candidates)))
 
 (defun cljr--get-error-value (response)
   "Gets the error value from the middleware response.
@@ -2933,7 +2986,7 @@ itself might be `nil'."
     response))
 
 (defun cljr--maybe-eval-ns-form ()
-  (when cljr-auto-eval-ns-form
+  (when (and cljr-auto-eval-ns-form (cider-connected-p))
     (cider-eval-ns-form :synchronously)))
 
 ;;;###autoload
@@ -2950,7 +3003,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-missing-libs
          (candidates (cljr--call-middleware-to-resolve-missing symbol)))
     (if (and candidates (< 0 (length candidates)))
         (cljr--add-missing-libspec symbol candidates)
-      (message "Can't find %s on classpath" (cljr--symbol-suffix symbol))))
+      (cljr--post-command-message "Can't find %s on classpath" (cljr--symbol-suffix symbol))))
   (cljr--maybe-clean-ns)
   (cljr--maybe-eval-ns-form))
 
@@ -2964,7 +3017,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-missing-libs
 
 (defun cljr--hotload-dependency-callback (response)
   (cljr--maybe-rethrow-error response)
-  (message "Hotloaded %s" (nrepl-dict-get response "dependency")))
+  (cljr--post-command-message "Hotloaded %s" (nrepl-dict-get response "dependency")))
 
 (defun cljr--call-middleware-to-hotload-dependency (dep)
   (cljr--call-middleware-async
@@ -3244,8 +3297,8 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-inline-symbol"
         (cljr--inline-symbol ns definition occurrences)
         (unless *cljr--noninteractive* ; don't spam when called from `cljr-remove-let'
           (if occurrences
-              (message "Inlined %s occurrence(s) of '%s'" (length occurrences) symbol)
-            (message "No occurrences of '%s' found.  Deleted the definition." symbol)))))
+              (cljr--post-command-message "Inlined %s occurrence(s) of '%s'" (length occurrences) symbol)
+            (cljr--post-command-message "No occurrences of '%s' found.  Deleted the definition." symbol)))))
     (cljr--indent-defun)))
 
 (defun cljr--check-nrepl-ops ()
@@ -4051,7 +4104,7 @@ Point is assumed to be at the function being called."
   (kill-buffer cljr--change-signature-buffer))
 
 (define-derived-mode cljr--change-signature-mode fundamental-mode
-  "Change Signature"
+                     "Change Signature"
   "Major mode for refactoring function signatures.")
 
 (defun cljr--setup-change-signature-buffer (control-buffer params)
@@ -4108,7 +4161,10 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-change-function-
 ;;;###autoload
 (define-minor-mode clj-refactor-mode
   "A mode to keep the clj-refactor keybindings."
-  nil " cljr" clj-refactor-map)
+  nil " cljr" clj-refactor-map
+  (if clj-refactor-mode
+      (add-hook 'post-command-hook #'cljr--post-command-hook :append :local)
+    (remove-hook 'post-command-hook #'cljr--post-command-hook :local)))
 
 (provide 'clj-refactor)
 ;;; clj-refactor.el ends here

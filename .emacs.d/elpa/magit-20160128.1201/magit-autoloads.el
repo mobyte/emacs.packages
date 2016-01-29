@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "git-rebase" "git-rebase.el" (22185 50372 0
+;;;### (autoloads nil "git-rebase" "git-rebase.el" (22187 4723 0
 ;;;;;;  0))
 ;;; Generated autoloads from git-rebase.el
 
@@ -23,7 +23,7 @@ running 'man git-rebase' at the command line) for details.
 
 ;;;***
 
-;;;### (autoloads nil "magit" "magit.el" (22185 50372 0 0))
+;;;### (autoloads nil "magit" "magit.el" (22187 4723 0 0))
 ;;; Generated autoloads from magit.el
 
 (autoload 'magit-status "magit" "\
@@ -397,47 +397,6 @@ defaulting to the tag at point.
 
 \(fn TAGS)" t nil)
  (autoload 'magit-notes-popup "magit" nil t)
- (autoload 'magit-submodule-popup "magit" nil t)
-
-(autoload 'magit-submodule-add "magit" "\
-Add the repository at URL as a submodule.
-Optional PATH is the path to the submodule relative to the root
-of the superproject. If it is nil then the path is determined
-based on URL.
-
-\(fn URL &optional PATH)" t nil)
-
-(autoload 'magit-submodule-setup "magit" "\
-Clone and register missing submodules and checkout appropriate commits.
-
-\(fn)" t nil)
-
-(autoload 'magit-submodule-init "magit" "\
-Register submodules listed in \".gitmodules\" into \".git/config\".
-
-\(fn)" t nil)
-
-(autoload 'magit-submodule-update "magit" "\
-Clone missing submodules and checkout appropriate commits.
-With a prefix argument also register submodules in \".git/config\".
-
-\(fn &optional INIT)" t nil)
-
-(autoload 'magit-submodule-sync "magit" "\
-Update each submodule's remote URL according to \".gitmodules\".
-
-\(fn)" t nil)
-
-(autoload 'magit-submodule-fetch "magit" "\
-Fetch all submodules.
-With a prefix argument fetch all remotes.
-
-\(fn &optional ALL)" t nil)
-
-(autoload 'magit-submodule-deinit "magit" "\
-Unregister the submodule at PATH.
-
-\(fn PATH)" t nil)
 
 (defvar global-magit-file-mode nil "\
 Non-nil if Global-Magit-File mode is enabled.
@@ -497,7 +456,7 @@ Git, and Emacs in the echo area.
 
 ;;;***
 
-;;;### (autoloads nil "magit-apply" "magit-apply.el" (22185 50372
+;;;### (autoloads nil "magit-apply" "magit-apply.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-apply.el
 
@@ -534,8 +493,8 @@ Remove all changes from the staging area.
 
 ;;;***
 
-;;;### (autoloads nil "magit-autorevert" "magit-autorevert.el" (22185
-;;;;;;  50372 0 0))
+;;;### (autoloads nil "magit-autorevert" "magit-autorevert.el" (22187
+;;;;;;  4723 0 0))
 ;;; Generated autoloads from magit-autorevert.el
 
 (defvar magit-revert-buffers t)
@@ -563,7 +522,7 @@ See `auto-revert-mode' for more information on Auto-Revert mode.
 
 ;;;***
 
-;;;### (autoloads nil "magit-bisect" "magit-bisect.el" (22185 50372
+;;;### (autoloads nil "magit-bisect" "magit-bisect.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-bisect.el
  (autoload 'magit-bisect-popup "magit-bisect" nil t)
@@ -615,7 +574,7 @@ bisect run'.
 
 ;;;***
 
-;;;### (autoloads nil "magit-blame" "magit-blame.el" (22185 50372
+;;;### (autoloads nil "magit-blame" "magit-blame.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-blame.el
  (autoload 'magit-blame-popup "magit-blame" nil t)
@@ -640,7 +599,7 @@ only arguments available from `magit-blame-popup' should be used.
 
 ;;;***
 
-;;;### (autoloads nil "magit-commit" "magit-commit.el" (22185 50372
+;;;### (autoloads nil "magit-commit" "magit-commit.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-commit.el
 
@@ -723,7 +682,7 @@ Create a squash commit targeting COMMIT and instantly rebase.
 
 ;;;***
 
-;;;### (autoloads nil "magit-diff" "magit-diff.el" (22185 50372 0
+;;;### (autoloads nil "magit-diff" "magit-diff.el" (22187 4723 0
 ;;;;;;  0))
 ;;; Generated autoloads from magit-diff.el
 
@@ -789,7 +748,7 @@ for a revision.
 
 ;;;***
 
-;;;### (autoloads nil "magit-ediff" "magit-ediff.el" (22185 50372
+;;;### (autoloads nil "magit-ediff" "magit-ediff.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-ediff.el
  (autoload 'magit-ediff-popup "magit-ediff" nil t)
@@ -870,7 +829,7 @@ Show changes introduced by COMMIT using Ediff.
 
 ;;;***
 
-;;;### (autoloads nil "magit-extras" "magit-extras.el" (22185 50372
+;;;### (autoloads nil "magit-extras" "magit-extras.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-extras.el
 
@@ -941,7 +900,7 @@ on a position in a file-visiting buffer.
 
 ;;;***
 
-;;;### (autoloads nil "magit-log" "magit-log.el" (22185 50372 0 0))
+;;;### (autoloads nil "magit-log" "magit-log.el" (22187 4723 0 0))
 ;;; Generated autoloads from magit-log.el
 
 (autoload 'magit-log-current "magit-log" "\
@@ -1009,7 +968,7 @@ Show commits in a branch that are not merged in the upstream branch.
 
 ;;;***
 
-;;;### (autoloads nil "magit-remote" "magit-remote.el" (22185 50372
+;;;### (autoloads nil "magit-remote" "magit-remote.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-remote.el
 
@@ -1223,8 +1182,8 @@ is asked to pull.  START has to be reachable from that commit.
 
 ;;;***
 
-;;;### (autoloads nil "magit-sequence" "magit-sequence.el" (22185
-;;;;;;  50372 0 0))
+;;;### (autoloads nil "magit-sequence" "magit-sequence.el" (22187
+;;;;;;  4723 0 0))
 ;;; Generated autoloads from magit-sequence.el
 
 (autoload 'magit-sequencer-continue "magit-sequence" "\
@@ -1372,7 +1331,7 @@ Abort the current rebase operation, restoring the original branch.
 
 ;;;***
 
-;;;### (autoloads nil "magit-stash" "magit-stash.el" (22185 50372
+;;;### (autoloads nil "magit-stash" "magit-stash.el" (22187 4723
 ;;;;;;  0 0))
 ;;; Generated autoloads from magit-stash.el
  (autoload 'magit-stash-popup "magit-stash" nil t)
@@ -1472,7 +1431,71 @@ Show all diffs of a stash in a buffer.
 
 ;;;***
 
-;;;### (autoloads nil "magit-wip" "magit-wip.el" (22185 50372 0 0))
+;;;### (autoloads nil "magit-submodule" "magit-submodule.el" (22187
+;;;;;;  4723 0 0))
+;;; Generated autoloads from magit-submodule.el
+ (autoload 'magit-submodule-popup "magit-submodule" nil t)
+
+(autoload 'magit-submodule-add "magit-submodule" "\
+Add the repository at URL as a submodule.
+Optional PATH is the path to the submodule relative to the root
+of the superproject. If it is nil then the path is determined
+based on URL.
+
+\(fn URL &optional PATH)" t nil)
+
+(autoload 'magit-submodule-setup "magit-submodule" "\
+Clone and register missing submodules and checkout appropriate commits.
+
+\(fn)" t nil)
+
+(autoload 'magit-submodule-init "magit-submodule" "\
+Register submodules listed in \".gitmodules\" into \".git/config\".
+
+\(fn)" t nil)
+
+(autoload 'magit-submodule-update "magit-submodule" "\
+Clone missing submodules and checkout appropriate commits.
+With a prefix argument also register submodules in \".git/config\".
+
+\(fn &optional INIT)" t nil)
+
+(autoload 'magit-submodule-sync "magit-submodule" "\
+Update each submodule's remote URL according to \".gitmodules\".
+
+\(fn)" t nil)
+
+(autoload 'magit-submodule-fetch "magit-submodule" "\
+Fetch all submodules.
+With a prefix argument fetch all remotes.
+
+\(fn &optional ALL)" t nil)
+
+(autoload 'magit-submodule-deinit "magit-submodule" "\
+Unregister the submodule at PATH.
+
+\(fn PATH)" t nil)
+
+(autoload 'magit-insert-submodule-commits "magit-submodule" "\
+For internal use, don't add to a hook.
+
+\(fn SECTION RANGE)" nil nil)
+
+(autoload 'magit-insert-unpulled-module-commits "magit-submodule" "\
+Insert sections for all submodules with unpulled commits.
+These sections can be expanded to show the respective commits.
+
+\(fn)" nil nil)
+
+(autoload 'magit-insert-unpushed-module-commits "magit-submodule" "\
+Insert sections for all submodules with unpushed commits.
+These sections can be expanded to show the respective commits.
+
+\(fn)" nil nil)
+
+;;;***
+
+;;;### (autoloads nil "magit-wip" "magit-wip.el" (22187 4723 0 0))
 ;;; Generated autoloads from magit-wip.el
 
 (defvar magit-wip-after-save-mode nil "\
@@ -1538,8 +1561,8 @@ command which is about to be called are committed.
 ;;;***
 
 ;;;### (autoloads nil nil ("magit-core.el" "magit-git.el" "magit-mode.el"
-;;;;;;  "magit-pkg.el" "magit-popup.el" "magit-process.el" "magit-section.el"
-;;;;;;  "magit-utils.el") (22185 50372 520570 0))
+;;;;;;  "magit-pkg.el" "magit-process.el" "magit-section.el" "magit-utils.el")
+;;;;;;  (22187 4723 393796 0))
 
 ;;;***
 

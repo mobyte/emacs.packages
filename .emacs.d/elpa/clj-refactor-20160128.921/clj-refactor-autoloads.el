@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22181 52361
+;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22187 4728
 ;;;;;;  0 0))
 ;;; Generated autoloads from clj-refactor.el
 
@@ -57,6 +57,13 @@ With a prefix act on the cljs part of the ns declaration.
 See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-import-to-ns
 
 \(fn &optional CLJS\\?)" t nil)
+
+(autoload 'cljr-require-macro "clj-refactor" "\
+Add a require statement for a macro to the ns form in current buffer.
+
+See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-require-macro
+
+\(fn)" t nil)
 
 (autoload 'cljr-stop-referring "clj-refactor" "\
 Stop referring to vars in the namespace at point.
@@ -370,7 +377,7 @@ A mode to keep the clj-refactor keybindings.
 
 ;;;***
 
-;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22181 52361 424443
+;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22187 4728 52731
 ;;;;;;  0))
 
 ;;;***

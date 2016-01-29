@@ -294,6 +294,7 @@ the upstream isn't ahead of the current branch) show."
     :options  ((?n "Limit number of commits" "-n")
                (?f "Limit to files"          "-- " magit-read-files)
                (?a "Limit to author"         "--author=")
+               (?o "Order commits by"        "++order=" magit-log-select-order)
                (?g "Search messages"         "--grep=")
                (?G "Search changes"          "-G")
                (?S "Search occurences"       "-S")
@@ -324,6 +325,7 @@ the upstream isn't ahead of the current branch) show."
     :options  ((?n "Limit number of commits" "-n")
                (?f "Limit to files"          "-- " magit-read-files)
                (?a "Limit to author"         "--author=")
+               (?o "Order commits by"        "++order=" magit-log-select-order)
                (?g "Search messages"         "--grep=")
                (?G "Search changes"          "-G")
                (?S "Search occurences"       "-S")
@@ -345,7 +347,8 @@ the upstream isn't ahead of the current branch) show."
     :switches ((?g "Show graph"          "--graph")
                (?c "Show graph in color" "--color")
                (?d "Show refnames"       "--decorate"))
-    :options  ((?n "Limit number of commits" "-n"))
+    :options  ((?n "Limit number of commits" "-n")
+               (?o "Order commits by"        "++order=" magit-log-select-order))
     :actions  ((?g "Refresh"       magit-log-refresh)
                (?t "Toggle margin" magit-toggle-margin)
                (?s "Set defaults"  magit-log-set-default-arguments) nil
@@ -356,13 +359,19 @@ the upstream isn't ahead of the current branch) show."
 (magit-define-popup-keys-deferred 'magit-log-mode-refresh-popup)
 (magit-define-popup-keys-deferred 'magit-log-refresh-popup)
 
-(defun magit-read-file-trace (&rest ignored)
+(defun magit-read-file-trace (&rest _ignored)
   (let ((file  (magit-read-file-from-rev "HEAD" "File"))
         (trace (magit-read-string "Trace")))
     (if (string-match
          "^\\(/.+/\\|:[^:]+\\|[0-9]+,[-+]?[0-9]+\\)\\(:\\)?$" trace)
         (concat trace (or (match-string 2 trace) ":") file)
       (user-error "Trace is invalid, see man git-log"))))
+
+(defun magit-log-select-order (&rest _ignored)
+  (magit-read-char-case "Order commits by " t
+    (?t "[t]opography"     "topo")
+    (?a "[a]uthor date"    "author-date")
+    (?c "[c]ommitter date" "date")))
 
 (defun magit-log-arguments (&optional refresh)
   (cond ((memq magit-current-popup
@@ -733,9 +742,13 @@ Do not add this to a hook variable."
                     (concat "\n" magit-log-revision-headers-format "\n")
                   (concat "\n" magit-log-revision-headers-format "\n"))
               ""))
-    (if (member "--decorate" args)
-        (cons "--decorate=full" (remove "--decorate" args))
-      args)
+    (progn
+      (--when-let (--first (string-match "^\\+\\+order=\\(.+\\)$" it) args)
+        (setq args (cons (format "--%s-order" (match-string 1 it))
+                         (remove it args))))
+      (if (member "--decorate" args)
+          (cons "--decorate=full" (remove "--decorate" args))
+        args))
     "--use-mailmap" "--no-prefix" revs "--" files))
 
 (defvar magit-commit-section-map
@@ -1375,58 +1388,6 @@ all others with \"-\"."
       (magit-insert-heading "Unpushed commits:")
       (magit-git-wash (apply-partially 'magit-log-wash-log 'cherry)
         "cherry" "-v" (magit-abbrev-arg) "@{upstream}"))))
-
-;;;; Submodule Sections
-
-(defun magit-insert-submodule-commits (section range)
-  "For internal use, don't add to a hook."
-  (if (magit-section-hidden section)
-      (setf (magit-section-washer section)
-            (apply-partially #'magit-insert-submodule-commits section range))
-    (magit-git-wash (apply-partially 'magit-log-wash-log 'module)
-      "log" "--oneline" range)
-    (when (> (point) (magit-section-content section))
-      (delete-char -1))))
-
-(defun magit-insert-unpulled-module-commits ()
-  "Insert sections for all submodules with unpulled commits.
-These sections can be expanded to show the respective commits."
-  (-when-let (modules (magit-get-submodules))
-    (magit-insert-section section (unpulled-modules)
-      (magit-insert-heading "Unpulled modules:")
-      (magit-with-toplevel
-        (dolist (module modules)
-          (let ((default-directory
-                  (expand-file-name (file-name-as-directory module))))
-            (-when-let (tracked (magit-get-upstream-ref))
-              (magit-insert-section sec (file module t)
-                (magit-insert-heading
-                  (concat (propertize module 'face 'magit-diff-file-heading) ":"))
-                (magit-insert-submodule-commits
-                 section (concat "HEAD.." tracked)))))))
-      (if (> (point) (magit-section-content section))
-          (insert ?\n)
-        (magit-cancel-section)))))
-
-(defun magit-insert-unpushed-module-commits ()
-  "Insert sections for all submodules with unpushed commits.
-These sections can be expanded to show the respective commits."
-  (-when-let (modules (magit-get-submodules))
-    (magit-insert-section section (unpushed-modules)
-      (magit-insert-heading "Unpushed modules:")
-      (magit-with-toplevel
-        (dolist (module modules)
-          (let ((default-directory
-                  (expand-file-name (file-name-as-directory module))))
-            (-when-let (tracked (magit-get-upstream-ref))
-              (magit-insert-section sec (file module t)
-                (magit-insert-heading
-                  (concat (propertize module 'face 'magit-diff-file-heading) ":"))
-                (magit-insert-submodule-commits
-                 section (concat tracked "..HEAD")))))))
-      (if (> (point) (magit-section-content section))
-          (insert ?\n)
-        (magit-cancel-section)))))
 
 ;;; Buffer Margins
 

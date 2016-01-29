@@ -391,8 +391,7 @@ If you are updating from a release older than ‘2.1.0’, then you have to
 first uninstall the old version.  See *note Updating from an older
 release: Updating from an older release.
 
-   Magit is available from all three of the popular unofficial Elpa
-archives: Melpa, Melpa-Stable, and Marmalade.  If you haven’t used
+   Magit is available from Melpa and Melpa-Stable.  If you haven’t used
 Emacs’ package manager before, then it is high time you familiarize
 yourself with it by reading the documentation in the Emacs manual, see
 *note (emacs)Packages::.  Then add one of the archives to
@@ -409,12 +408,6 @@ yourself with it by reading the documentation in the Emacs manual, see
      (require 'package)
      (add-to-list 'package-archives
      	     '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-
-   • To use Marmalade:
-
-     (require 'package)
-     (add-to-list 'package-archives
-     	     '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
    Once you have added your preferred archive, you need to update the
 local package list using:
@@ -438,10 +431,16 @@ If you are updating from a release older than ‘2.1.0’, then you have to
 first uninstall the old version.  See *note Updating from an older
 release: Updating from an older release.
 
-   Magit depends on the ‘dash’ library, available from all three of the
-popular third-party Elpa archives.  Install it using ‘M-x
-package-install RET dash RET’.  Of course you may also install it
-manually from its development repository, but I won’t cover that here.
+   Magit depends on the ‘dash’ and ‘with-editor’ library which are
+available from Melpa and Melpa-Stable.  Install them using ‘M-x
+package-install RET <package> RET’.  Of course you may also install them
+manually from their development repository, but I won’t cover that here.
+
+   (An older release of Magit is also available from Marmalade, but no
+new versions will be uploaded in the future.  Marmalade’s maintainer has
+stopped responding to requests from package maintainers who are having
+difficulties or require him to create an account so that they can upload
+their packages in the first place.)
 
    Then clone the Magit repository:
 
@@ -452,12 +451,14 @@ manually from its development repository, but I won’t cover that here.
 
      $ make
 
-   If you haven’t installed ‘dash’ using Elpa or at
-‘/path/to/magit/../dash’, then you have to tell ‘make’ where to find it.
-To do so create ‘/path/to/magit/config.mk’ with the following content
-before running ‘make’:
+   If you haven’t installed ‘dash’ and ‘with-editor’ using Elpa or at
+‘/path/to/magit/../<package>’, then you have to tell ‘make’ where to
+find them.  To do so create ‘/path/to/magit/config.mk’ with the
+following content before running ‘make’:
 
-     LOAD_PATH = -L /path/to/magit/lisp -L /path/to/dash
+     LOAD_PATH  = -L /path/to/magit/lisp
+     LOAD_PATH += -L /path/to/dash
+     LOAD_PATH += -L /path/to/with-editor
 
    Finally add this to your init file:
 
@@ -469,11 +470,13 @@ before running ‘make’:
        (add-to-list 'Info-directory-list
      	       "~/.emacs.d/site-lisp/magit/Documentation/"))
 
-   Note that you have to add the ‘lisp/’ subdirectory to the
-‘load-path’, not the top-level of the repository.
+   Note that you have to add the ‘lisp’ subdirectory to the ‘load-path’,
+not the top-level of the repository, and that elements of ‘load-path’
+should not end with a slash, while those of ‘Info-directory-list’
+should.
 
-   Instead of requiring the feature ‘magit’, you could only load the
-autoloads, by loading the file ‘magit-autoloads.el’.
+   Instead of requiring the feature ‘magit’, you could load just the
+autoload definitions, by loading the file ‘magit-autoloads.el’.
 
    Instead of running Magit directly from the repository by adding that
 to the ‘load-path’, you might want to instead install it in some other
@@ -2077,7 +2080,9 @@ invoked while no log buffer exists for the current repository yet, then
 the default value of ‘magit-log-arguments’ is used instead.
 
    For information about the various arguments, see *note
-(gitman)git-log:: .
+(gitman)git-log:: .  The switch ‘++order=VALUE’ is converted to one of
+‘--author-date-order’, ‘--date-order’, or ‘--topo-order’ before being
+passed to ‘git log’.
 
    The log popup also features several reflog commands.  See *note
 Reflog: Reflog.
@@ -6858,17 +6863,17 @@ Appendix B Keystroke Index
 * k <2>:                                 Editing rebase sequences.
                                                               (line  68)
 * k <3>:                                 Stashing.            (line  92)
-* l:                                     Logging.             (line  24)
+* l:                                     Logging.             (line  26)
 * L:                                     Refreshing logs.     (line  11)
 * L <1>:                                 Log Buffer.          (line   6)
-* l a:                                   Logging.             (line  54)
-* l b:                                   Logging.             (line  50)
+* l a:                                   Logging.             (line  56)
+* l b:                                   Logging.             (line  52)
 * L g:                                   Refreshing logs.     (line  16)
-* l h:                                   Logging.             (line  42)
+* l h:                                   Logging.             (line  44)
 * l H:                                   Reflog.              (line  19)
-* l l:                                   Logging.             (line  29)
-* l L:                                   Logging.             (line  46)
-* l o:                                   Logging.             (line  35)
+* l l:                                   Logging.             (line  31)
+* l L:                                   Logging.             (line  48)
+* l o:                                   Logging.             (line  37)
 * l O:                                   Reflog.              (line  15)
 * l r:                                   Reflog.              (line  11)
 * L s:                                   Refreshing logs.     (line  21)
@@ -6913,7 +6918,7 @@ Appendix B Keystroke Index
 * M-x magit-find-file:                   Visiting blobs.      (line   6)
 * M-x magit-find-file-other-window:      Visiting blobs.      (line  11)
 * M-x magit-init:                        Repository setup.    (line   6)
-* M-x magit-log-buffer-file:             Logging.             (line  65)
+* M-x magit-log-buffer-file:             Logging.             (line  67)
 * M-x magit-reset-hard:                  Resetting.           (line  32)
 * M-x magit-reset-head:                  Resetting.           (line  21)
 * M-x magit-reset-index:                 Staging and unstaging.
@@ -7037,7 +7042,7 @@ Appendix B Keystroke Index
 * x:                                     Editing rebase sequences.
                                                               (line  76)
 * x <1>:                                 Resetting.           (line   8)
-* Y:                                     Logging.             (line  60)
+* Y:                                     Logging.             (line  62)
 * y:                                     References buffer.   (line   6)
 * y <1>:                                 Editing rebase sequences.
                                                               (line  85)
@@ -7160,7 +7165,7 @@ Appendix C Command Index
 * magit-branch-spinoff:                  Branching.           (line 207)
 * magit-checkout:                        Branching.           (line 182)
 * magit-checkout-file:                   Resetting.           (line  37)
-* magit-cherry:                          Logging.             (line  60)
+* magit-cherry:                          Logging.             (line  62)
 * magit-cherry-apply:                    Cherry picking.      (line  22)
 * magit-cherry-pick:                     Cherry picking.      (line  16)
 * magit-cherry-pick-popup:               Cherry picking.      (line   8)
@@ -7247,19 +7252,19 @@ Appendix C Command Index
 * magit-jump-to-diffstat-or-diff:        Diff buffer.         (line  38)
 * magit-kill-this-buffer:                Minor mode for buffers visiting blobs.
                                                               (line  20)
-* magit-log:                             Logging.             (line  35)
-* magit-log-all:                         Logging.             (line  54)
-* magit-log-all-branches:                Logging.             (line  50)
-* magit-log-branches:                    Logging.             (line  46)
-* magit-log-buffer-file:                 Logging.             (line  65)
+* magit-log:                             Logging.             (line  37)
+* magit-log-all:                         Logging.             (line  56)
+* magit-log-all-branches:                Logging.             (line  52)
+* magit-log-branches:                    Logging.             (line  48)
+* magit-log-buffer-file:                 Logging.             (line  67)
 * magit-log-buffer-file <1>:             Minor mode for buffers visiting files.
                                                               (line  33)
 * magit-log-bury-buffer:                 Log Buffer.          (line  12)
-* magit-log-current:                     Logging.             (line  29)
+* magit-log-current:                     Logging.             (line  31)
 * magit-log-double-commit-limit:         Log Buffer.          (line  53)
 * magit-log-half-commit-limit:           Log Buffer.          (line  57)
-* magit-log-head:                        Logging.             (line  42)
-* magit-log-popup:                       Logging.             (line  24)
+* magit-log-head:                        Logging.             (line  44)
+* magit-log-popup:                       Logging.             (line  26)
 * magit-log-refresh:                     Refreshing logs.     (line  16)
 * magit-log-refresh-popup:               Refreshing logs.     (line  11)
 * magit-log-refresh-popup <1>:           Log Buffer.          (line   6)
