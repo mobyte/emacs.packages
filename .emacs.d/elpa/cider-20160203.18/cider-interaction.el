@@ -678,6 +678,24 @@ can be used to display the evaluation result."
                                  (cider-emit-interactive-eval-err-output err))
                                '()))
 
+(defun cider-eval-print-with-comment-handler (buffer location comment-prefix)
+  "Make a handler for evaluating and printing commented results in BUFFER.
+
+LOCATION is the location at which to insert.
+COMMENT-PREFIX is the comment prefix to use."
+  (nrepl-make-response-handler buffer
+                               (lambda (buffer value)
+                                 (with-current-buffer buffer
+                                   (save-excursion
+                                     (goto-char location)
+                                     (insert (concat comment-prefix
+                                                     value "\n")))))
+                               (lambda (_buffer out)
+                                 (cider-emit-interactive-eval-output out))
+                               (lambda (_buffer err)
+                                 (cider-emit-interactive-eval-err-output err))
+                               '()))
+
 (defun cider-popup-eval-out-handler (&optional buffer)
   "Make a handler for evaluating and printing stdout/stderr in popup BUFFER.
 
@@ -992,6 +1010,8 @@ arguments and only proceed with evaluation if it returns nil."
   (let ((form  (or form (apply #'buffer-substring bounds)))
         (start (car-safe bounds))
         (end   (car-safe (cdr-safe bounds))))
+    (when (and start end)
+      (remove-overlays start end))
     (unless (and cider-interactive-eval-override
                  (functionp cider-interactive-eval-override)
                  (funcall cider-interactive-eval-override form callback bounds))
@@ -1047,6 +1067,21 @@ If invoked with a PREFIX argument, print the result in the current buffer."
     ;; seems like the sexp is valid, so we can safely kill it
     (backward-kill-sexp)
     (cider-interactive-eval last-sexp (cider-eval-print-handler))))
+
+(defun cider-eval-defun-to-comment (loc)
+  "Evaluate the \"top-level\" form and insert result as comment at LOC.
+
+With a prefix arg, LOC, insert before the form, otherwise afterwards."
+  (interactive "P")
+  (let ((defun-at-point (cider-defun-at-point))
+        (insertion-point
+         (if loc
+             (cider-defun-at-point-start-pos)
+           (cider-defun-at-point-end-pos))))
+    (cider-interactive-eval defun-at-point
+                            (cider-eval-print-with-comment-handler
+                             (current-buffer) insertion-point
+                             ";; => "))))
 
 (declare-function cider-switch-to-repl-buffer "cider-mode")
 

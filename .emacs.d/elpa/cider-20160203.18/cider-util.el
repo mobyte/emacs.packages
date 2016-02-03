@@ -100,12 +100,16 @@ If BUFFER is provided act on that buffer instead."
     (save-match-data
       (end-of-defun)
       (let ((end (point)))
-        (beginning-of-defun)
+        (clojure-backward-logical-sexp 1)
         (list (point) end)))))
 
 (defun cider-defun-at-point-start-pos ()
   "Return the starting position of the current defun."
   (car (cider--region-for-defun-at-point)))
+
+(defun cider-defun-at-point-end-pos ()
+  "Return the end position of the current defun."
+  (cadr (cider--region-for-defun-at-point)))
 
 (defun cider-ns-form ()
   "Retrieve the ns form."

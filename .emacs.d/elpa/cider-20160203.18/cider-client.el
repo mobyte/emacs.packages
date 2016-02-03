@@ -119,7 +119,11 @@ Also close associated REPL and server buffers."
           (cider--close-buffer nrepl-tunnel-buffer)))
       ;; If this is the only (or last) REPL connected to its server, the
       ;; kill-process hook will kill the server.
-      (cider--close-buffer buffer))))
+      (cider--close-buffer buffer))
+    ;; close the matching nREPL messages buffer
+    (when nrepl-log-messages
+      (when-let ((nrepl-messages-buffer (nrepl-message-buffer conn-buffer)))
+        (kill-buffer nrepl-messages-buffer)))))
 
 
 ;;; Current connection logic
@@ -618,8 +622,8 @@ Return the REPL buffer given by `cider-current-connection'.")
 (define-obsolete-function-alias 'nrepl-current-session 'cider-current-session "0.10")
 
 (defun cider-current-messages-buffer ()
-  "The nREPL messages buffer, matching the current connection's default session."
-  (format nrepl-message-buffer-name-template (cider-current-session)))
+  "The nREPL messages buffer, matching the current connection."
+  (nrepl-messages-buffer (cider-current-connection)))
 
 (defun cider-current-tooling-session ()
   "Return the current tooling session."
@@ -627,10 +631,6 @@ Return the REPL buffer given by `cider-current-connection'.")
     nrepl-tooling-session))
 
 (define-obsolete-function-alias 'nrepl-current-tooling-session 'cider-current-tooling-session "0.10")
-
-(defun cider-current-tooling-messages-buffer ()
-  "The nREPL messages buffer, matching the current connection's tooling session."
-  (format nrepl-message-buffer-name-template (cider-current-tooling-session)))
 
 (defun cider--var-choice (var-info)
   "Prompt to choose from among multiple VAR-INFO candidates, if required.
