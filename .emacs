@@ -444,6 +444,9 @@ current git branch as a string.  Otherwise return an empty string."
 
 (setq nrepl-sync-request-timeout nil)
 
+;; skip the cider's welcome message
+(setq cider-repl-display-help-banner nil)
+
 ;; clj-refactor-mode
 
 (require 'clj-refactor)
