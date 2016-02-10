@@ -788,4 +788,12 @@ current git branch as a string.  Otherwise return an empty string."
 
 (global-set-key (kbd "C-x C-x") 'switch-to-presentation)
 
+;;* initial execution
+
 (split-window-right)
+
+;; Open shell in default project directory
+(let ((default-directory (shell-command-to-string ". ~/.bashrc; echo -n $CURRENT_PROJECT")))
+  (when (not (s-blank? default-directory))
+    (shell)))
+
