@@ -43,19 +43,9 @@
 
 ;;* shell path
 
-(setq path "/Applications/Emacs.app/Contents/MacOS/bin:/usr/local/git/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/Users/mobyte/bin")
-(setenv "PATH" path)
 (setenv "BOOT_JVM_OPTIONS" "-XX:-OmitStackTraceInFastThrow")
-;; (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
-;;   (setenv "PATH" path)
-;;   (setq exec-path 
-;;         (append
-;;          (split-string-and-unquote path ":")
-;;          exec-path)))
+(exec-path-from-shell-initialize)
 
-(let ((path (concat (getenv "PATH") ":/opt/local/bin")))
-  (setenv "PATH" path)
-  (setq exec-path (split-string path path-separator)))
 
 ;;* general settings
 
