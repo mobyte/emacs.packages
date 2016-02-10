@@ -43,7 +43,8 @@
                 [clojure.tools.namespace.repl refresh]
                 [clojure.tools.namespace.repl refresh-all]
                 [clojure.java.shell sh]
-                [clojure.repl doc])]
+                [clojure.repl doc]
+                [clojure.test run-tests])]
   ;; :test-paths ["test-int"]
   ;; :source-paths ["src-int"]
   :jvm-opts ["-Djsse.enableSNIExtension=false"]}}
