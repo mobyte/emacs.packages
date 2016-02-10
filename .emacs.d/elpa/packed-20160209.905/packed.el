@@ -5,7 +5,7 @@
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/tarsius/packed
 ;; Keywords: compile, convenience, lisp, package, library
-;; Package-Version: 20160205.1637
+;; Package-Version: 20160209.905
 
 ;; Package: packed
 ;; Package-Requires: ((emacs "24.3") (dash "2.10.0"))
@@ -153,7 +153,7 @@ and the file name is displayed in the echo area."
     file))
 
 (defconst packed-ignore-library-regexp
-  "\\(?:^\\.\\|autoloads\\|loaddefs\\|tests?$\\)")
+  "\\(?:^\\.\\|-autoloads\\|-loaddefs\\|-tests?$\\)")
 
 (defconst packed-ignore-directory-regexp
   "\\(?:CVS\\|RCS\\|^t$\\|^tests?$\\)")
