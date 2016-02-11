@@ -1235,6 +1235,9 @@ constructs."
         ["Quit" cider-quit]
         ["Restart" cider-restart]
         "--"
+        ["A sip of CIDER" cider-drink-a-sip]
+        ["View manual online" cider-open-manual]
+        ["Report a bug" cider-report-bug]
         ["Version info" cider-version]))
     map))
 
