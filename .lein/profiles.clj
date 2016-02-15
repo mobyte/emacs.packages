@@ -42,6 +42,7 @@
                 [clojure.pprint pprint]
                 [clojure.tools.namespace.repl refresh]
                 [clojure.tools.namespace.repl refresh-all]
+                [clojure.tools.namespace.repl clear]
                 [clojure.java.shell sh]
                 [clojure.repl doc]
                 [clojure.test run-tests])]
