@@ -1,6 +1,6 @@
-(define-package "cider" "20160214.1402" "Clojure Interactive Development Environment that Rocks"
+(define-package "cider" "20160215.1540" "Clojure Interactive Development Environment that Rocks"
   '((emacs "24.3")
-    (clojure-mode "5.1.0")
+    (clojure-mode "5.2.0")
     (pkg-info "0.4")
     (queue "0.1.1")
     (spinner "1.7")
