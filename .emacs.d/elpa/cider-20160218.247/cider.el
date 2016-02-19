@@ -104,7 +104,8 @@ version from the CIDER package or library.")
   :group 'cider)
 
 (defcustom cider-boot-command
-  "boot"
+  (or (executable-find "boot")
+      (executable-find "boot.sh"))
   "The command used to execute Boot."
   :type 'string
   :group 'cider
@@ -289,7 +290,7 @@ dependencies."
              cider-jack-in-dependencies
              cider-jack-in-lein-plugins
              cider-jack-in-nrepl-middlewares))
-    ("gradle" "")))
+    ("gradle" params)))
 
 
 ;;; ClojureScript REPL creation
