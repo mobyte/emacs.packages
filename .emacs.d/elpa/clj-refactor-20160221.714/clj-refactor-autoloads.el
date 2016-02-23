@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22212 8066
+;;;### (autoloads nil "clj-refactor" "clj-refactor.el" (22218 52357
 ;;;;;;  0 0))
 ;;; Generated autoloads from clj-refactor.el
 
@@ -285,17 +285,6 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-rename-symbol
 
 \(fn &optional NEW-NAME)" t nil)
 
-(autoload 'cljr-replace-refer-all "clj-refactor" "\
-Replaces :refer :all style require with alias :as style require.
-
-Also adds the alias prefix to all occurrences of public symbols in the namespace.
-
-With prefix WITH-REFERRED-SYMS? replaces refer all with the list of public symbols used in the namespace.
-
-wiki: todo
-
-\(fn WITH-REFERRED-SYMS\\?)" t nil)
-
 (autoload 'cljr-clean-ns "clj-refactor" "\
 Clean the ns form for the current buffer.
 
@@ -396,7 +385,7 @@ A mode to keep the clj-refactor keybindings.
 
 ;;;***
 
-;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22212 8066 343018
+;;;### (autoloads nil nil ("clj-refactor-pkg.el") (22218 52357 677772
 ;;;;;;  0))
 
 ;;;***

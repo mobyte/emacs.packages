@@ -1,14 +1,12 @@
 ;;; packed.el --- package manager agnostic Emacs Lisp package utilities
 
-;; Copyright (C) 2012-2015  Jonas Bernoulli
+;; Copyright (C) 2012-2016  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/tarsius/packed
 ;; Keywords: compile, convenience, lisp, package, library
-;; Package-Version: 20160209.905
-
-;; Package: packed
-;; Package-Requires: ((emacs "24.3") (dash "2.10.0"))
+;; Package-Version: 20160222.2252
+;; Package-Requires: ((emacs "24.3") (dash "2.12.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -153,10 +151,10 @@ and the file name is displayed in the echo area."
     file))
 
 (defconst packed-ignore-library-regexp
-  "\\(?:^\\.\\|-autoloads\\|-loaddefs\\|-tests?$\\)")
+  "\\(?:^\\.\\|-autoloads\\|-loaddefs\\|-tests?$\\|^ert$\\)")
 
 (defconst packed-ignore-directory-regexp
-  "\\(?:CVS\\|RCS\\|^t$\\|^tests?$\\)")
+  "\\(?:CVS\\|RCS\\|^t$\\|^tests?$\\|^vendor$\\|^script$\\)")
 
 (defun packed-ignore-directory-p (directory package)
   "Return t if DIRECTORY should be ignored when searching for libraries.

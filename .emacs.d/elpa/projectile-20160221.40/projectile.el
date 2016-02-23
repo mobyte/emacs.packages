@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20160210.905
+;; Package-Version: 20160221.40
 ;; Keywords: project, convenience
 ;; Version: 0.13.0
 ;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
@@ -476,7 +476,10 @@ The saved data can be restored with `projectile-unserialize'."
 
 (defvar projectile-known-projects nil
   "List of locations where we have previously seen projects.
-The list of projects is ordered by the time they have been accessed.")
+The list of projects is ordered by the time they have been accessed.
+
+See also `projectile-remove-known-project',
+`projectile-cleanup-known-projects' and `projectile-clear-known-projects'.")
 
 (defvar projectile-known-projects-on-file nil
   "List of known projects reference point.
