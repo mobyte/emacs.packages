@@ -528,6 +528,9 @@ current git branch as a string.  Otherwise return an empty string."
 ;;(setq cider-repl-output-face t)
 ;;(setq cider-repl-input-face t)
 
+;; pretty print REPL output
+(setq cider-repl-use-pretty-printing t)
+
 (setq nrepl-log-messages t)
 
 (require 'eldoc)
