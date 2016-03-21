@@ -523,6 +523,7 @@ current git branch as a string.  Otherwise return an empty string."
 (setq cider-repl-use-clojure-font-lock t)
 
 (add-hook 'cider-repl-mode-hook 'clojure-font-lock-setup)
+(add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
 ;;(setq cider-repl-output-face t)
 ;;(setq cider-repl-input-face t)
