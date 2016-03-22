@@ -529,7 +529,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;;(setq cider-repl-input-face t)
 
 ;; pretty print REPL output
-(setq cider-repl-use-pretty-printing t)
+(setq cider-repl-use-pretty-printing nil)
 
 (setq nrepl-log-messages t)
 
