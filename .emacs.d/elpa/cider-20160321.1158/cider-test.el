@@ -402,16 +402,21 @@ With the actual value, the outermost '(not ...)' s-expression is removed."
 
 ;;; Message echo
 
-(defun cider-test-echo-running (ns)
-  "Echo a running message for the test NS, which may be a keyword."
-  (message "Running tests in %s..."
-           (concat (cider-propertize
-                    (cond ((stringp ns) ns)
-                          ((eq :non-passing ns) "failing")
-                          ((eq :loaded ns)  "all loaded")
-                          ((eq :project ns) "all project"))
-                    'ns)
-                   (unless (stringp ns) " namespaces"))))
+(defun cider-test-echo-running (ns &optional test)
+  "Echo a running message for the test NS, which may be a keyword.
+The optional arg TEST denotes an individual test name."
+  (if test
+      (message "Running test %s in %s..."
+               (cider-propertize test 'bold)
+               (cider-propertize ns 'ns))
+    (message "Running tests in %s..."
+             (concat (cider-propertize
+                      (cond ((stringp ns) ns)
+                            ((eq :non-passing ns) "failing")
+                            ((eq :loaded ns)  "all loaded")
+                            ((eq :project ns) "all project"))
+                      'ns)
+                     (unless (stringp ns) " namespaces")))))
 
 (defun cider-test-echo-summary (summary results)
   "Echo SUMMARY statistics for a test run returning RESULTS."
@@ -532,14 +537,17 @@ This uses the Leiningen convention of appending '-test' to the namespace name."
   "Run tests for NS, which may be a keyword, optionally specifying TESTS.
 
 This tests a single NS, or multiple namespaces when using keywords `:project',
-`:loaded' or `:non-passing'. Optional TESTS are only honored when a single
-namespace is specified. Upon test completion, results are echoed and a test
-report is optionally displayed. When test failures/errors occur, their sources
+`:loaded' or `:non-passing'.  Optional TESTS are only honored when a single
+namespace is specified.  Upon test completion, results are echoed and a test
+report is optionally displayed.  When test failures/errors occur, their sources
 are highlighted."
   (cider-test-clear-highlights)
   (cider-map-connections
    (lambda (conn)
-     (cider-test-echo-running ns)
+     (if (and tests (= (length tests) 1))
+         ;; we generate a different message when running individual tests
+         (cider-test-echo-running ns (car tests))
+       (cider-test-echo-running ns))
      (cider-nrepl-send-request
       (list "op"     (cond ((stringp ns)         "test")
                            ((eq :project ns)     "test-all")
