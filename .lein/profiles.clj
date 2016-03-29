@@ -1,5 +1,5 @@
 {:user
- {:plugins [[refactor-nrepl "2.2.0-SNAPSHOT"]]
+ {:plugins [[refactor-nrepl "2.3.0-SNAPSHOT"]]
   :repl-options {:nrepl-middleware
                  [cider.nrepl.middleware.apropos/wrap-apropos
                   cider.nrepl.middleware.classpath/wrap-classpath
@@ -39,11 +39,8 @@
                 ;; inject into clojure.core with prefix
                 clojure.core >
                 [clojure.pprint pprint]
-                [clojure.tools.namespace.repl refresh]
                 [clojure.tools.namespace.repl refresh-all]
                 [clojure.tools.namespace.repl clear]
-                [clojure.java.shell sh]
-                [clojure.repl doc]
                 [clojure.test run-tests])]
   ;; :test-paths ["test-int"]
   ;; :source-paths ["src-int"]
