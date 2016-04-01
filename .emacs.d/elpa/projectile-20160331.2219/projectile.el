@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20160326.2220
+;; Package-Version: 20160331.2219
 ;; Keywords: project, convenience
 ;; Version: 0.14.0-cvs
 ;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
@@ -791,7 +791,7 @@ The current directory is assumed to be the project's root otherwise."
   (let ((dir default-directory))
     (or (--some (let* ((cache-key (format "%s-%s" it dir))
                        (cache-value (gethash cache-key projectile-project-root-cache)))
-                  (if cache-value
+                  (if (and cache-value (file-exists-p cache-value))
                       cache-value
                     (let ((value (funcall it (file-truename dir))))
                       (puthash cache-key value projectile-project-root-cache)
@@ -2840,10 +2840,10 @@ is chosen."
 (define-skeleton projectile-skel-dir-locals
   "Insert a .dir-locals.el template."
   nil
-  "((nil . (("
+  "((nil . ("
   ("" '(projectile-skel-variable-cons) \n)
   resume:
-  "))))")
+  ")))")
 
 ;;;###autoload
 (defun projectile-edit-dir-locals ()
