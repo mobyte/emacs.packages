@@ -3,7 +3,7 @@
 ;;; Code:
 (add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads nil "cider" "cider.el" (22276 44705 0 0))
+;;;### (autoloads nil "cider" "cider.el" (22277 63506 0 0))
 ;;; Generated autoloads from cider.el
 
 (autoload 'cider-version "cider" "\
@@ -40,7 +40,7 @@ gets associated with it.
 
 ;;;***
 
-;;;### (autoloads nil "cider-apropos" "cider-apropos.el" (22276 44705
+;;;### (autoloads nil "cider-apropos" "cider-apropos.el" (22277 63506
 ;;;;;;  0 0))
 ;;; Generated autoloads from cider-apropos.el
 
@@ -49,8 +49,8 @@ Show all symbols whose names match QUERY, a regular expression.
 QUERY can also be a list of space-separated words (e.g. take while) which
 will be converted to a regular expression (like take.+while) automatically
 behind the scenes.  The search may be limited to the namespace NS, and may
-optionally search doc strings, include private vars, and be case
-sensitive.
+optionally search doc strings (based on DOCS-P), include private vars
+\(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P).
 
 \(fn QUERY &optional NS DOCS-P PRIVATES-P CASE-SENSITIVE-P)" t nil)
 
@@ -62,6 +62,13 @@ Shortcut for (cider-apropos <query> nil t).
 (autoload 'cider-apropos-select "cider-apropos" "\
 Similar to `cider-apropos', but presents the results in a completing read.
 
+Show all symbols whose names match QUERY, a regular expression.
+QUERY can also be a list of space-separated words (e.g. take while) which
+will be converted to a regular expression (like take.+while) automatically
+behind the scenes.  The search may be limited to the namespace NS, and may
+optionally search doc strings (based on DOCS-P), include private vars
+\(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P).
+
 \(fn QUERY &optional NS DOCS-P PRIVATES-P CASE-SENSITIVE-P)" t nil)
 
 (autoload 'cider-apropos-documentation-select "cider-apropos" "\
@@ -71,8 +78,8 @@ Shortcut for (cider-apropos-select <query> nil t).
 
 ;;;***
 
-;;;### (autoloads nil "cider-browse-ns" "cider-browse-ns.el" (22276
-;;;;;;  44705 0 0))
+;;;### (autoloads nil "cider-browse-ns" "cider-browse-ns.el" (22277
+;;;;;;  63506 0 0))
 ;;; Generated autoloads from cider-browse-ns.el
 
 (autoload 'cider-browse-ns "cider-browse-ns" "\
@@ -87,8 +94,8 @@ List all loaded namespaces in BUFFER.
 
 ;;;***
 
-;;;### (autoloads nil "cider-classpath" "cider-classpath.el" (22276
-;;;;;;  44705 0 0))
+;;;### (autoloads nil "cider-classpath" "cider-classpath.el" (22277
+;;;;;;  63506 0 0))
 ;;; Generated autoloads from cider-classpath.el
 
 (autoload 'cider-classpath "cider-classpath" "\
@@ -103,7 +110,7 @@ Open a classpath entry.
 
 ;;;***
 
-;;;### (autoloads nil "cider-debug" "cider-debug.el" (22276 44705
+;;;### (autoloads nil "cider-debug" "cider-debug.el" (22277 63506
 ;;;;;;  0 0))
 ;;; Generated autoloads from cider-debug.el
 
@@ -120,8 +127,8 @@ a number of keys will be prompted to the user.
 
 ;;;***
 
-;;;### (autoloads nil "cider-grimoire" "cider-grimoire.el" (22276
-;;;;;;  44705 0 0))
+;;;### (autoloads nil "cider-grimoire" "cider-grimoire.el" (22277
+;;;;;;  63506 0 0))
 ;;; Generated autoloads from cider-grimoire.el
 
 (autoload 'cider-grimoire-web "cider-grimoire" "\
@@ -144,8 +151,8 @@ opposite of what that option dictates.
 
 ;;;***
 
-;;;### (autoloads nil "cider-inspector" "cider-inspector.el" (22276
-;;;;;;  44705 0 0))
+;;;### (autoloads nil "cider-inspector" "cider-inspector.el" (22277
+;;;;;;  63506 0 0))
 ;;; Generated autoloads from cider-inspector.el
 
 (autoload 'cider-inspect-last-sexp "cider-inspector" "\
@@ -174,7 +181,7 @@ With a second prefix argument it prompts for an expression to eval and inspect.
 ;;;***
 
 ;;;### (autoloads nil "cider-macroexpansion" "cider-macroexpansion.el"
-;;;;;;  (22276 44705 0 0))
+;;;;;;  (22277 63506 0 0))
 ;;; Generated autoloads from cider-macroexpansion.el
 
 (autoload 'cider-macroexpand-1 "cider-macroexpansion" "\
@@ -191,7 +198,7 @@ Invoke \\=`clojure.walk/macroexpand-all\\=` on the expression preceding point.
 
 ;;;***
 
-;;;### (autoloads nil "cider-mode" "cider-mode.el" (22276 44705 0
+;;;### (autoloads nil "cider-mode" "cider-mode.el" (22277 63506 0
 ;;;;;;  0))
 ;;; Generated autoloads from cider-mode.el
 
@@ -218,7 +225,7 @@ Minor mode for REPL interaction from a Clojure buffer.
 
 ;;;***
 
-;;;### (autoloads nil "cider-scratch" "cider-scratch.el" (22276 44705
+;;;### (autoloads nil "cider-scratch" "cider-scratch.el" (22277 63506
 ;;;;;;  0 0))
 ;;; Generated autoloads from cider-scratch.el
 
@@ -229,8 +236,8 @@ Go to the scratch buffer named `cider-scratch-buffer-name'.
 
 ;;;***
 
-;;;### (autoloads nil "cider-selector" "cider-selector.el" (22276
-;;;;;;  44705 0 0))
+;;;### (autoloads nil "cider-selector" "cider-selector.el" (22277
+;;;;;;  63506 0 0))
 ;;; Generated autoloads from cider-selector.el
 
 (autoload 'cider-selector "cider-selector" "\
@@ -245,7 +252,7 @@ See `def-cider-selector-method' for defining new methods.
 
 ;;;***
 
-;;;### (autoloads nil "cider-test" "cider-test.el" (22276 44705 0
+;;;### (autoloads nil "cider-test" "cider-test.el" (22277 63506 0
 ;;;;;;  0))
 ;;; Generated autoloads from cider-test.el
 
@@ -273,7 +280,7 @@ nothing if no tests are defined or if the file failed to load.
 ;;;;;;  "cider-doc.el" "cider-eldoc.el" "cider-interaction.el" "cider-overlays.el"
 ;;;;;;  "cider-pkg.el" "cider-popup.el" "cider-repl.el" "cider-resolve.el"
 ;;;;;;  "cider-stacktrace.el" "cider-util.el" "nrepl-client.el")
-;;;;;;  (22276 44705 795831 0))
+;;;;;;  (22277 63506 835712 0))
 
 ;;;***
 

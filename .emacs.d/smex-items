@@ -2,17 +2,22 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- package-install
+ js-mode
+ cider-restart
+ clojure-mode
+ replace-string
+ rgrep
  cider-jack-in
- cd
- 5x5
- arp
- dbx
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 1)
+ (cider-jack-in . 2)
  (package-install . 1)
- (package-list-packages . 1)
+ (package-list-packages . 2)
+ (cider-restart . 3)
+ (rgrep . 1)
+ (replace-string . 2)
+ (clojure-mode . 1)
+ (js-mode . 1)
 )
