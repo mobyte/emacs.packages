@@ -2,19 +2,19 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- cider-quit
+ revert-buffer
  rgrep
  cider-jack-in
- revert-buffer
  reveal-mode
  bubbles
+ magit-blame
 )
 
 ;; ----- smex-data -----
 (
  (cider-jack-in . 9)
  (package-install . 1)
- (package-list-packages . 6)
+ (package-list-packages . 7)
  (cider-restart . 7)
  (rgrep . 9)
  (replace-string . 2)
@@ -33,5 +33,5 @@
  (bubbles . 1)
  (buffer-info . 1)
  (reveal-mode . 1)
- (revert-buffer . 1)
+ (revert-buffer . 3)
 )
