@@ -2,8 +2,8 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- revert-buffer
  rgrep
+ revert-buffer
  cider-jack-in
  reveal-mode
  bubbles
@@ -14,9 +14,9 @@
 (
  (cider-jack-in . 9)
  (package-install . 1)
- (package-list-packages . 7)
+ (package-list-packages . 8)
  (cider-restart . 7)
- (rgrep . 9)
+ (rgrep . 10)
  (replace-string . 2)
  (clojure-mode . 1)
  (js-mode . 1)
