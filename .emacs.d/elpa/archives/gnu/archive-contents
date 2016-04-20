@@ -110,7 +110,7 @@
 	  ((:url . "https://github.com/Malabarba/beacon")
 	   (:keywords "convenience"))])
  (bug-hunter .
-	     [(1 2)
+	     [(1 3)
 	      ((seq
 		(1 3))
 	       (cl-lib

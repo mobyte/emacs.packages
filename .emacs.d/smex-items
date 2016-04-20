@@ -3,31 +3,31 @@
 (
  package-list-packages
  rgrep
- revert-buffer
  cider-jack-in
- reveal-mode
- bubbles
  magit-blame
+ cider-quit
+ clojure-mode
+ revert-buffer
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 9)
+ (cider-jack-in . 11)
  (package-install . 1)
- (package-list-packages . 8)
+ (package-list-packages . 9)
  (cider-restart . 7)
- (rgrep . 10)
+ (rgrep . 14)
  (replace-string . 2)
- (clojure-mode . 1)
+ (clojure-mode . 2)
  (js-mode . 1)
  (magit-process-mode . 2)
  (magit-process-buffer . 2)
  (ada-header . 1)
  (shell . 1)
- (cider-quit . 4)
+ (cider-quit . 5)
  (version . 1)
  (server-start . 1)
- (magit-blame . 8)
+ (magit-blame . 12)
  (insert-file . 1)
  (magit-blame-popup . 2)
  (bubbles . 1)
