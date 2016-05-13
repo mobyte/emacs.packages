@@ -516,22 +516,15 @@ and `magit-post-display-buffer-hook'."
 (defun magit-display-buffer-traditional (buffer)
   "Display BUFFER the way this has traditionally been done."
   (display-buffer
-   buffer (cond ((and (derived-mode-p 'magit-mode)
-                      (not (memq (with-current-buffer buffer major-mode)
-                                 '(magit-process-mode
-                                   magit-revision-mode
-                                   magit-diff-mode
-                                   magit-stash-mode
-                                   magit-status-mode))))
-                 '(display-buffer-same-window))
-                (with-editor-mode ; see #2632
-                 '((display-buffer--maybe-same-window
-                    display-buffer-reuse-window
-                    display-buffer--maybe-pop-up-frame-or-window
-                    display-buffer-use-some-window
-                    display-buffer-pop-up-frame)
-                   . (inhibit-same-window t)))
-                (t nil)))) ; display in another window
+   buffer (if (and (derived-mode-p 'magit-mode)
+                   (not (memq (with-current-buffer buffer major-mode)
+                              '(magit-process-mode
+                                magit-revision-mode
+                                magit-diff-mode
+                                magit-stash-mode
+                                magit-status-mode))))
+              '(display-buffer-same-window)
+            nil))) ; display in another window
 
 (defun magit-maybe-set-dedicated ()
   "Mark the selected window as dedicated if appropriate.

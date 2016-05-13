@@ -3300,6 +3300,9 @@ variants.
 
      Apply the change at point to the working tree.
 
+     With a prefix argument fallback to a 3-way merge.  Doing so causes
+     the change to be applied to the index as well.
+
 ‘k’     (‘magit-discard’)
 
      Remove the change at point from the working tree.
@@ -3307,6 +3310,9 @@ variants.
 ‘v’     (‘magit-reverse’)
 
      Reverse the change at point in the working tree.
+
+     With a prefix argument fallback to a 3-way merge.  Doing so causes
+     the change to be applied to the index as well.
 
    With a prefix argument all apply variants attempt a 3-way merge when
 appropriate (i.e.  when ‘git apply’ is used internally).
@@ -7283,7 +7289,7 @@ Appendix B Keystroke Index
                                                               (line  31)
 * j:                                     Diff buffer.         (line  38)
 * k:                                     Viewing Git output.  (line  19)
-* k <1>:                                 Applying.            (line  37)
+* k <1>:                                 Applying.            (line  40)
 * k <2>:                                 Editing rebase sequences.
                                                               (line  68)
 * k <3>:                                 Stashing.            (line  92)
@@ -7452,7 +7458,7 @@ Appendix B Keystroke Index
                                                               (line  44)
 * U:                                     Staging and unstaging.
                                                               (line  53)
-* v:                                     Applying.            (line  41)
+* v:                                     Applying.            (line  44)
 * V:                                     Reverting.           (line   6)
 * V A:                                   Reverting.           (line  30)
 * V a:                                   Reverting.           (line  38)
