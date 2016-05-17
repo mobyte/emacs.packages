@@ -2,33 +2,33 @@
 ;; ----- smex-history -----
 (
  package-list-packages
+ cider-restart
+ rgrep
+ insert-file
  cider-jack-in
  cider-quit
- cider-restart
  clojure-mode
- rgrep
- magit-blame
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 64)
+ (cider-jack-in . 66)
  (package-install . 1)
- (package-list-packages . 30)
- (cider-restart . 29)
- (rgrep . 45)
+ (package-list-packages . 31)
+ (cider-restart . 31)
+ (rgrep . 49)
  (replace-string . 2)
- (clojure-mode . 10)
+ (clojure-mode . 11)
  (js-mode . 1)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
  (shell . 1)
- (cider-quit . 25)
+ (cider-quit . 26)
  (version . 2)
  (server-start . 1)
  (magit-blame . 35)
- (insert-file . 3)
+ (insert-file . 4)
  (magit-blame-popup . 2)
  (bubbles . 2)
  (buffer-info . 8)

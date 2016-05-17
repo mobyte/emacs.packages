@@ -9,7 +9,7 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20160512.722
+;; Package-Version: 20160513.847
 ;; Keywords: languages clojure clojurescript lisp
 ;; Version: 5.3.0
 ;; Package-Requires: ((emacs "24.3"))
@@ -1485,13 +1485,17 @@ content) are considered part of the preceding sexp."
                ;; Move to start of ns name.
                (lambda ()
                  (comment-forward)
-                 (skip-chars-forward "[(")
+                 (skip-chars-forward "[:blank:]\n\r[(")
                  (clojure-forward-logical-sexp)
                  (forward-sexp -1)
                  nil)
                ;; Move to end of ns name.
                (lambda ()
-                 (clojure-forward-logical-sexp)))))
+                 (clojure-forward-logical-sexp)))
+    (goto-char (point-max))
+    ;; Does the last line now end in a comment?
+    (when (nth 4 (parse-partial-sexp (point-min) (point)))
+      (insert "\n"))))
 
 (defun clojure-sort-ns ()
   "Internally sort each sexp inside the ns form."
