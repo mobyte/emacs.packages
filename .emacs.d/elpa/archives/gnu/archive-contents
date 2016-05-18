@@ -695,6 +695,13 @@
 	     nil "Major mode for SiSU markup text" single
 	     ((:url . "http://www.sisudoc.org/")
 	      (:keywords "text" "syntax" "processes" "tools"))])
+ (smart-yank .
+	     [(0 1)
+	      ((emacs
+		(24)))
+	      "A different approach of yank pointer handling" single
+	      ((:url . "http://elpa.gnu.org/packages/smart-yank.html")
+	       (:keywords "convenience"))])
  (sml-mode .
 	   [(6 7)
 	    nil "Major mode for editing (Standard) ML" single

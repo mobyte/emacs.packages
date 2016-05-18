@@ -3,19 +3,19 @@
 (
  package-list-packages
  cider-restart
- rgrep
- insert-file
  cider-jack-in
  cider-quit
+ rgrep
+ insert-file
  clojure-mode
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 66)
+ (cider-jack-in . 68)
  (package-install . 1)
- (package-list-packages . 31)
- (cider-restart . 31)
+ (package-list-packages . 34)
+ (cider-restart . 36)
  (rgrep . 49)
  (replace-string . 2)
  (clojure-mode . 11)
@@ -24,7 +24,7 @@
  (magit-process-buffer . 3)
  (ada-header . 1)
  (shell . 1)
- (cider-quit . 26)
+ (cider-quit . 27)
  (version . 2)
  (server-start . 1)
  (magit-blame . 35)
