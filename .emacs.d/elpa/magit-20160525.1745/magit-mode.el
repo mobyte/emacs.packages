@@ -104,6 +104,7 @@ which in turn uses the function specified here."
   :type '(radio (function-item magit-display-buffer-traditional)
                 (function-item magit-display-buffer-same-window-except-diff-v1)
                 (function-item magit-display-buffer-fullframe-status-v1)
+                (function-item magit-display-buffer-fullframe-status-topleft-v1)
                 (function-item magit-display-buffer-fullcolumn-most-v1)
                 (function-item display-buffer)
                 (function :tag "Function")))
@@ -544,13 +545,13 @@ If a buffer's `major-mode' derives from `magit-diff-mode' or
 other buffers in the selected window."
   (display-buffer
    buffer (if (with-current-buffer buffer
-                (or (derived-mode-p 'magit-diff-mode)
-                    (derived-mode-p 'magit-process-mode)))
+                (derived-mode-p 'magit-diff-mode 'magit-process-mode))
               nil  ; display in another window
             '(display-buffer-same-window))))
 
 (defun magit--display-buffer-fullframe (buffer alist)
   (-when-let (window (or (display-buffer-reuse-window buffer alist)
+                         (display-buffer-same-window buffer alist)
                          (display-buffer-pop-up-window buffer alist)
                          (display-buffer-use-some-window buffer alist)))
     (delete-other-windows window)
@@ -563,6 +564,49 @@ Otherwise, behave like `magit-display-buffer-traditional'."
           'magit-status-mode)
       (display-buffer buffer '(magit--display-buffer-fullframe))
     (magit-display-buffer-traditional buffer)))
+
+(defun magit--display-buffer-topleft (buffer alist)
+  (or (display-buffer-reuse-window buffer alist)
+      (-when-let (window2 (display-buffer-pop-up-window buffer alist))
+        (let ((window1 (get-buffer-window))
+              (buffer1 (current-buffer))
+              (buffer2 (window-buffer window2))
+              (w2-quit-restore (window-parameter window2 'quit-restore)))
+          (set-window-buffer window1 buffer2)
+          (set-window-buffer window2 buffer1)
+          (select-window window2)
+          ;; Swap some window state that `magit-mode-quit-window' and
+          ;; `quit-restore-window' inspect.
+          (set-window-prev-buffers window2 (cdr (window-prev-buffers window1)))
+          (set-window-prev-buffers window1 nil)
+          (set-window-parameter window2 'magit-dedicated
+                                (window-parameter window1 'magit-dedicated))
+          (set-window-parameter window1 'magit-dedicated t)
+          (set-window-parameter window1 'quit-restore
+                                (list 'window 'window
+                                      (nth 2 w2-quit-restore)
+                                      (nth 3 w2-quit-restore)))
+          (set-window-parameter window2 'quit-restore nil)
+          window1))))
+
+(defun magit-display-buffer-fullframe-status-topleft-v1 (buffer)
+  "Display BUFFER, filling entire frame if BUFFER is a status buffer.
+When BUFFER derives from `magit-diff-mode' or
+`magit-process-mode', try to display BUFFER to the top or left of
+the current buffer rather than to the bottom or right, as
+`magit-display-buffer-fullframe-status-v1' would.  Whether the
+split is made vertically or horizontally is determined by
+`split-window-preferred-function'."
+  (display-buffer
+   buffer
+   (cond ((eq (with-current-buffer buffer major-mode)
+              'magit-status-mode)
+          '(magit--display-buffer-fullframe))
+         ((with-current-buffer buffer
+            (derived-mode-p 'magit-diff-mode 'magit-process-mode))
+          '(magit--display-buffer-topleft))
+         (t
+          '(display-buffer-same-window)))))
 
 (defun magit--display-buffer-fullcolumn (buffer alist)
   (-when-let (window (or (display-buffer-reuse-window buffer alist)
@@ -583,8 +627,7 @@ the mode of the current buffer derives from `magit-log-mode' or
 `magit-cherry-mode'."
   (display-buffer
    buffer
-   (cond ((and (or (derived-mode-p 'magit-log-mode)
-                   (derived-mode-p 'magit-cherry-mode))
+   (cond ((and (derived-mode-p 'magit-log-mode 'magit-cherry-mode)
                (with-current-buffer buffer
                  (derived-mode-p 'magit-diff-mode)))
           nil)
