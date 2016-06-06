@@ -189,6 +189,11 @@
 	    nil "Major mode for editing comma/char separated values" single
 	    ((:url . "http://elpa.gnu.org/packages/csv-mode.html")
 	     (:keywords "convenience"))])
+ (cycle-quotes .
+	       [(0 1)
+		nil "Cycle between quote styles" tar
+		((:keywords "convenience")
+		 (:url . "http://elpa.gnu.org/packages/cycle-quotes.html"))])
  (darkroom .
 	   [(0 1)
 	    ((cl-lib
