@@ -1,31 +1,31 @@
 
 ;; ----- smex-history -----
 (
+ shell
+ byte-recompile-directory
+ windmove-left
  package-list-packages
- magit-blame
- cider-jack-in
  rgrep
- cider-quit
- revert-buffer
- clojure-mode
+ cider-jack-in
+ version
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 99)
+ (cider-jack-in . 101)
  (package-install . 1)
- (package-list-packages . 49)
- (cider-restart . 73)
- (rgrep . 98)
+ (package-list-packages . 58)
+ (cider-restart . 74)
+ (rgrep . 105)
  (replace-string . 3)
  (clojure-mode . 20)
  (js-mode . 1)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
- (shell . 2)
+ (shell . 6)
  (cider-quit . 42)
- (version . 2)
+ (version . 3)
  (server-start . 1)
  (magit-blame . 47)
  (insert-file . 10)
@@ -37,9 +37,11 @@
  (cider-mode . 1)
  (org-mode . 1)
  (cider-connect . 5)
- (package-refresh-contents . 3)
- (paredit-mode . 11)
+ (package-refresh-contents . 6)
+ (paredit-mode . 13)
  (describe-function . 1)
  (apply-macro-to-region-lines . 3)
  (cider-inspect-last-result . 3)
+ (windmove-left . 1)
+ (byte-recompile-directory . 3)
 )

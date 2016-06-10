@@ -5,8 +5,10 @@
 ;;     '("marmalade" .
 ;;       "http://marmalade-repo.org/packages/"))
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
+;; (add-to-list 'package-archives
+;;              '("melpa" . "http://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
@@ -66,15 +68,18 @@
  '(global-font-lock-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
+ '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(ispell-program-name "/usr/bin/aspell")
  '(make-backup-files nil)
  '(org-agenda-files (quote ("~/tmp/1.org")))
+ '(package-selected-packages
+   (quote
+    (zoom-frm smex shell-command projectile magit key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values (quote ((eval hide-sublevels 1) (aaa . bbb))))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
- '(uniquify-buffer-name-style (quote forward) nil (uniquify))
- '(initial-frame-alist (quote ((fullscreen . maximized)))))
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
 (set-default-font "Monaco 16")
 (set-background-color "black")
@@ -756,7 +761,11 @@ current git branch as a string.  Otherwise return an empty string."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(company-scrollbar-bg ((t (:background "#191919"))))
+ '(company-scrollbar-fg ((t (:background "#0c0c0c"))))
+ '(company-tooltip ((t (:inherit default))))
+ '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
+ '(company-tooltip-selection ((t (:inherit font-lock-function-name-face :background "#3f3f3f")))))
 
 ;;* some actions on start
 
@@ -795,6 +804,8 @@ current git branch as a string.  Otherwise return an empty string."
 ;;* initial execution
 
 (split-window-right)
+
+(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-same-window)))
 
 ;; Open shell in default project directory
 (let ((default-directory (shell-command-to-string ". ~/.bashrc; echo -n $CURRENT_PROJECT")))
