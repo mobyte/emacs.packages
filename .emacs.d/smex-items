@@ -1,24 +1,24 @@
 
 ;; ----- smex-history -----
 (
- shell
- byte-recompile-directory
- windmove-left
- package-list-packages
  rgrep
  cider-jack-in
- version
+ package-list-packages
+ clojure-mode
+ revert-buffer
+ byte-recompile-directory
+ shell
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 101)
+ (cider-jack-in . 103)
  (package-install . 1)
- (package-list-packages . 58)
+ (package-list-packages . 59)
  (cider-restart . 74)
- (rgrep . 105)
+ (rgrep . 109)
  (replace-string . 3)
- (clojure-mode . 20)
+ (clojure-mode . 21)
  (js-mode . 1)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
@@ -33,7 +33,7 @@
  (bubbles . 2)
  (buffer-info . 19)
  (reveal-mode . 1)
- (revert-buffer . 14)
+ (revert-buffer . 15)
  (cider-mode . 1)
  (org-mode . 1)
  (cider-connect . 5)
@@ -43,5 +43,5 @@
  (apply-macro-to-region-lines . 3)
  (cider-inspect-last-result . 3)
  (windmove-left . 1)
- (byte-recompile-directory . 3)
+ (byte-recompile-directory . 5)
 )

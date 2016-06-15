@@ -805,7 +805,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 (split-window-right)
 
-(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-same-window)))
+;(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-same-window)))
 
 ;; Open shell in default project directory
 (let ((default-directory (shell-command-to-string ". ~/.bashrc; echo -n $CURRENT_PROJECT")))
