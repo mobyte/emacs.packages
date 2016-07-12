@@ -1,47 +1,51 @@
 
 ;; ----- smex-history -----
 (
- rgrep
- cider-jack-in
  package-list-packages
- clojure-mode
- revert-buffer
- byte-recompile-directory
- shell
+ magit-blame
+ rgrep
+ insert-file
+ cider-restart
+ cider-jack-in
+ cider-quit
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 103)
+ (cider-jack-in . 120)
  (package-install . 1)
- (package-list-packages . 59)
- (cider-restart . 74)
- (rgrep . 109)
- (replace-string . 3)
- (clojure-mode . 21)
+ (package-list-packages . 71)
+ (cider-restart . 126)
+ (rgrep . 143)
+ (replace-string . 4)
+ (clojure-mode . 22)
  (js-mode . 1)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
  (shell . 6)
- (cider-quit . 42)
+ (cider-quit . 48)
  (version . 3)
  (server-start . 1)
- (magit-blame . 47)
- (insert-file . 10)
+ (magit-blame . 79)
+ (insert-file . 11)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 19)
+ (buffer-info . 25)
  (reveal-mode . 1)
- (revert-buffer . 15)
+ (revert-buffer . 25)
  (cider-mode . 1)
- (org-mode . 1)
+ (org-mode . 3)
  (cider-connect . 5)
- (package-refresh-contents . 6)
+ (package-refresh-contents . 7)
  (paredit-mode . 13)
  (describe-function . 1)
  (apply-macro-to-region-lines . 3)
  (cider-inspect-last-result . 3)
  (windmove-left . 1)
  (byte-recompile-directory . 5)
+ (erc-identd-start . 1)
+ (Custom-reset-standard . 1)
+ (text-mode . 2)
+ (emerge-files-with-ancestor . 1)
 )
