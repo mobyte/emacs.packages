@@ -2,22 +2,22 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- magit-blame
- rgrep
- insert-file
  cider-restart
+ rgrep
+ revert-buffer
  cider-jack-in
- cider-quit
+ magit-blame
+ replace-regexp
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 120)
+ (cider-jack-in . 123)
  (package-install . 1)
- (package-list-packages . 71)
- (cider-restart . 126)
- (rgrep . 143)
- (replace-string . 4)
+ (package-list-packages . 73)
+ (cider-restart . 130)
+ (rgrep . 150)
+ (replace-string . 5)
  (clojure-mode . 22)
  (js-mode . 1)
  (magit-process-mode . 3)
@@ -27,13 +27,13 @@
  (cider-quit . 48)
  (version . 3)
  (server-start . 1)
- (magit-blame . 79)
+ (magit-blame . 81)
  (insert-file . 11)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 25)
+ (buffer-info . 26)
  (reveal-mode . 1)
- (revert-buffer . 25)
+ (revert-buffer . 27)
  (cider-mode . 1)
  (org-mode . 3)
  (cider-connect . 5)
@@ -48,4 +48,5 @@
  (Custom-reset-standard . 1)
  (text-mode . 2)
  (emerge-files-with-ancestor . 1)
+ (replace-regexp . 1)
 )
