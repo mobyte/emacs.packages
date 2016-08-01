@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20160723.622
+;; Package-Version: 20160728.52
 ;; Keywords: project, convenience
 ;; Version: 0.14.0
 ;; Package-Requires: ((dash "2.11.0") (pkg-info "0.4"))
@@ -1616,6 +1616,8 @@ With FLEX-MATCHING, match any file that contains the base name of current file"
                                 candidates))
                      file-list)))
          (candidates
+          (-filter (lambda (file) (not (backup-file-name-p file))) candidates))
+         (candidates
           (-sort (lambda (file _)
                    (let ((candidate-dirname (file-name-nondirectory (directory-file-name (file-name-directory file)))))
                      (unless (equal fulldirname (file-name-directory file))
@@ -1845,6 +1847,22 @@ a COMPILE-CMD, a TEST-CMD, and a RUN-CMD."
                               'run-command run-cmd)
            projectile-project-types))
 
+(defun projectile-cabal ()
+  "Check if a project contains *.cabal files but no stack.yaml file."
+  (and (projectile-verify-file "*.cabal")
+       (not (projectile-verify-file "stack.yaml"))))
+
+(defun projectile-go ()
+  "Check if a project contains Go source files."
+  (-any? (lambda (file)
+           (string= (file-name-extension file) "go"))
+         (projectile-current-project-files)))
+
+(defcustom projectile-go-function 'projectile-go
+  "Function to determine if project's type is go."
+  :group 'projectile
+  :type 'function)
+
 (projectile-register-project-type 'emacs-cask '("Cask") "cask install")
 (projectile-register-project-type 'rails-rspec '("Gemfile" "app" "lib" "db" "config" "spec") "bundle exec rails server" "bundle exec rspec")
 (projectile-register-project-type 'rails-test '("Gemfile" "app" "lib" "db" "config" "test") "bundle exec rails server" "bundle exec rake test")
@@ -1872,25 +1890,9 @@ a COMPILE-CMD, a TEST-CMD, and a RUN-CMD."
 (projectile-register-project-type 'haskell-cabal #'projectile-cabal "cabal build" "cabal test")
 (projectile-register-project-type 'rust-cargo '("Cargo.toml") "cargo build" "cargo test")
 (projectile-register-project-type 'r '("DESCRIPTION") "R CMD INSTALL --with-keep.source ." (concat "R CMD check -o " temporary-file-directory " ."))
-(projectile-register-project-type 'go 'projectile-go-function "go build ./..." "go test ./...")
+(projectile-register-project-type 'go projectile-go-function "go build ./..." "go test ./...")
 (projectile-register-project-type 'racket '("info.rkt") nil "raco test .")
 (projectile-register-project-type 'elixir '("mix.exs") "mix compile" "mix test")
-
-(defun projectile-cabal ()
-  "Check if a project contains *.cabal files but no stack.yaml file."
-  (and (projectile-verify-file "*.cabal")
-       (not (projectile-verify-file "stack.yaml"))))
-
-(defun projectile-go ()
-  "Check if a project contains Go source files."
-  (-any? (lambda (file)
-           (string= (file-name-extension file) "go"))
-         (projectile-current-project-files)))
-
-(defcustom projectile-go-function 'projectile-go
-  "Function to determine if project's type is go."
-  :group 'projectile
-  :type 'function)
 
 (defvar-local projectile-project-type nil
   "Buffer local var for overriding the auto-detected project type.

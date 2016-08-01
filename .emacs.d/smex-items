@@ -3,23 +3,23 @@
 (
  package-list-packages
  rgrep
- replace-string
- magit-blame
  revert-buffer
- cider-jack-in
- clojure-mode
+ cider-restart
+ magit-blame
+ js-mode
+ insert-file
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 137)
+ (cider-jack-in . 141)
  (package-install . 1)
- (package-list-packages . 81)
- (cider-restart . 178)
- (rgrep . 205)
- (replace-string . 14)
- (clojure-mode . 24)
- (js-mode . 1)
+ (package-list-packages . 83)
+ (cider-restart . 191)
+ (rgrep . 234)
+ (replace-string . 18)
+ (clojure-mode . 26)
+ (js-mode . 3)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
@@ -27,18 +27,18 @@
  (cider-quit . 61)
  (version . 3)
  (server-start . 1)
- (magit-blame . 111)
- (insert-file . 17)
+ (magit-blame . 120)
+ (insert-file . 20)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 36)
+ (buffer-info . 37)
  (reveal-mode . 1)
- (revert-buffer . 29)
+ (revert-buffer . 32)
  (cider-mode . 1)
  (org-mode . 4)
  (cider-connect . 11)
  (package-refresh-contents . 7)
- (paredit-mode . 15)
+ (paredit-mode . 22)
  (describe-function . 1)
  (apply-macro-to-region-lines . 3)
  (cider-inspect-last-result . 3)
