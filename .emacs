@@ -550,6 +550,9 @@ current git branch as a string.  Otherwise return an empty string."
   '(define-clojure-indent
      (wrap-result 'defun)
      (handle-error 'defun)
+     (context-defn 'defun)
+     (context-fn 'defun)
+     (context-fn-stub 'defun)
      (defroutes 'defun)
      (testing 'defun)
      (feature 'defun)
