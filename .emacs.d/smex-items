@@ -6,18 +6,18 @@
  cider-restart
  magit-blame
  cider-jack-in
- clojure-mode
- revert-buffer
+ emerge-files-with-ancestor
+ replace-string
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 156)
+ (cider-jack-in . 159)
  (package-install . 1)
- (package-list-packages . 106)
- (cider-restart . 258)
- (rgrep . 365)
- (replace-string . 22)
+ (package-list-packages . 110)
+ (cider-restart . 299)
+ (rgrep . 413)
+ (replace-string . 24)
  (clojure-mode . 40)
  (js-mode . 3)
  (magit-process-mode . 3)
@@ -27,18 +27,18 @@
  (cider-quit . 65)
  (version . 3)
  (server-start . 1)
- (magit-blame . 211)
+ (magit-blame . 225)
  (insert-file . 24)
  (magit-blame-popup . 2)
  (bubbles . 2)
  (buffer-info . 48)
  (reveal-mode . 1)
- (revert-buffer . 36)
+ (revert-buffer . 38)
  (cider-mode . 1)
  (org-mode . 4)
  (cider-connect . 11)
  (package-refresh-contents . 7)
- (paredit-mode . 34)
+ (paredit-mode . 44)
  (describe-function . 1)
  (apply-macro-to-region-lines . 3)
  (cider-inspect-last-result . 3)
@@ -47,7 +47,7 @@
  (erc-identd-start . 1)
  (Custom-reset-standard . 3)
  (text-mode . 2)
- (emerge-files-with-ancestor . 1)
+ (emerge-files-with-ancestor . 2)
  (replace-regexp . 4)
  (view-emacs-news . 1)
  (rename-buffer . 1)
