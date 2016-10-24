@@ -74,7 +74,7 @@
  '(org-agenda-files (quote ("~/tmp/1.org")))
  '(package-selected-packages
    (quote
-    (zoom-frm smex shell-command projectile magit key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values (quote ((eval hide-sublevels 1) (aaa . bbb))))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
