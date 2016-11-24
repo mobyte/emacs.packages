@@ -563,6 +563,7 @@ current git branch as a string.  Otherwise return an empty string."
      (fnk 'defun)
      (fact 'defun)
      (facts 'defun)
+     (conditional 'defun)
      (GET 2)
      (POST 2)
      (PUT 2)
