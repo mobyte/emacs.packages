@@ -641,7 +641,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 (key-chord-define-global "jf" 'ace-jump-mode)
 (key-chord-define-global "fj" 'ace-jump-mode)
-(key-chord-define-global "jj" 'ace-jump-char-mode)
+;;(key-chord-define-global "jj" 'ace-jump-char-mode)
 (key-chord-mode 1)
 
 (global-set-key (kbd "C-c SPC") 'ace-jump-char-mode)
@@ -808,6 +808,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;;* initial execution
 
 (split-window-right)
+(other-window 1)
 
 ;(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-same-window)))
 
