@@ -2,51 +2,51 @@
 ;; ----- smex-history -----
 (
  package-list-packages
- cider-jack-in
  rgrep
  magit-blame
- replace-string
- clojure-mode
- revert-buffer
+ text-mode
+ cider-quit
+ cider-jack-in
+ cider-connect
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 271)
+ (cider-jack-in . 279)
  (package-install . 1)
- (package-list-packages . 187)
- (cider-restart . 567)
- (rgrep . 823)
- (replace-string . 99)
- (clojure-mode . 153)
+ (package-list-packages . 191)
+ (cider-restart . 578)
+ (rgrep . 851)
+ (replace-string . 100)
+ (clojure-mode . 157)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
- (shell . 11)
- (cider-quit . 132)
+ (shell . 13)
+ (cider-quit . 141)
  (version . 8)
  (server-start . 1)
- (magit-blame . 383)
+ (magit-blame . 398)
  (insert-file . 37)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 81)
+ (buffer-info . 83)
  (reveal-mode . 1)
  (revert-buffer . 89)
  (cider-mode . 1)
  (org-mode . 5)
- (cider-connect . 11)
+ (cider-connect . 14)
  (package-refresh-contents . 7)
  (paredit-mode . 55)
  (describe-function . 1)
- (apply-macro-to-region-lines . 14)
+ (apply-macro-to-region-lines . 15)
  (cider-inspect-last-result . 6)
  (windmove-left . 1)
  (byte-recompile-directory . 5)
  (erc-identd-start . 1)
  (Custom-reset-standard . 4)
- (text-mode . 3)
+ (text-mode . 4)
  (emerge-files-with-ancestor . 2)
  (replace-regexp . 16)
  (view-emacs-news . 1)
@@ -62,7 +62,7 @@
  (clj-refactor-mode . 2)
  (cljr-update-project-dependencies . 3)
  (cljr-update-project-dependency . 2)
- (cljr-project-clean . 2)
+ (cljr-project-clean . 3)
  (cljr-toggle-debug-mode . 1)
  (emacs-lisp-mode . 2)
  (cider-load-all-project-ns . 1)
@@ -78,4 +78,5 @@
  (cider-browse-ns-all . 1)
  (cider-scratch . 1)
  (dired-do-find-regexp-and-replace . 1)
+ (ibuffer . 2)
 )
