@@ -1,9 +1,9 @@
 ;;; frame-fns-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil nil ("frame-fns.el") (22154 10765 203055 0))
+;;;### (autoloads nil nil ("frame-fns.el") (22635 24426 0 0))
 
 ;;;***
 

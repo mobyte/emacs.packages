@@ -1,9 +1,9 @@
 ;;; zoom-frm-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
+(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
-;;;### (autoloads nil "zoom-frm" "zoom-frm.el" (22445 30078 0 0))
+;;;### (autoloads nil "zoom-frm" "zoom-frm.el" (22635 24426 0 0))
 ;;; Generated autoloads from zoom-frm.el
 
 (let ((loads (get 'zoom 'custom-loads))) (if (member '"zoom-frm" loads) nil (put 'zoom 'custom-loads (cons '"zoom-frm" loads))))
