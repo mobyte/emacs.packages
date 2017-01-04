@@ -3,22 +3,22 @@
 (
  package-list-packages
  clojure-mode
- rgrep
  cider-restart
- buffer-info
+ replace-string
+ rgrep
  cider-jack-in
  magit-blame
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 280)
+ (cider-jack-in . 281)
  (package-install . 1)
- (package-list-packages . 192)
- (cider-restart . 579)
- (rgrep . 855)
- (replace-string . 100)
- (clojure-mode . 158)
+ (package-list-packages . 194)
+ (cider-restart . 580)
+ (rgrep . 856)
+ (replace-string . 102)
+ (clojure-mode . 159)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
