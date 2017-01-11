@@ -12,7 +12,7 @@
 ;; Maintainer: Jonas Bernoulli <jonas@bernoul.li>
 
 ;; Package-Requires: ((emacs "24.4") (dash "20161121.55") (with-editor "20161231.826"))
-;; Package-Version: 20170104.924
+;; Package-Version: 20170109.1253
 ;; Keywords: git tools vc
 ;; Homepage: https://github.com/magit/magit
 
@@ -408,7 +408,7 @@ already using it, then you probably shouldn't start doing so."
                                                (regexp-quote buffer-file-name)
                                                "\\'")
                                        git-commit-major-mode))))
-      (normal-mode)))
+      (normal-mode t)))
   (setq with-editor-show-usage nil)
   (with-editor-mode 1)
   (add-hook 'with-editor-finish-query-functions
