@@ -46,6 +46,7 @@
 ;;* shell path
 
 (setenv "BOOT_JVM_OPTIONS" "-XX:-OmitStackTraceInFastThrow")
+(setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
 (exec-path-from-shell-initialize)
 
 
@@ -74,7 +75,7 @@
  '(org-agenda-files (quote ("~/tmp/1.org")))
  '(package-selected-packages
    (quote
-    (magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values (quote ((eval hide-sublevels 1) (aaa . bbb))))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
@@ -817,3 +818,86 @@ current git branch as a string.  Otherwise return an empty string."
   (when (not (s-blank? default-directory))
     (shell)))
 
+;;* haskell http://stackoverflow.com/questions/26603649/haskell-repl-in-emacs
+(require 'haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'linum-mode)
+(add-to-list 'exec-path "~/Library/Haskell/bin")
+(eval-after-load 'haskell-mode '(progn
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+  (define-key haskell-mode-map "\C-ch" 'haskell-hoogle)))
+(eval-after-load 'haskell-cabal '(progn
+  (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
+  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
+(require 'company-ghci)
+(push 'company-ghci company-backends)
+(add-hook 'haskell-mode-hook 'company-mode)
+(add-hook 'haskell-interactive-mode-hook 'company-mode)
+
+;;;;;;
+
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'company-mode)
+(add-to-list 'company-backends 'company-ghc)
+(custom-set-variables '(company-ghc-show-info t))
+
+(eval-after-load 'haskell-mode '(progn
+  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-process-load-or-reload)
+  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+  (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
+  (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
+(eval-after-load 'haskell-cabal '(progn
+  (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
+  ;(define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
+  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+  (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
+;;;;;;;
+
+(custom-set-variables
+ '(haskell-font-lock-symbols (quote unicode))
+ '(haskell-hoogle-command nil)
+ '(haskell-mode-hook
+   (quote
+    (linum-mode turn-on-haskell-indentation turn-on-haskell-doc-mode)) t)
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-load-or-reload-prompt t)
+ '(haskell-process-suggest-language-pragmas nil)
+ '(haskell-process-suggest-no-warn-orphans t)
+ '(haskell-process-use-presentation-mode t)
+ '(haskell-tags-on-save t)
+ '(inferior-haskell-wait-and-jump t)
+ '(safe-local-variable-values
+   (quote
+    ((haskell-process-use-ghci . t)
+     (haskell-indent-spaces . 4))))
+ '(haskell-interactive-mode-hide-multi-line-errors nil)
+ '(haskell-process-log t)
+ '(haskell-process-type (quote cabal-repl)))
+
+(ac-config-default)
+(autoload 'ghc-init "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
+(defun my-ac-haskell-mode ()
+  (setq ac-sources (append ac-sources '(ac-source-ghc-mod))))
+
+(add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+
+(ac-define-source ghc-mod
+                  '((depends ghc)
+                    (candidates . ghc-select-completion-symbol)
+                    (symbol . "s")
+                    (cache)))
