@@ -1,24 +1,24 @@
 
 ;; ----- smex-history -----
 (
- emacs-lisp-mode
  package-list-packages
- revert-buffer
- haskell-mode
+ yaml-mode
+ rgrep
+ buffer-info
+ clojure-mode
  cider-jack-in
- ibuffer
  magit-blame
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 296)
+ (cider-jack-in . 299)
  (package-install . 1)
- (package-list-packages . 206)
- (cider-restart . 598)
- (rgrep . 925)
- (replace-string . 113)
- (clojure-mode . 193)
+ (package-list-packages . 210)
+ (cider-restart . 603)
+ (rgrep . 936)
+ (replace-string . 114)
+ (clojure-mode . 195)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
@@ -27,11 +27,11 @@
  (cider-quit . 145)
  (version . 8)
  (server-start . 1)
- (magit-blame . 415)
+ (magit-blame . 419)
  (insert-file . 37)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 97)
+ (buffer-info . 98)
  (reveal-mode . 1)
  (revert-buffer . 95)
  (cider-mode . 1)
@@ -83,4 +83,5 @@
  (cljr-find-usages . 1)
  (find-name-dired . 3)
  (haskell-mode . 2)
+ (yaml-mode . 2)
 )

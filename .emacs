@@ -64,10 +64,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
+ '(company-ghc-show-info t)
  '(display-battery-mode nil)
  '(display-time-mode nil)
  '(global-font-lock-mode t)
+ '(haskell-font-lock-symbols (quote unicode))
+ '(haskell-hoogle-command nil)
+ '(haskell-interactive-mode-hide-multi-line-errors nil)
+ '(haskell-mode-hook
+   (quote
+    (linum-mode turn-on-haskell-indentation turn-on-haskell-doc-mode)))
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-load-or-reload-prompt t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-language-pragmas nil)
+ '(haskell-process-suggest-no-warn-orphans t)
+ '(haskell-process-type (quote cabal-repl))
+ '(haskell-process-use-presentation-mode t)
+ '(haskell-tags-on-save t)
  '(indent-tabs-mode nil)
+ '(inferior-haskell-wait-and-jump t)
  '(inhibit-startup-screen t)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(ispell-program-name "/usr/bin/aspell")
@@ -75,8 +91,11 @@
  '(org-agenda-files (quote ("~/tmp/1.org")))
  '(package-selected-packages
    (quote
-    (company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
- '(safe-local-variable-values (quote ((eval hide-sublevels 1) (aaa . bbb))))
+    (yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+ '(safe-local-variable-values
+   (quote
+    ((haskell-process-use-ghci . t)
+     (haskell-indent-spaces . 4))))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
@@ -847,7 +866,7 @@ current git branch as a string.  Otherwise return an empty string."
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'company-mode)
 (add-to-list 'company-backends 'company-ghc)
-(custom-set-variables '(company-ghc-show-info t))
+
 
 (eval-after-load 'haskell-mode '(progn
   (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-process-load-or-reload)
@@ -864,26 +883,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;;;;;;
 
-(custom-set-variables
- '(haskell-font-lock-symbols (quote unicode))
- '(haskell-hoogle-command nil)
- '(haskell-mode-hook
-   (quote
-    (linum-mode turn-on-haskell-indentation turn-on-haskell-doc-mode)) t)
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-load-or-reload-prompt t)
- '(haskell-process-suggest-language-pragmas nil)
- '(haskell-process-suggest-no-warn-orphans t)
- '(haskell-process-use-presentation-mode t)
- '(haskell-tags-on-save t)
- '(inferior-haskell-wait-and-jump t)
- '(safe-local-variable-values
-   (quote
-    ((haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 4))))
- '(haskell-interactive-mode-hide-multi-line-errors nil)
- '(haskell-process-log t)
- '(haskell-process-type (quote cabal-repl)))
+
 
 (ac-config-default)
 (autoload 'ghc-init "ghc" nil t)
