@@ -885,7 +885,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 
 
-(ac-config-default)
+;;(ac-config-default)
 (autoload 'ghc-init "ghc" nil t)
 (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
