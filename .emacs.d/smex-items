@@ -1,24 +1,24 @@
 
 ;; ----- smex-history -----
 (
+ emacs-lisp-mode
+ revert-buffer
+ outline-mode
+ restclient-mode
  package-list-packages
  rgrep
- cider-restart
- revert-buffer
  magit-blame
- insert-file
- cider-jack-in
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 304)
+ (cider-jack-in . 306)
  (package-install . 1)
- (package-list-packages . 214)
- (cider-restart . 613)
- (rgrep . 953)
- (replace-string . 119)
- (clojure-mode . 197)
+ (package-list-packages . 216)
+ (cider-restart . 616)
+ (rgrep . 970)
+ (replace-string . 120)
+ (clojure-mode . 203)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
@@ -27,13 +27,13 @@
  (cider-quit . 148)
  (version . 8)
  (server-start . 1)
- (magit-blame . 424)
- (insert-file . 38)
+ (magit-blame . 425)
+ (insert-file . 40)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 99)
+ (buffer-info . 100)
  (reveal-mode . 1)
- (revert-buffer . 97)
+ (revert-buffer . 101)
  (cider-mode . 1)
  (org-mode . 5)
  (cider-connect . 14)
@@ -55,7 +55,7 @@
  (restore-frame . 2)
  (magit-ediff-compare . 1)
  (magit-diff . 2)
- (javascript-mode . 9)
+ (javascript-mode . 11)
  (magit-log-buffer-file . 1)
  (eshell . 1)
  (customize-group . 1)
@@ -64,7 +64,7 @@
  (cljr-update-project-dependency . 2)
  (cljr-project-clean . 3)
  (cljr-toggle-debug-mode . 1)
- (emacs-lisp-mode . 3)
+ (emacs-lisp-mode . 6)
  (cider-load-all-project-ns . 1)
  (cider-refresh . 7)
  (cider-format-region . 1)
@@ -86,4 +86,9 @@
  (yaml-mode . 2)
  (cider-repl-history . 1)
  (projectile-replace . 1)
+ (restclient-mode . 1)
+ (outline-mode . 2)
+ (outline-hide-other . 1)
+ (outline-hide-leaves . 1)
+ (outline-hide-sublevels . 2)
 )

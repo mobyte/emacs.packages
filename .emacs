@@ -20,15 +20,16 @@
 ;;* outline config
 
 (eval-after-load "outline"
-  (lambda ()
-    (define-key outline-minor-mode-map
-      [(shift control n)] 'outline-next-visible-heading)
-    (define-key outline-minor-mode-map
-      [(shift control p)] 'outline-previous-visible-heading)
-    (define-key outline-minor-mode-map
-      [(tab)] 'org-cycle)
-    (define-key outline-minor-mode-map
-      [(meta o)] 'outline-toggle-children)))
+  '(progn
+     (define-key outline-minor-mode-map
+       [(shift control n)] 'outline-next-visible-heading)
+     (define-key outline-minor-mode-map
+       [(shift control p)] 'outline-previous-visible-heading)
+     (define-key outline-minor-mode-map
+       [(tab)] 'org-cycle)
+     (define-key outline-minor-mode-map
+       [(meta o)] 'outline-toggle-children)
+     (outline-hide-sublevels 1)))
 
 (add-hook 'outline-minor-mode-hook
           (lambda ()
@@ -39,9 +40,10 @@
                    (let ((len (- (match-end 0) (match-beginning 0))))
                      (- len 2))))))
 
-;; (add-hook 'emacs-lisp-mode-hook
-;;           (lambda ()
-;;               (outline-minor-mode 1)))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (outline-minor-mode 1)
+            (outline-hide-sublevels 1)))
 
 ;;* shell path
 
