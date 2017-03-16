@@ -3,20 +3,20 @@
 (
  package-list-packages
  rgrep
- replace-string
  cider-restart
- magit-blame
  revert-buffer
- projectile-replace
+ magit-blame
+ insert-file
+ cider-jack-in
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 303)
+ (cider-jack-in . 304)
  (package-install . 1)
- (package-list-packages . 213)
- (cider-restart . 611)
- (rgrep . 951)
+ (package-list-packages . 214)
+ (cider-restart . 613)
+ (rgrep . 953)
  (replace-string . 119)
  (clojure-mode . 197)
  (js-mode . 9)
@@ -27,13 +27,13 @@
  (cider-quit . 148)
  (version . 8)
  (server-start . 1)
- (magit-blame . 422)
- (insert-file . 37)
+ (magit-blame . 424)
+ (insert-file . 38)
  (magit-blame-popup . 2)
  (bubbles . 2)
  (buffer-info . 99)
  (reveal-mode . 1)
- (revert-buffer . 96)
+ (revert-buffer . 97)
  (cider-mode . 1)
  (org-mode . 5)
  (cider-connect . 14)
