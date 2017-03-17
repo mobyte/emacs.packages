@@ -898,8 +898,8 @@ current git branch as a string.  Otherwise return an empty string."
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 
-(ac-define-source ghc-mod
-                  '((depends ghc)
-                    (candidates . ghc-select-completion-symbol)
-                    (symbol . "s")
-                    (cache)))
+;; (ac-define-source ghc-mod
+;;                   '((depends ghc)
+;;                     (candidates . ghc-select-completion-symbol)
+;;                     (symbol . "s")
+;;                     (cache)))

@@ -1,21 +1,21 @@
 
 ;; ----- smex-history -----
 (
- emacs-lisp-mode
- revert-buffer
- outline-mode
- restclient-mode
  package-list-packages
+ cider-restart
+ revert-buffer
+ outline-minor-mode
+ outline-cycle
+ package-autoremove
  rgrep
- magit-blame
 )
 
 ;; ----- smex-data -----
 (
  (cider-jack-in . 306)
  (package-install . 1)
- (package-list-packages . 216)
- (cider-restart . 616)
+ (package-list-packages . 220)
+ (cider-restart . 617)
  (rgrep . 970)
  (replace-string . 120)
  (clojure-mode . 203)
@@ -33,7 +33,7 @@
  (bubbles . 2)
  (buffer-info . 100)
  (reveal-mode . 1)
- (revert-buffer . 101)
+ (revert-buffer . 104)
  (cider-mode . 1)
  (org-mode . 5)
  (cider-connect . 14)
@@ -90,5 +90,9 @@
  (outline-mode . 2)
  (outline-hide-other . 1)
  (outline-hide-leaves . 1)
- (outline-hide-sublevels . 2)
+ (outline-hide-sublevels . 3)
+ (package-autoremove . 1)
+ (outline-cycle . 1)
+ (outline-minor-mode . 2)
+ (outline-hide-subtree . 2)
 )
