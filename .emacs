@@ -362,6 +362,9 @@ current git branch as a string.  Otherwise return an empty string."
 (setq git-commit-summary-max-length 120)
 (setq magit-push-always-verify nil)
 
+;; *magit-refs*: checkout the ref (branch) on RETURN.
+(setq magit-visit-ref-behavior '(checkout-any focus-on-ref))
+
 ;;* paredit
 
 (projectile-global-mode)
