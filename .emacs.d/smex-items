@@ -1,37 +1,37 @@
 
 ;; ----- smex-history -----
 (
- package-autoremove
  package-list-packages
- revert-buffer
- outline-minor-mode
- outline-cycle
  rgrep
+ buffer-info
+ replace-string
+ projectile-replace
  magit-blame
+ cider-restart
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 306)
+ (cider-jack-in . 308)
  (package-install . 1)
- (package-list-packages . 221)
- (cider-restart . 617)
- (rgrep . 970)
- (replace-string . 120)
- (clojure-mode . 203)
+ (package-list-packages . 226)
+ (cider-restart . 620)
+ (rgrep . 1019)
+ (replace-string . 127)
+ (clojure-mode . 204)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
  (shell . 14)
- (cider-quit . 148)
+ (cider-quit . 149)
  (version . 8)
  (server-start . 1)
- (magit-blame . 425)
+ (magit-blame . 431)
  (insert-file . 40)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 100)
+ (buffer-info . 109)
  (reveal-mode . 1)
  (revert-buffer . 104)
  (cider-mode . 1)
@@ -43,10 +43,10 @@
  (apply-macro-to-region-lines . 17)
  (cider-inspect-last-result . 7)
  (windmove-left . 1)
- (byte-recompile-directory . 5)
+ (byte-recompile-directory . 6)
  (erc-identd-start . 1)
  (Custom-reset-standard . 4)
- (text-mode . 4)
+ (text-mode . 5)
  (emerge-files-with-ancestor . 2)
  (replace-regexp . 16)
  (view-emacs-news . 1)
@@ -55,7 +55,7 @@
  (restore-frame . 2)
  (magit-ediff-compare . 1)
  (magit-diff . 2)
- (javascript-mode . 11)
+ (javascript-mode . 12)
  (magit-log-buffer-file . 1)
  (eshell . 1)
  (customize-group . 1)
@@ -85,7 +85,7 @@
  (haskell-mode . 3)
  (yaml-mode . 2)
  (cider-repl-history . 1)
- (projectile-replace . 1)
+ (projectile-replace . 2)
  (restclient-mode . 1)
  (outline-mode . 2)
  (outline-hide-other . 1)
@@ -95,4 +95,5 @@
  (outline-cycle . 1)
  (outline-minor-mode . 2)
  (outline-hide-subtree . 2)
+ (java-mode . 1)
 )
