@@ -839,7 +839,7 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; Open shell in default project directory
 (let ((default-directory (shell-command-to-string ". ~/.bashrc; echo -n $CURRENT_PROJECT")))
-  (when (not (s-blank? default-directory))
+  (when (not (string= "" default-directory))
     (shell)))
 
 ;;* haskell http://stackoverflow.com/questions/26603649/haskell-repl-in-emacs
@@ -906,3 +906,10 @@ current git branch as a string.  Otherwise return an empty string."
 ;;                     (candidates . ghc-select-completion-symbol)
 ;;                     (symbol . "s")
 ;;                     (cache)))
+;;* align whitespace
+
+(defun align-whitespace (start end)
+  (interactive "r")
+  (align-regexp start end "\\(\\s-*\\)\\s-" 1 0 t)
+  ;;(indent-region start end)
+  )
