@@ -3,37 +3,37 @@
 (
  package-list-packages
  rgrep
- buffer-info
- replace-string
- projectile-replace
+ insert-file
+ cider-jack-in
+ emerge-files-with-ancestor
  magit-blame
- cider-restart
+ clojure-mode
 )
 
 ;; ----- smex-data -----
 (
- (cider-jack-in . 308)
+ (cider-jack-in . 313)
  (package-install . 1)
- (package-list-packages . 226)
- (cider-restart . 620)
- (rgrep . 1019)
- (replace-string . 127)
- (clojure-mode . 204)
+ (package-list-packages . 232)
+ (cider-restart . 635)
+ (rgrep . 1070)
+ (replace-string . 138)
+ (clojure-mode . 212)
  (js-mode . 9)
  (magit-process-mode . 3)
  (magit-process-buffer . 3)
  (ada-header . 1)
  (shell . 14)
- (cider-quit . 149)
+ (cider-quit . 152)
  (version . 8)
  (server-start . 1)
- (magit-blame . 431)
- (insert-file . 40)
+ (magit-blame . 439)
+ (insert-file . 42)
  (magit-blame-popup . 2)
  (bubbles . 2)
- (buffer-info . 109)
+ (buffer-info . 113)
  (reveal-mode . 1)
- (revert-buffer . 104)
+ (revert-buffer . 106)
  (cider-mode . 1)
  (org-mode . 5)
  (cider-connect . 14)
@@ -46,9 +46,9 @@
  (byte-recompile-directory . 6)
  (erc-identd-start . 1)
  (Custom-reset-standard . 4)
- (text-mode . 5)
- (emerge-files-with-ancestor . 2)
- (replace-regexp . 16)
+ (text-mode . 6)
+ (emerge-files-with-ancestor . 3)
+ (replace-regexp . 17)
  (view-emacs-news . 1)
  (rename-buffer . 1)
  (cider-ping . 1)
@@ -78,7 +78,7 @@
  (cider-browse-ns-all . 1)
  (cider-scratch . 1)
  (dired-do-find-regexp-and-replace . 1)
- (ibuffer . 3)
+ (ibuffer . 4)
  (man . 2)
  (cljr-find-usages . 1)
  (find-name-dired . 3)
@@ -96,4 +96,7 @@
  (outline-minor-mode . 2)
  (outline-hide-subtree . 2)
  (java-mode . 1)
+ (align . 2)
+ (bjm/align-whitespace . 5)
+ (align-whitespace . 3)
 )
