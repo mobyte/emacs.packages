@@ -469,6 +469,8 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;; clj-refactor-mode
 
+(unless (fboundp 'seq-map-indexed)
+  (defun seq-map-indexed ()))
 (require 'clj-refactor)
 
 (defun my-clojure-mode-hook ()
