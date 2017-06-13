@@ -1,5 +1,5 @@
 {:user
- {:plugins [[refactor-nrepl "2.3.0-SNAPSHOT"]]
+ {;; :plugins [[refactor-nrepl "2.3.0-SNAPSHOT"]]
   :repl-options {:nrepl-middleware
                  [cider.nrepl.middleware.apropos/wrap-apropos
                   cider.nrepl.middleware.classpath/wrap-classpath
