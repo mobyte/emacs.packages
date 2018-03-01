@@ -591,6 +591,7 @@ current git branch as a string.  Otherwise return an empty string."
      (fact 'defun)
      (facts 'defun)
      (conditional 'defun)
+     (wrap-clean-transaction 'defun)
      (GET 2)
      (POST 2)
      (PUT 2)
