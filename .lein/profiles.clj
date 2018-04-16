@@ -22,7 +22,7 @@
                  [org.clojure/tools.namespace "0.2.11"]
                  [leiningen #=(leiningen.core.main/leiningen-version)]
                  [io.aviso/pretty "0.1.8"]
-                 [im.chit/vinyasa "0.4.2"]
+                 [im.chit/vinyasa "0.4.7"]
                  [alembic "0.3.2"]]
   :injections [(require 'spyscope.core)
                (require '[vinyasa.inject :as inject])
