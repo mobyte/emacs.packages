@@ -4,7 +4,7 @@
 
 ;; Author: Hrvoje Niksic <hniksic@gmail.com>
 ;; Keywords: hypermedia, extensions
-;; Package-Version: 20180328.2341
+;; Package-Version: 20180412.1244
 ;; Version: 1.54
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -1282,9 +1282,10 @@ overlays that specify `face'."
 
   (defun htmlize-sorted-overlays-at (pos)
     ;; Like OVERLAYS-AT with the SORTED argument, for older Emacsen.
-    (let ((overlays (sort* overlays #'<
-                           :key (lambda (o)
-                                  (- (overlay-end o) (overlay-start o))))))
+    (let ((overlays (overlays-at pos)))
+      (setq overlays (sort* overlays #'<
+                            :key (lambda (o)
+                                   (- (overlay-end o) (overlay-start o)))))
       (setq overlays
             (stable-sort overlays #'<
                          :key (lambda (o)

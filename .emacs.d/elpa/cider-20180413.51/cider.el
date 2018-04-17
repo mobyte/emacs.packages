@@ -660,7 +660,18 @@ this is a command, not just a string."
         (build (string-remove-prefix ":" (read-from-minibuffer "Select shadow-cljs build: "))))
     (format form build build)))
 
-(defconst cider-cljs-repl-types
+(defun cider-custom-cljs-repl-init-form ()
+  "Prompt for a form that would start a ClojureScript REPL.
+
+The supplied string will be wrapped in a do form if needed."
+  (let ((form (read-from-minibuffer "Please, provide a form to start a ClojureScript REPL: ")))
+    ;; TODO: We should probably make this more robust (e.g. by using a regexp or
+    ;; parsing the form).
+    (if (string-prefix-p "(do" form)
+        form
+      (format "(do %s)" form))))
+
+(defvar cider-cljs-repl-types
   '(("Rhino" "(cemerick.piggieback/cljs-repl (cljs.repl.rhino/repl-env))"
      nil)
     ("Nashorn" "(cemerick.piggieback/cljs-repl (cljs.repl.nashorn/repl-env))"
@@ -673,13 +684,34 @@ this is a command, not just a string."
      cider-check-weasel-requirements)
     ("Boot" "(do (require 'adzerk.boot-cljs-repl) (adzerk.boot-cljs-repl/start-repl))"
      cider-check-boot-requirements)
-    ("Shadow" cider-shadow-cljs-init-form cider-check-shadow-cljs-requirements))
+    ("Shadow" cider-shadow-cljs-init-form cider-check-shadow-cljs-requirements)
+    ("Custom" cider-custom-cljs-repl-init-form nil))
   "A list of supported ClojureScript REPLs.
 
 For each one we have its name, the form we need to evaluate in a Clojure
 REPL to start the ClojureScript REPL and functions to very their requirements.
 
 The form should be either a string or a function producing a string.")
+
+(defun cider-register-cljs-repl-type (name init-form &optional requirements-fn)
+  "Register a new ClojureScript REPL type.
+
+Types are defined by the following:
+
+- NAME - string identifier that will be used to refer to the REPL typel
+- INIT-FORM - string or function (symbol) producing string
+- REQUIREMENTS-FN - function to check whether the REPL can be started.
+This param is optional.
+
+All this function does is modifying `cider-cljs-repl-types'.
+It's intended to be used in your Emacs config."
+  (unless (stringp name)
+    (user-error "The REPL name must be a string"))
+  (unless (or (stringp init-form) (symbolp init-form))
+    (user-error "The init form must be a string or a symbol referring to a function"))
+  (unless (or (null requirements-fn) (symbolp requirements-fn))
+    (user-error "The requirements-fn must be a symbol referring to a function"))
+  (add-to-list 'cider-cljs-repl-types (list name init-form requirements-fn)))
 
 (defcustom cider-default-cljs-repl nil
   "The default ClojureScript REPL to start.
@@ -693,7 +725,9 @@ you're working on."
                  (const "Figwheel")
                  (const "Node")
                  (const "Weasel")
-                 (const "Boot"))
+                 (const "Boot")
+                 (const "Shadow")
+                 (const "Custom"))
   :group 'cider
   :safe #'stringp
   :package-version '(cider . "0.17.0"))
