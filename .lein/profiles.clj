@@ -24,24 +24,24 @@
                  [io.aviso/pretty "0.1.8"]
                  [im.chit/vinyasa "0.4.7"]
                  [alembic "0.3.2"]]
-  :injections [(require 'spyscope.core)
-               (require '[vinyasa.inject :as inject])
-               (require 'io.aviso.repl)
-               (inject/in ;; the default injected namespace is `.`
-                ;; note that `:refer, :all and :exclude can be used
-                [vinyasa.inject :refer [inject [in inject-in]]]  
-                [vinyasa.lein :exclude [*project*]]  
-                ;; imports all functions in vinyasa.pull
-                [alembic.still [distill pull]]
-                ;; inject into clojure.core
-                clojure.core
-                [vinyasa.reflection .> .? .* .% .%> .& .>ns .>var]
-                ;; inject into clojure.core with prefix
-                clojure.core >
-                [clojure.pprint pprint]
-                [clojure.tools.namespace.repl refresh-all]
-                [clojure.tools.namespace.repl clear]
-                [clojure.test run-tests])]
+  ;; :injections [(require 'spyscope.core)
+  ;;              (require '[vinyasa.inject :as inject])
+  ;;              (require 'io.aviso.repl)
+  ;;              (inject/in ;; the default injected namespace is `.`
+  ;;               ;; note that `:refer, :all and :exclude can be used
+  ;;               [vinyasa.inject :refer [inject [in inject-in]]]  
+  ;;               [vinyasa.lein :exclude [*project*]]  
+  ;;               ;; imports all functions in vinyasa.pull
+  ;;               [alembic.still [distill pull]]
+  ;;               ;; inject into clojure.core
+  ;;               clojure.core
+  ;;               [vinyasa.reflection .> .? .* .% .%> .& .>ns .>var]
+  ;;               ;; inject into clojure.core with prefix
+  ;;               clojure.core >
+  ;;               [clojure.pprint pprint]
+  ;;               [clojure.tools.namespace.repl refresh-all]
+  ;;               [clojure.tools.namespace.repl clear]
+  ;;               [clojure.test run-tests])]
   ;; :test-paths ["test-int"]
   ;; :source-paths ["src-int"]
   :jvm-opts ["-Djsse.enableSNIExtension=false"]}}

@@ -480,7 +480,7 @@ PLUGINS and MIDDLEWARES.  PARAMS and MIDDLEWARES are passed on to
  are passed on to `cider-boot-dependencies`."
   (concat global-opts
           (unless (seq-empty-p global-opts) " ")
-          "-i \"(require 'cider.tasks)\" " ;; Note the white space at the end here
+          "-i \"(require 'cider.tasks)\" " ;; Note the space at the end here
           (cider-boot-dependencies (append dependencies plugins))
           (cider-boot-middleware-task params middlewares)))
 
@@ -521,8 +521,7 @@ removed, LEIN-PLUGINS, and finally PARAMS."
 (defun cider-clojure-cli-jack-in-dependencies (global-opts params dependencies)
   "Create Clojure tools.deps jack-in dependencies.
 Does so by concatenating GLOBAL-OPTS, DEPENDENCIES finally PARAMS."
-  (let ((dependencies (append dependencies
-                              `(("cider/cider-nrepl" ,(upcase cider-version))))))
+  (let ((dependencies (append dependencies cider-jack-in-lein-plugins)))
     (concat
      global-opts
      (unless (seq-empty-p global-opts) " ")
@@ -536,8 +535,7 @@ Does so by concatenating GLOBAL-OPTS, DEPENDENCIES finally PARAMS."
 (defun cider-shadow-cljs-jack-in-dependencies (global-opts params dependencies)
   "Create shadow-cljs jack-in deps.
 Does so by concatenating GLOBAL-OPTS, DEPENDENCIES finally PARAMS."
-  (let ((dependencies (append dependencies
-                              `(("cider/cider-nrepl" ,(upcase cider-version))))))
+  (let ((dependencies (append dependencies cider-jack-in-lein-plugins)))
     (concat
      global-opts
      (unless (seq-empty-p global-opts) " ")
@@ -672,9 +670,7 @@ The supplied string will be wrapped in a do form if needed."
       (format "(do %s)" form))))
 
 (defvar cider-cljs-repl-types
-  '(("Rhino" "(cemerick.piggieback/cljs-repl (cljs.repl.rhino/repl-env))"
-     nil)
-    ("Nashorn" "(cemerick.piggieback/cljs-repl (cljs.repl.nashorn/repl-env))"
+  '(("Nashorn" "(cemerick.piggieback/cljs-repl (cljs.repl.nashorn/repl-env))"
      cider-check-nashorn-requirements)
     ("Figwheel" "(do (require 'figwheel-sidecar.repl-api) (figwheel-sidecar.repl-api/start-figwheel!) (figwheel-sidecar.repl-api/cljs-repl))"
      cider-check-figwheel-requirements)
@@ -720,8 +716,7 @@ This affects commands like `cider-jack-in-clojurescript'.  Generally it's
 intended to be set via .dir-locals.el for individual projects, as its
 relatively unlikely you'd like to use the same type of REPL in each project
 you're working on."
-  :type '(choice (const "Rhino")
-                 (const "Nashorn")
+  :type '(choice (const "Nashorn")
                  (const "Figwheel")
                  (const "Node")
                  (const "Weasel")
@@ -888,7 +883,7 @@ own buffer."
                            (cider-inject-jack-in-dependencies command-global-opts params project-type)
                          params))
 
-               (cmd (format "%s %s" command-resolved params)))
+               (cmd (format "%s %s" command params)))
           (if (or project-dir cider-allow-jack-in-without-project)
               (progn
                 (when (or project-dir
