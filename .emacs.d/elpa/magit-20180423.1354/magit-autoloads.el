@@ -210,13 +210,26 @@ bisect run'.
 ;;; Generated autoloads from magit-blame.el
  (autoload 'magit-blame-popup "magit-blame" nil t)
 
+(autoload 'magit-blame-echo "magit-blame" "\
+For each line show the revision in which it was added.
+Show the information about the chunk at point in the echo area
+when moving between chunks.  Unlike other blaming commands, do
+not turn on `read-only-mode'.
+
+\(fn)" t nil)
+
 (autoload 'magit-blame "magit-blame" "\
-For each line show the revision that last touched it.
+For each line show the revision in which it was added.
+
+\(fn)" t nil)
+
+(autoload 'magit-blame-removal "magit-blame" "\
+For each line show the revision in which it was removed.
 
 \(fn)" t nil)
 
 (autoload 'magit-blame-reverse "magit-blame" "\
-For each line show the last revision in which a line still exists.
+For each line show the last revision in which it still exists.
 
 \(fn)" t nil)
 

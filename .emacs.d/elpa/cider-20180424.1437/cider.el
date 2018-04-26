@@ -286,7 +286,7 @@ This variable is used by `cider-connect'."
 (defcustom cider-inject-dependencies-at-jack-in t
   "When nil, do not inject repl dependencies (most likely nREPL middlewares) at `cider-jack-in' time."
   :type 'boolean
-  :safe #'stringp
+  :safe #'booleanp
   :version '(cider . "0.11.0"))
 
 (defcustom cider-offer-to-open-cljs-app-in-browser t
@@ -604,6 +604,14 @@ dependencies."
 
 ;;; ClojureScript REPL creation
 
+(defcustom cider-check-cljs-repl-requirements t
+  "When non-nil will run the requirement checks for the different cljs repls.
+
+Generally you should not disable this unless you run into some faulty check."
+  :type 'boolean
+  :safe #'booleanp
+  :version '(cider . "0.17.0"))
+
 (defun cider-verify-clojurescript-is-present ()
   "Check whether ClojureScript is present."
   (unless (cider-library-present-p "clojurescript")
@@ -775,14 +783,16 @@ Normally this would prompt for the ClojureScript REPL to start (e.g. Node,
 Figwheel, etc), unless you've set `cider-default-cljs-repl'."
   (interactive (list (cider-current-connection)))
   ;; We can't start a ClojureScript REPL without ClojureScript
-  (cider-verify-clojurescript-is-present)
+  (when cider-check-cljs-repl-requirements
+    (cider-verify-clojurescript-is-present))
   ;; Load variables in .dir-locals.el into the server process buffer, so
   ;; cider-default-cljs-repl can be set for each project individually.
   (hack-local-variables)
   (let* ((cljs-repl-type (or cider-default-cljs-repl
                              (cider-select-cljs-repl)))
          (cljs-repl-form (cider-cljs-repl-form cljs-repl-type)))
-    (cider-verify-cljs-repl-requirements cljs-repl-type)
+    (when cider-check-cljs-repl-requirements
+      (cider-verify-cljs-repl-requirements cljs-repl-type))
     ;; if all the requirements are met we can finally proceed with starting
     ;; the ClojureScript REPL for `cljs-repl-type'
     (let* ((nrepl-repl-buffer-name-template "*cider-repl%s(cljs)*")
@@ -1129,6 +1139,15 @@ message in the REPL area."
                                  "CIDER's version (%s) does not match cider-nrepl's version (%s). Things will break!"
                                  cider-version middleware-version))))
 
+(defcustom cider-redirect-server-output-to-repl  t
+  "Controls whether nREPL server output would be redirected to the REPL.
+When non-nil the output would end up in both the nrepl-server buffer (when
+available) and the matching REPL buffer."
+  :type 'boolean
+  :group 'cider
+  :safe #'booleanp
+  :package-version '(cider . "0.17.0"))
+
 (defun cider--subscribe-repl-to-server-out ()
   "Subscribe to the nREPL server's *out*."
   (cider-nrepl-send-request '("op" "out-subscribe")
@@ -1148,7 +1167,8 @@ buffer."
     (cider--check-required-nrepl-version)
     (cider--check-clojure-version-supported)
     (cider--check-middleware-compatibility)
-    (cider--subscribe-repl-to-server-out)
+    (when cider-redirect-server-output-to-repl
+      (cider--subscribe-repl-to-server-out))
     (when cider-auto-mode
       (cider-enable-on-existing-clojure-buffers))
     ;; Middleware on cider-nrepl's side is deferred until first usage, but
