@@ -208,7 +208,6 @@ bisect run'.
 
 ;;;### (autoloads nil "magit-blame" "magit-blame.el" (0 0 0 0))
 ;;; Generated autoloads from magit-blame.el
- (autoload 'magit-blame-popup "magit-blame" nil t)
 
 (autoload 'magit-blame-echo "magit-blame" "\
 For each line show the revision in which it was added.
@@ -232,6 +231,7 @@ For each line show the revision in which it was removed.
 For each line show the last revision in which it still exists.
 
 \(fn)" t nil)
+ (autoload 'magit-blame-popup "magit-blame" nil t)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-blame" '("magit-" "auto-revert-handler--unless-magit-blame-mode")))
 
