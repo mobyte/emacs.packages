@@ -4,7 +4,7 @@
 
 ;; Author: Lars Andersen <expez@expez.com>
 ;; URL: https://www.github.com/expez/company-quickhelp
-;; Package-Version: 20180323.1200
+;; Package-Version: 20180525.303
 ;; Keywords: company popup documentation quickhelp
 ;; Version: 2.2.0
 ;; Package-Requires: ((emacs "24.3") (company "0.8.9") (pos-tip "0.4.6"))
@@ -212,7 +212,8 @@ currently active `company' completion candidate."
                             (+ overlay-width overlay-position) 1))))))))
 
 (defun company-quickhelp--set-timer ()
-  (when (null company-quickhelp--timer)
+  (when (or (null company-quickhelp--timer)
+        (eq this-command #'company-quickhelp-manual-begin))
     (setq company-quickhelp--timer
           (run-with-idle-timer company-quickhelp-delay nil
                                'company-quickhelp--show))))

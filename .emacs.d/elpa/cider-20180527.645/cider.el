@@ -12,7 +12,7 @@
 ;; Maintainer: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://www.github.com/clojure-emacs/cider
 ;; Version: 0.18.0-snapshot
-;; Package-Requires: ((emacs "24.4") (clojure-mode "5.6.0") (pkg-info "0.4") (queue "0.1.1") (spinner "1.7") (seq "2.16"))
+;; Package-Requires: ((emacs "24.4") (clojure-mode "5.7.0") (pkg-info "0.4") (queue "0.1.1") (spinner "1.7") (seq "2.16"))
 ;; Keywords: languages, clojure, cider
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -623,12 +623,12 @@ Generally you should not disable this unless you run into some faulty check."
 
 (defun cider-verify-clojurescript-is-present ()
   "Check whether ClojureScript is present."
-  (unless (cider-library-present-p "clojurescript")
+  (unless (cider-library-present-p "clojure/clojurescript")
     (user-error "ClojureScript is not available.  See http://cider.readthedocs.io/en/latest/clojurescript for details")))
 
 (defun cider-verify-piggieback-is-present ()
   "Check whether the piggieback middleware is present."
-  (unless (cider-library-present-p "piggieback")
+  (unless (cider-library-present-p "cider/piggieback")
     (user-error "Piggieback is not available.  See http://cider.readthedocs.io/en/latest/clojurescript for details")))
 
 (defun cider-check-nashorn-requirements ()
@@ -646,24 +646,24 @@ Generally you should not disable this unless you run into some faulty check."
 (defun cider-check-figwheel-requirements ()
   "Check whether we can start a Figwheel ClojureScript REPL."
   (cider-verify-piggieback-is-present)
-  (unless (cider-library-present-p "figwheel-sidecar")
+  (unless (cider-library-present-p "figwheel-sidecar/figwheel-sidecar")
     (user-error "Figwheel-sidecar is not available.  Please check http://cider.readthedocs.io/en/latest/clojurescript")))
 
 (defun cider-check-weasel-requirements ()
   "Check whether we can start a Weasel ClojureScript REPL."
   (cider-verify-piggieback-is-present)
-  (unless (cider-library-present-p "weasel")
+  (unless (cider-library-present-p "weasel/weasel")
     (user-error "Weasel in not available.  Please check http://cider.readthedocs.io/en/latest/clojurescript/#browser-connected-clojurescript-repl")))
 
 (defun cider-check-boot-requirements ()
   "Check whether we can start a Boot ClojureScript REPL."
   (cider-verify-piggieback-is-present)
-  (unless (cider-library-present-p "boot-cljs-repl")
+  (unless (cider-library-present-p "adzerk/boot-cljs-repl")
     (user-error "The Boot ClojureScript REPL is not available.  Please check https://github.com/adzerk-oss/boot-cljs-repl/blob/master/README.md")))
 
 (defun cider-check-shadow-cljs-requirements ()
   "Check whether we can start a shadow-cljs REPL."
-  (unless (cider-library-present-p "shadow-cljs")
+  (unless (cider-library-present-p "thheller/shadow-cljs")
     (user-error "The shadow-cljs ClojureScript REPL is not available")))
 
 (defun cider-shadow-cljs-init-form ()
@@ -1006,10 +1006,8 @@ the appropriate REPL type in the end."
 
 (defun cider-current-host ()
   "Retrieve the current host."
-  (if (and (stringp buffer-file-name)
-           (file-remote-p buffer-file-name)
-           (boundp 'tramp-current-host))
-      tramp-current-host
+  (if (stringp buffer-file-name)
+      (file-remote-p buffer-file-name 'host)
     "localhost"))
 
 (defun cider-select-endpoint ()
