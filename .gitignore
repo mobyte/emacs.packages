@@ -12,3 +12,4 @@
 /.emacs.d/projectile.cache
 resources/see-also.edn
 .emacs.d/smex-items
+.boot/cache/
