@@ -486,20 +486,6 @@ Edit or create a .dir-locals.el file of the project.
 
 \(fn)" t nil)
 
-(defvar projectile-mode-line '(:eval (format " Projectile[%s]" (projectile-project-name))) "\
-Mode line lighter for Projectile.
-
-The value of this variable is a mode line template as in
-`mode-line-format'.  See Info Node `(elisp)Mode Line Format' for
-details about mode line templates.
-
-Customize this variable to change how Projectile displays its
-status in the mode line.  The default value displays the project
-name and type.  Set this variable to nil to disable the mode line
-entirely.")
-
-(custom-autoload 'projectile-mode-line "projectile" t)
-
 (defvar projectile-mode nil "\
 Non-nil if Projectile mode is enabled.
 See the `projectile-mode' command
