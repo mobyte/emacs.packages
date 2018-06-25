@@ -276,12 +276,6 @@ This variable is used by `cider-connect'."
   :group 'cider
   :package-version '(cider . "0.9.0"))
 
-(defcustom cider-auto-mode t
-  "When non-nil, automatically enable cider mode for all Clojure buffers."
-  :type 'boolean
-  :safe #'booleanp
-  :package-version '(cider . "0.9.0"))
-
 (defcustom cider-inject-dependencies-at-jack-in t
   "When nil, do not inject repl dependencies (most likely nREPL middlewares) at `cider-jack-in' time."
   :type 'boolean
@@ -384,6 +378,15 @@ Elements of the list are artifact name and list of exclusions to apply for the a
 (put 'cider-jack-in-dependencies-exclusions 'risky-local-variable t)
 (cider-add-to-alist 'cider-jack-in-dependencies-exclusions
                     "org.clojure/tools.nrepl" '("org.clojure/clojure"))
+
+(defconst cider-clojure-artifact-id "org.clojure/clojure"
+  "Artifact identifier for Clojure.")
+
+(defconst cider-minimum-clojure-version "1.8.0"
+  "Minimum supported version of Clojure.")
+
+(defconst cider-latest-clojure-version "1.10.0"
+  "Latest supported version of Clojure.")
 
 (defcustom cider-jack-in-auto-inject-clojure nil
   "Version of clojure to auto-inject into REPL.
@@ -998,6 +1001,7 @@ are not met."
 (defvar cider-connection-init-commands
   '(cider-jack-in-clj
     cider-jack-in-cljs
+    cider-jack-in-clj&cljs
     cider-connect-clj
     cider-connect-cljs
     cider-connect-clj&cljs

@@ -218,6 +218,14 @@ Open a classpath entry.
 
 ;;;***
 
+;;;### (autoloads nil "cider-completion" "cider-completion.el" (0
+;;;;;;  0 0 0))
+;;; Generated autoloads from cider-completion.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-completion" '("cider-")))
+
+;;;***
+
 ;;;### (autoloads nil "cider-connection" "cider-connection.el" (0
 ;;;;;;  0 0 0))
 ;;; Generated autoloads from cider-connection.el
@@ -255,6 +263,103 @@ a number of keys will be prompted to the user.
 ;;; Generated autoloads from cider-eldoc.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-eldoc" '("cider-")))
+
+;;;***
+
+;;;### (autoloads nil "cider-eval" "cider-eval.el" (0 0 0 0))
+;;; Generated autoloads from cider-eval.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-eval" '("cider-")))
+
+;;;***
+
+;;;### (autoloads nil "cider-find" "cider-find.el" (0 0 0 0))
+;;; Generated autoloads from cider-find.el
+
+(autoload 'cider-find-dwim "cider-find" "\
+Find and display the SYMBOL-FILE at point.
+SYMBOL-FILE could be a var or a resource.  If thing at point is empty then
+show dired on project.  If var is not found, try to jump to resource of the
+same name.  When called interactively, a prompt is given according to the
+variable `cider-prompt-for-symbol'.  A single or double prefix argument
+inverts the meaning.  A prefix of `-' or a double prefix argument causes
+the results to be displayed in a different window.  A default value of thing
+at point is given when prompted.
+
+\(fn SYMBOL-FILE)" t nil)
+
+(autoload 'cider-find-resource "cider-find" "\
+Find the resource at PATH.
+Prompt for input as indicated by the variable `cider-prompt-for-symbol'.
+A single or double prefix argument inverts the meaning of
+`cider-prompt-for-symbol'.  A prefix argument of `-` or a double prefix
+argument causes the results to be displayed in other window.  The default
+value is thing at point.
+
+\(fn PATH)" t nil)
+
+(autoload 'cider-find-ns "cider-find" "\
+Find the file containing NS.
+A prefix ARG of `-` or a double prefix argument causes
+the results to be displayed in a different window.
+
+\(fn &optional ARG NS)" t nil)
+
+(autoload 'cider-find-keyword "cider-find" "\
+Find the namespace of the keyword at point and its first occurrence there.
+
+For instance - if the keyword at point is \":cider.demo/keyword\", this command
+would find the namespace \"cider.demo\" and afterwards find the first mention
+of \"::keyword\" there.
+
+Prompt according to prefix ARG and `cider-prompt-for-symbol'.
+A single or double prefix argument inverts the meaning of
+`cider-prompt-for-symbol'.  A prefix of `-` or a double prefix argument causes
+the results to be displayed in a different window.  The default value is
+thing at point.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-find" '("cider-")))
+
+;;;***
+
+;;;### (autoloads nil "cider-format" "cider-format.el" (0 0 0 0))
+;;; Generated autoloads from cider-format.el
+
+(autoload 'cider-format-region "cider-format" "\
+Format the Clojure code in the current region.
+START and END represent the region's boundaries.
+
+\(fn START END)" t nil)
+
+(autoload 'cider-format-defun "cider-format" "\
+Format the code in the current defun.
+
+\(fn)" t nil)
+
+(autoload 'cider-format-buffer "cider-format" "\
+Format the Clojure code in the current buffer.
+
+\(fn)" t nil)
+
+(autoload 'cider-format-edn-buffer "cider-format" "\
+Format the EDN data in the current buffer.
+
+\(fn)" t nil)
+
+(autoload 'cider-format-edn-region "cider-format" "\
+Format the EDN data in the current region.
+START and END represent the region's boundaries.
+
+\(fn START END)" t nil)
+
+(autoload 'cider-format-edn-last-sexp "cider-format" "\
+Format the EDN data of the last sexp.
+
+\(fn)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-format" '("cider--format-")))
 
 ;;;***
 
@@ -319,14 +424,6 @@ current buffer's namespace.
 \(fn EXPR NS)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-inspector" '("cider-")))
-
-;;;***
-
-;;;### (autoloads nil "cider-interaction" "cider-interaction.el"
-;;;;;;  (0 0 0 0))
-;;; Generated autoloads from cider-interaction.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-interaction" '("cider-")))
 
 ;;;***
 
@@ -445,6 +542,32 @@ Clear any collected profile data.
 
 ;;;***
 
+;;;### (autoloads nil "cider-refresh" "cider-refresh.el" (0 0 0 0))
+;;; Generated autoloads from cider-refresh.el
+
+(autoload 'cider-refresh "cider-refresh" "\
+Reload modified and unloaded namespaces on the classpath.
+
+With a single prefix argument, or if MODE is `refresh-all', reload all
+namespaces on the classpath unconditionally.
+
+With a double prefix argument, or if MODE is `clear', clear the state of
+the namespace tracker before reloading.  This is useful for recovering from
+some classes of error (for example, those caused by circular dependencies)
+that a normal reload would not otherwise recover from.  The trade-off of
+clearing is that stale code from any deleted files may not be completely
+unloaded.
+
+With a negative prefix argument, or if MODE is `inhibit-fns', prevent any
+refresh functions (defined in `cider-refresh-before-fn' and
+`cider-refresh-after-fn') from being invoked.
+
+\(fn &optional MODE)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-refresh" '("cider-")))
+
+;;;***
+
 ;;;### (autoloads nil "cider-repl" "cider-repl.el" (0 0 0 0))
 ;;; Generated autoloads from cider-repl.el
 
@@ -532,6 +655,27 @@ nothing if no tests are defined or if the file failed to load.
 \(fn &optional ARG)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-test" '("cider-")))
+
+;;;***
+
+;;;### (autoloads nil "cider-tracing" "cider-tracing.el" (0 0 0 0))
+;;; Generated autoloads from cider-tracing.el
+
+(autoload 'cider-toggle-trace-var "cider-tracing" "\
+Toggle var tracing.
+Prompts for the symbol to use, or uses the symbol at point, depending on
+the value of `cider-prompt-for-symbol'.  With prefix arg ARG, does the
+opposite of what that option dictates.
+
+\(fn ARG)" t nil)
+
+(autoload 'cider-toggle-trace-ns "cider-tracing" "\
+Toggle ns tracing.
+Defaults to the current ns.  With prefix arg QUERY, prompts for a ns.
+
+\(fn QUERY)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-tracing" '("cider-")))
 
 ;;;***
 

@@ -70,7 +70,45 @@ INVERT is used to invert the semantics of the function `cider--should-prompt-for
   (when kw
     (replace-regexp-in-string "\\`:+" "" kw)))
 
-(declare-function cider-read-from-minibuffer "cider-interaction")
+;;; Minibuffer
+(defvar cider-minibuffer-history '()
+  "History list of expressions read from the minibuffer.")
+
+(defvar cider-minibuffer-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map minibuffer-local-map)
+    (define-key map (kbd "TAB") #'complete-symbol)
+    (define-key map (kbd "M-TAB") #'complete-symbol)
+    map)
+  "Minibuffer keymap used for reading Clojure expressions.")
+
+(declare-function cider-complete-at-point "cider-completion")
+(declare-function cider-eldoc "cider-eldoc")
+(defun cider-read-from-minibuffer (prompt &optional value)
+  "Read a string from the minibuffer, prompting with PROMPT.
+If VALUE is non-nil, it is inserted into the minibuffer as initial-input.
+PROMPT need not end with \": \". If it doesn't, VALUE is displayed on the
+prompt as a default value (used if the user doesn't type anything) and is
+not used as initial input (input is left empty)."
+  (minibuffer-with-setup-hook
+      (lambda ()
+        (set-syntax-table clojure-mode-syntax-table)
+        (add-hook 'completion-at-point-functions
+                  #'cider-complete-at-point nil t)
+        (setq-local eldoc-documentation-function #'cider-eldoc)
+        (run-hooks 'eval-expression-minibuffer-setup-hook))
+    (let* ((has-colon (string-match ": \\'" prompt))
+           (input (read-from-minibuffer (cond
+                                         (has-colon prompt)
+                                         (value (format "%s (default %s): " prompt value))
+                                         (t (format "%s: " prompt)))
+                                        (when has-colon value) ; initial-input
+                                        cider-minibuffer-map nil
+                                        'cider-minibuffer-history
+                                        (unless has-colon value)))) ; default-value
+      (if (and (equal input "") value (not has-colon))
+          value
+        input))))
 
 (defun cider-read-symbol-name (prompt callback)
   "Read a symbol name using PROMPT with a default of the one at point.
@@ -86,7 +124,53 @@ On failure, read a symbol name using PROMPT and call CALLBACK with that."
   (condition-case nil (funcall callback (cider--kw-to-symbol (cider-symbol-at-point 'look-back)))
     ('error (funcall callback (cider-read-from-minibuffer prompt)))))
 
-(declare-function cider-jump-to "cider-interaction")
+(declare-function cider-mode "cider-mode")
+
+(defun cider-jump-to (buffer &optional pos other-window)
+  "Push current point onto marker ring, and jump to BUFFER and POS.
+POS can be either a number, a cons, or a symbol.
+If a number, it is the character position (the point).
+If a cons, it specifies the position as (LINE . COLUMN).  COLUMN can be nil.
+If a symbol, `cider-jump-to' searches for something that looks like the
+symbol's definition in the file.
+If OTHER-WINDOW is non-nil don't reuse current window."
+  (with-no-warnings
+    (ring-insert find-tag-marker-ring (point-marker)))
+  (if other-window
+      (pop-to-buffer buffer)
+    ;; like switch-to-buffer, but reuse existing window if BUFFER is visible
+    (pop-to-buffer buffer '((display-buffer-reuse-window display-buffer-same-window))))
+  (with-current-buffer buffer
+    (widen)
+    (goto-char (point-min))
+    (cider-mode +1)
+    (cond
+     ;; Line-column specification.
+     ((consp pos)
+      (forward-line (1- (or (car pos) 1)))
+      (if (cdr pos)
+          (move-to-column (cdr pos))
+        (back-to-indentation)))
+     ;; Point specification.
+     ((numberp pos)
+      (goto-char pos))
+     ;; Symbol or string.
+     (pos
+      ;; Try to find (def full-name ...).
+      (if (or (save-excursion
+                (search-forward-regexp (format "(def.*\\s-\\(%s\\)" (regexp-quote pos))
+                                       nil 'noerror))
+              (let ((name (replace-regexp-in-string ".*/" "" pos)))
+                ;; Try to find (def name ...).
+                (or (save-excursion
+                      (search-forward-regexp (format "(def.*\\s-\\(%s\\)" (regexp-quote name))
+                                             nil 'noerror))
+                    ;; Last resort, just find the first occurrence of `name'.
+                    (save-excursion
+                      (search-forward name nil 'noerror)))))
+          (goto-char (match-beginning 0))
+        (message "Can't find %s in %s" pos (buffer-file-name))))
+     (t nil))))
 
 (defun cider--find-buffer-for-file (file)
   "Return a buffer visiting FILE.

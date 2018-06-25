@@ -32,12 +32,13 @@
 ;;; Code:
 
 (require 'clojure-mode)
-(require 'cider-interaction)
-(require 'cider-profile)
-(require 'cider-test)
+(require 'cider-eval)
+(require 'cider-test) ; required only for the menu
 (require 'cider-eldoc)
 (require 'cider-resolve)
-(require 'cider-doc)
+(require 'cider-doc) ; required only for the menu
+(require 'cider-profile) ; required only for the menu
+(require 'cider-completion)
 (require 'subr-x)
 (require 'cider-compat)
 
@@ -121,7 +122,7 @@ the buffer should appear."
           (cider--switch-to-repl-buffer repl set-namespace)))
     (user-error "No linked REPL")))
 
-(declare-function cider-load-buffer "cider-interaction")
+(declare-function cider-load-buffer "cider-eval")
 
 (defun cider-load-buffer-and-switch-to-repl-buffer (&optional set-namespace)
   "Load the current buffer into the matching REPL buffer and switch to it.
@@ -170,6 +171,125 @@ the related commands `cider-repl-clear-buffer' and
       (cider-repl-clear-output))
     (switch-to-buffer origin-buffer)))
 
+(defun cider-undef ()
+  "Undefine a symbol from the current ns."
+  (interactive)
+  (cider-ensure-op-supported "undef")
+  (cider-read-symbol-name
+   "Undefine symbol: "
+   (lambda (sym)
+     (cider-nrepl-send-request
+      `("op" "undef"
+        "ns" ,(cider-current-ns)
+        "symbol" ,sym)
+      (cider-interactive-eval-handler (current-buffer))))))
+
+;;; cider-run
+(defvar cider--namespace-history nil
+  "History of user input for namespace prompts.")
+
+(defun cider--var-namespace (var)
+  "Return the namespace of VAR.
+VAR is a fully qualified Clojure variable name as a string."
+  (replace-regexp-in-string "\\(?:#'\\)?\\(.*\\)/.*" "\\1" var))
+
+(defun cider-run (&optional function)
+  "Run -main or FUNCTION, prompting for its namespace if necessary.
+With a prefix argument, prompt for function to run instead of -main."
+  (interactive (list (when current-prefix-arg (read-string "Function name: "))))
+  (cider-ensure-connected)
+  (let ((name (or function "-main")))
+    (when-let* ((response (cider-nrepl-send-sync-request
+                           `("op" "ns-list-vars-by-name"
+                             "name" ,name))))
+      (if-let* ((vars (split-string (substring (nrepl-dict-get response "var-list") 1 -1))))
+          (cider-interactive-eval
+           (if (= (length vars) 1)
+               (concat "(" (car vars) ")")
+             (let* ((completions (mapcar #'cider--var-namespace vars))
+                    (def (or (car cider--namespace-history)
+                             (car completions))))
+               (format "(#'%s/%s)"
+                       (completing-read (format "Namespace (%s): " def)
+                                        completions nil t nil
+                                        'cider--namespace-history def)
+                       name))))
+        (user-error "No %s var defined in any namespace" (cider-propertize name 'fn))))))
+
+;;; Insert (and eval) in REPL functionality
+(defvar cider-insert-commands-map
+  (let ((map (define-prefix-command 'cider-insert-commands-map)))
+    ;; single key bindings defined last for display in menu
+    (define-key map (kbd "e") #'cider-insert-last-sexp-in-repl)
+    (define-key map (kbd "d") #'cider-insert-defun-in-repl)
+    (define-key map (kbd "r") #'cider-insert-region-in-repl)
+    (define-key map (kbd "n") #'cider-insert-ns-form-in-repl)
+
+    ;; duplicates with C- for convenience
+    (define-key map (kbd "C-e") #'cider-insert-last-sexp-in-repl)
+    (define-key map (kbd "C-d") #'cider-insert-defun-in-repl)
+    (define-key map (kbd "C-r") #'cider-insert-region-in-repl)
+    (define-key map (kbd "C-n") #'cider-insert-ns-form-in-repl)))
+
+(defcustom cider-switch-to-repl-after-insert-p t
+  "Whether to switch to the repl after inserting a form into the repl."
+  :type 'boolean
+  :group 'cider
+  :package-version '(cider . "0.18.0"))
+
+(defcustom cider-invert-insert-eval-p nil
+  "Whether to invert the behavior of evaling.
+Default behavior when inserting is to NOT eval the form and only eval with
+a prefix.  This allows to invert this so that default behavior is to insert
+and eval and the prefix is required to prevent evaluation."
+  :type 'boolean
+  :group 'cider
+  :package-version '(cider . "0.18.0"))
+
+(defun cider-insert-in-repl (form eval)
+  "Insert FORM in the REPL buffer and switch to it.
+If EVAL is non-nil the form will also be evaluated."
+  (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
+    (setq form (replace-match "" t t form)))
+  (with-current-buffer (cider-current-repl)
+    (goto-char (point-max))
+    (let ((beg (point)))
+      (insert form)
+      (indent-region beg (point)))
+    (when (if cider-invert-insert-eval-p
+              (not eval)
+            eval)
+      (cider-repl-return)))
+  (when cider-switch-to-repl-after-insert-p
+    (cider-switch-to-repl-buffer)))
+
+(defun cider-insert-last-sexp-in-repl (&optional arg)
+  "Insert the expression preceding point in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+  (interactive "P")
+  (cider-insert-in-repl (cider-last-sexp) arg))
+
+(defun cider-insert-defun-in-repl (&optional arg)
+  "Insert the top level form at point in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+  (interactive "P")
+  (cider-insert-in-repl (cider-defun-at-point) arg))
+
+(defun cider-insert-region-in-repl (start end &optional arg)
+  "Insert the curent region in the REPL buffer.
+START and END represent the region's boundaries.
+If invoked with a prefix ARG eval the expression after inserting it."
+  (interactive "rP")
+  (cider-insert-in-repl
+   (buffer-substring-no-properties start end) arg))
+
+(defun cider-insert-ns-form-in-repl (&optional arg)
+  "Insert the current buffer's ns form in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+  (interactive "P")
+  (cider-insert-in-repl (cider-ns-form) arg))
+
+
 
 ;;; The menu-bar
 (defconst cider-mode-menu
@@ -213,12 +333,12 @@ the related commands `cider-repl-clear-buffer' and
 (defconst cider-mode-eval-menu
   '("CIDER Eval" :visible (cider-connected-p)
     ["Eval top-level sexp" cider-eval-defun-at-point]
-    ["Eval top-level sexp to point" cider-eval-defun-to-point]
+    ["Eval top-level sexp to point" cider-eval-defun-up-to-point]
     ["Eval top-level sexp to comment" cider-eval-defun-to-comment]
     ["Eval top-level sexp and pretty-print to comment" cider-pprint-eval-defun-to-comment]
     "--"
     ["Eval current sexp" cider-eval-sexp-at-point]
-    ["Eval current sexp to point" cider-eval-sexp-to-point]
+    ["Eval current sexp to point" cider-eval-sexp-up-to-point]
     ["Eval current sexp in context" cider-eval-sexp-at-point-in-context]
     "--"
     ["Eval last sexp" cider-eval-last-sexp]
@@ -302,9 +422,17 @@ the related commands `cider-repl-clear-buffer' and
      ["Flush completion cache" cider-completion-flush-caches]))
   "Menu for CIDER interactions.")
 
+;; Those declares are needed, because we autoload all those commands when first
+;; used. That optimizes CIDER's initial load time.
 (declare-function cider-macroexpand-1 "cider-macroexpansion")
 (declare-function cider-macroexpand-all "cider-macroexpansion")
 (declare-function cider-selector "cider-selector")
+(declare-function cider-toggle-trace-ns "cider-tracing")
+(declare-function cider-toggle-trace-var "cider-tracing")
+(declare-function cider-refresh "cider-refresh")
+(declare-function cider-find-resource "cider-find")
+(declare-function cider-find-ns "cider-find")
+(declare-function cider-find-keyword "cider-find")
 (defconst cider-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-d") 'cider-doc-map)
@@ -344,7 +472,7 @@ the related commands `cider-repl-clear-buffer' and
     (define-key map (kbd "C-c C-t") 'cider-test-commands-map)
     (define-key map (kbd "C-c M-s") #'cider-selector)
     (define-key map (kbd "C-c M-d") #'cider-describe-current-connection)
-    (define-key map (kbd "C-c C-=") #'cider-profile-map)
+    (define-key map (kbd "C-c C-=") 'cider-profile-map)
     (define-key map (kbd "C-c C-x") #'cider-refresh)
     (define-key map (kbd "C-c C-q") #'cider-quit)
     (dolist (variable '(cider-mode-interactions-menu

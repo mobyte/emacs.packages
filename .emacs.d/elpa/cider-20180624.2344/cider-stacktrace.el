@@ -93,7 +93,6 @@ cyclical data structures."
 (defvar-local cider-stacktrace-positive-filters nil)
 
 (defconst cider-error-buffer "*cider-error*")
-(add-to-list 'cider-ancillary-buffers cider-error-buffer)
 
 (defcustom cider-stacktrace-suppressed-errors '()
   "Errors that won't make the stacktrace buffer 'pop-over' your active window.
@@ -709,8 +708,6 @@ This associates text properties to enable filtering and source navigation."
             (put-text-property (line-beginning-position) (line-end-position)
                                'cider-stacktrace-frame t)))
         (insert "\n")))))
-
-(declare-function cider-jump-to "cider-interaction")
 
 (defun cider-stacktrace-render-compile-error (buffer cause)
   "Emit into BUFFER the compile error CAUSE, and enable jumping to it."

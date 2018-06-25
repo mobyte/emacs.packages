@@ -145,6 +145,7 @@ Clojure and ClojureScript when invoking REPL type changing forms.
 Use `cider-set-repl-type' to manually change the REPL type."
   :type 'boolean
   :group 'cider-repl
+  :safe #'booleanp
   :package-version '(cider . "0.18.0"))
 
 (defcustom cider-repl-use-clojure-font-lock t
@@ -1477,13 +1478,13 @@ constructs."
   "Add a REPL shortcut command, defined by NAME and HANDLER."
   (puthash name handler cider-repl-shortcuts))
 
-(declare-function cider-toggle-trace-ns "cider-interaction")
-(declare-function cider-undef "cider-interaction")
+(declare-function cider-toggle-trace-ns "cider-tracing")
+(declare-function cider-undef "cider-mode")
 (declare-function cider-browse-ns "cider-browse-ns")
 (declare-function cider-classpath "cider-classpath")
 (declare-function cider-repl-history "cider-repl-history")
-(declare-function cider-run "cider-interaction")
-(declare-function cider-refresh "cider-interaction")
+(declare-function cider-run "cider-mode")
+(declare-function cider-refresh "cider-refresh")
 (declare-function cider-version "cider")
 (declare-function cider-test-run-loaded-tests "cider-test")
 (declare-function cider-test-run-project-tests "cider-test")
@@ -1560,13 +1561,12 @@ constructs."
 (defvar cider-repl-mode-syntax-table
   (copy-syntax-table clojure-mode-syntax-table))
 
-(declare-function cider-eval-last-sexp "cider-interaction")
-(declare-function cider-refresh "cider-interaction")
-(declare-function cider-toggle-trace-ns "cider-interaction")
-(declare-function cider-toggle-trace-var "cider-interaction")
-(declare-function cider-find-resource "cider-interaction")
-(declare-function cider-find-ns "cider-interaction")
-(declare-function cider-find-keyword "cider-interaction")
+(declare-function cider-eval-last-sexp "cider-eval")
+(declare-function cider-toggle-trace-ns "cider-tracing")
+(declare-function cider-toggle-trace-var "cider-tracing")
+(declare-function cider-find-resource "cider-find")
+(declare-function cider-find-ns "cider-find")
+(declare-function cider-find-keyword "cider-find")
 (declare-function cider-switch-to-last-clojure-buffer "cider-mode")
 (declare-function cider-macroexpand-1 "cider-macroexpansion")
 (declare-function cider-macroexpand-all "cider-macroexpansion")
@@ -1702,7 +1702,7 @@ constructs."
         (let ((font-lock-dont-widen t))
           (apply func (max beg cider-repl-input-start-mark) end rest))))))
 
-(declare-function cider-complete-at-point "cider-interaction")
+(declare-function cider-complete-at-point "cider-completion")
 (defvar cider--static-font-lock-keywords)
 
 (define-derived-mode cider-repl-mode fundamental-mode "REPL"

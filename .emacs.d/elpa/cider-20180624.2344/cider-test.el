@@ -77,8 +77,6 @@ Add to this list to have CIDER recognize additional test defining macros."
 
 (defconst cider-test-report-buffer "*cider-test-report*"
   "Buffer name in which to display test reports.")
-(add-to-list 'cider-ancillary-buffers cider-test-report-buffer)
-
 
 ;;; Faces
 
@@ -294,7 +292,8 @@ prompt and whether to use a new window.  Similar to `cider-find-var'."
                          (cider-stacktrace-render
                           (cider-popup-buffer cider-error-buffer
                                               cider-auto-select-error-buffer
-                                              #'cider-stacktrace-mode)
+                                              #'cider-stacktrace-mode
+                                              'ancillary)
                           (reverse causes))))))))))
 
 (defun cider-test-stacktrace ()
@@ -617,8 +616,8 @@ This uses the Leiningen convention of appending '-test' to the namespace name."
 
 ;;; Test execution
 
-(declare-function cider-emit-interactive-eval-output "cider-interaction")
-(declare-function cider-emit-interactive-eval-err-output "cider-interaction")
+(declare-function cider-emit-interactive-eval-output "cider-eval")
+(declare-function cider-emit-interactive-eval-err-output "cider-eval")
 
 (defun cider-test-execute (ns &optional tests silent prompt-for-filters)
   "Run tests for NS, which may be a keyword, optionally specifying TESTS.

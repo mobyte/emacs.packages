@@ -291,7 +291,13 @@ The library is a string of the format \"group-id/artifact-id\"."
                   (and (equal group-id g) (equal artifact-id a))))
               (cider-classpath-libs))))
 
-(declare-function cider-interrupt-handler "cider-interaction")
+
+;;; Interrupt evaluation
+
+(defun cider-interrupt-handler (buffer)
+  "Create an interrupt response handler for BUFFER."
+  (nrepl-make-response-handler buffer nil nil nil nil))
+
 (defun cider-interrupt ()
   "Interrupt any pending evaluations."
   (interactive)
@@ -378,7 +384,7 @@ thing at point."
 
 ;;; Requests
 
-(declare-function cider-load-file-handler "cider-interaction")
+(declare-function cider-load-file-handler "cider-eval")
 (defun cider-request:load-file (file-contents file-path file-name &optional connection callback)
   "Perform the nREPL \"load-file\" op.
 FILE-CONTENTS, FILE-PATH and FILE-NAME are details of the file to be
@@ -576,6 +582,23 @@ The result entries are relative to the classpath."
       ;; "clojure.lang.ExceptionInfo: Unmatched delimiter ]"
       (error (car (split-string err "\n"))))
     (nrepl-dict-get response "formatted-edn")))
+
+;;; Dealing with input
+;; TODO: Replace this with some nil handler.
+(defun cider-stdin-handler (&optional _buffer)
+  "Make a stdin response handler for _BUFFER."
+  (nrepl-make-response-handler (current-buffer)
+                               (lambda (_buffer _value))
+                               (lambda (_buffer _out))
+                               (lambda (_buffer _err))
+                               nil))
+
+(defun cider-need-input (buffer)
+  "Handle an need-input request from BUFFER."
+  (with-current-buffer buffer
+    (nrepl-request:stdin (concat (read-from-minibuffer "Stdin: ") "\n")
+                         (cider-stdin-handler buffer)
+                         (cider-current-repl))))
 
 (provide 'cider-client)
 

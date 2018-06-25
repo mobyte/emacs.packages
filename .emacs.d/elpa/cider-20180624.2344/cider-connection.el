@@ -50,6 +50,13 @@ available) and the matching REPL buffer."
   :safe #'booleanp
   :package-version '(cider . "0.17.0"))
 
+(defcustom cider-auto-mode t
+  "When non-nil, automatically enable cider mode for all Clojure buffers."
+  :type 'boolean
+  :group 'cider
+  :safe #'booleanp
+  :package-version '(cider . "0.9.0"))
+
 (defconst cider-required-nrepl-version "0.2.12"
   "The minimum nREPL version that's known to work properly with CIDER.")
 
@@ -105,6 +112,7 @@ PROC-BUFFER is either server or client buffer."
         (delete-process proc)))
     (kill-buffer buffer)))
 
+(declare-function cider-repl-emit-interactive-stderr "cider-repl")
 (defun cider--close-connection (repl &optional no-kill)
   "Close connection associated with REPL.
 When NO-KILL is non-nil stop the connection but don't kill the REPL
@@ -160,6 +168,7 @@ FORMAT is a format string to compile with ARGS and display on the REPL."
                                "Can't determine nREPL's version.\nPlease, update nREPL to %s."
                                cider-required-nrepl-version)))
 
+(defvar cider-minimum-clojure-version)
 (defun cider--check-clojure-version-supported ()
   "Ensure that we are meeting the minimum supported version of Clojure."
   (if-let* ((clojure-version (cider--clojure-version)))
@@ -183,14 +192,36 @@ message in the REPL area."
                                  "CIDER's version (%s) does not match cider-nrepl's version (%s). Things will break!"
                                  cider-version middleware-version))))
 
+(declare-function cider-interactive-eval-handler "cider-eval")
+;; TODO: Use some null handler here
 (defun cider--subscribe-repl-to-server-out ()
   "Subscribe to the nREPL server's *out*."
   (cider-nrepl-send-request '("op" "out-subscribe")
                             (cider-interactive-eval-handler (current-buffer))))
 
-(defvar cider-auto-mode)
-(declare-function cider-enable-on-existing-clojure-buffers "cider-interaction")
+(defun cider-enable-on-existing-clojure-buffers ()
+  "Enable CIDER's minor mode on existing Clojure buffers.
+See command `cider-mode'."
+  (interactive)
+  (add-hook 'clojure-mode-hook #'cider-mode)
+  (dolist (buffer (cider-util--clojure-buffers))
+    (with-current-buffer buffer
+      (cider-mode +1))))
+
+(defun cider-disable-on-existing-clojure-buffers ()
+  "Disable command `cider-mode' on existing Clojure buffers."
+  (interactive)
+  (dolist (buffer (cider-util--clojure-buffers))
+    (with-current-buffer buffer
+      (cider-mode -1))))
+
+(defun cider-possibly-disable-on-existing-clojure-buffers ()
+  "If not connected, disable command `cider-mode' on existing Clojure buffers."
+  (unless (cider-connected-p)
+    (cider-disable-on-existing-clojure-buffers)))
+
 (declare-function cider--debug-init-connection "cider-debug")
+(declare-function cider-repl-init "cider-repl")
 (defun cider--connected-handler ()
   "Handle CIDER initialization after nREPL connection has been established.
 This function is appended to `nrepl-connected-hook' in the client process
@@ -308,6 +339,8 @@ Don't restart the server or other connections within the same session.  Use
   (message "%s" (cider--connection-info (cider-current-repl))))
 (define-obsolete-function-alias 'cider-display-connection-info 'cider-describe-current-connection "0.18.0")
 
+(defconst cider-nrepl-session-buffer "*cider-nrepl-session*")
+
 (defun cider-describe-nrepl-session ()
   "Describe an nREPL session."
   (interactive)
@@ -322,7 +355,7 @@ Don't restart the server or other connections within the same session.  Use
                             ((equal session-id (cider-nrepl-eval-session)) "Active eval")
                             ((equal session-id (cider-nrepl-tooling-session)) "Active tooling")
                             (t "Unknown"))))
-        (with-current-buffer (cider-popup-buffer cider-nrepl-session-buffer)
+        (with-current-buffer (cider-popup-buffer cider-nrepl-session-buffer nil 'ancillary)
           (read-only-mode -1)
           (insert (format "Session: %s\n" session-id)
                   (format "Type: %s session\n" session-type)
@@ -446,7 +479,10 @@ Assume that the current buffer is a REPL."
           (with-current-buffer nrepl-messages-buffer
             (rename-buffer mbuf-name)))))))
 
-(declare-function cider-default-err-handler "cider-interaction")
+(declare-function cider-default-err-handler "cider-eval")
+(declare-function cider-repl-mode "cider-repl")
+(declare-function cider-repl--state-handler "cider-repl")
+(declare-function cider-repl-reset-markers "cider-repl")
 (defvar-local cider-repl-init-function nil)
 (defun cider-repl-create (params)
   "Create new repl buffer.
