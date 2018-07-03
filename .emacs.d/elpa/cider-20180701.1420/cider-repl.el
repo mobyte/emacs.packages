@@ -1027,10 +1027,12 @@ text property `cider-old-input'."
   "Switch between the Clojure and ClojureScript REPLs for the current project."
   (interactive)
   ;; FIXME: implement cycling as session can hold more than two REPLs
-  (if-let* ((this-repl (cider-current-repl))
-            (other-repls (seq-remove (lambda (r) (eq r this-repl)) (cider-repls))))
-      (switch-to-buffer (car other-repls))
-    (message "There's no other REPL for the current project")))
+  (let* ((this-repl (cider-current-repl nil 'ensure))
+         (other-repl (car (seq-remove (lambda (r) (eq r this-repl)) (cider-repls nil t)))))
+    (if other-repl
+        (switch-to-buffer other-repl)
+      (user-error "No other REPL in current session (%s)"
+                  (car (sesman-current-session 'CIDER))))))
 
 (defvar cider-repl-clear-buffer-hook)
 
@@ -1567,10 +1569,17 @@ constructs."
 (declare-function cider-find-resource "cider-find")
 (declare-function cider-find-ns "cider-find")
 (declare-function cider-find-keyword "cider-find")
+(declare-function cider-find-var "cider-find")
 (declare-function cider-switch-to-last-clojure-buffer "cider-mode")
 (declare-function cider-macroexpand-1 "cider-macroexpansion")
 (declare-function cider-macroexpand-all "cider-macroexpansion")
 (declare-function cider-selector "cider-selector")
+(declare-function cider-jack-in-clj "cider")
+(declare-function cider-jack-in-cljs "cider")
+(declare-function cider-connect-clj "cider")
+(declare-function cider-connect-cljs "cider")
+(declare-function cider-connect-sibling-clj "cider")
+(declare-function cider-connect-sibling-cljs "cider")
 
 (defvar cider-repl-mode-map
   (let ((map (make-sparse-keymap)))
@@ -1617,12 +1626,12 @@ constructs."
     (define-key map (kbd "C-x C-e") #'cider-eval-last-sexp)
     (define-key map (kbd "C-c C-r") 'clojure-refactor-map)
     (define-key map (kbd "C-c C-v") 'cider-eval-commands-map)
-    (define-key map (kbd "C-c M-j") #'cider-jack-in-clojure)
-    (define-key map (kbd "C-c M-J") #'cider-jack-in-clojurescript)
-    (define-key map (kbd "C-c M-c") #'cider-connect-clojure)
-    (define-key map (kbd "C-c M-C") #'cider-connect-clojurescript)
-    (define-key map (kbd "C-c M-s") #'cider-connect-sibling-clojure)
-    (define-key map (kbd "C-c M-S") #'cider-connect-sibling-clojurescript)
+    (define-key map (kbd "C-c M-j") #'cider-jack-in-clj)
+    (define-key map (kbd "C-c M-J") #'cider-jack-in-cljs)
+    (define-key map (kbd "C-c M-c") #'cider-connect-clj)
+    (define-key map (kbd "C-c M-C") #'cider-connect-cljs)
+    (define-key map (kbd "C-c M-s") #'cider-connect-sibling-clj)
+    (define-key map (kbd "C-c M-S") #'cider-connect-sibling-cljs)
 
     (define-key map (string cider-repl-shortcut-dispatch-char) #'cider-repl-handle-shortcut)
     (easy-menu-define cider-repl-mode-menu map

@@ -81,8 +81,7 @@ PARAMS is a plist containing :host, :port, :server and other parameters for
 
 (defun cider-ensure-connected ()
   "Ensure there is a linked CIDER session."
-  (let ((sesman-disambiguate-by-relevance t))
-    (sesman-ensure-linked-session 'CIDER)))
+  (sesman-ensure-session 'CIDER))
 
 (defun cider--gather-connect-params (proc-buffer)
   "Gather all relevant for connection parameters in a plist.
@@ -199,6 +198,7 @@ message in the REPL area."
   (cider-nrepl-send-request '("op" "out-subscribe")
                             (cider-interactive-eval-handler (current-buffer))))
 
+(declare-function cider-mode "cider-mode")
 (defun cider-enable-on-existing-clojure-buffers ()
   "Enable CIDER's minor mode on existing Clojure buffers.
 See command `cider-mode'."
@@ -336,7 +336,7 @@ Don't restart the server or other connections within the same session.  Use
 (defun cider-describe-current-connection ()
   "Display information about the current connection."
   (interactive)
-  (message "%s" (cider--connection-info (cider-current-repl))))
+  (message "%s" (cider--connection-info (cider-current-repl nil 'ensure))))
 (define-obsolete-function-alias 'cider-display-connection-info 'cider-describe-current-connection "0.18.0")
 
 (defconst cider-nrepl-session-buffer "*cider-nrepl-session*")
@@ -345,7 +345,7 @@ Don't restart the server or other connections within the same session.  Use
   "Describe an nREPL session."
   (interactive)
   (cider-ensure-connected)
-  (let* ((repl (cider-current-repl))
+  (let* ((repl (cider-current-repl nil 'ensure))
          (selected-session (completing-read "Describe nREPL session: " (nrepl-sessions repl))))
     (when (and selected-session (not (equal selected-session "")))
       (let* ((session-info (nrepl-sync-request:describe repl))
@@ -459,7 +459,6 @@ For the REPL type use the function `cider-repl-type'."
      ((derived-mode-p 'clojurec-mode) "multi")
      ((derived-mode-p 'clojure-mode) "clj")
      (cider-repl-type))))
-(defalias 'cider-connection-type-for-buffer 'cider-repl-type-for-buffer)
 
 (defun cider-set-repl-type (&optional type)
   "Set REPL TYPE to \"clj\" or \"cljs\".
@@ -516,26 +515,37 @@ function with the repl buffer set as current."
 
 ;;; Current/other REPLs
 
-(defun cider-current-repl (&optional type)
+(defun cider-current-repl (&optional type ensure)
   "Get the most recent REPL of TYPE from the current session.
-TYPE is either \"clj\" or \"cljs\".  When nil, infer the REPL from the
-current buffer."
+TYPE is either \"clj\", \"cljs\" or \"multi\".  When nil, infer the type
+from the current buffer.  If ENSURE is non-nil, throw an error if either
+there is no linked session or there is no REPL of TYPE within the current
+session."
   (if (and (derived-mode-p 'cider-repl-mode)
            (or (null type)
                (string= cider-repl-type type)))
       ;; shortcut when in REPL buffer
       (current-buffer)
     (let* ((type (or type (cider-repl-type-for-buffer)))
-           (repls (cider-repls type)))
-      ;; pick the most recent one
-      (seq-find (lambda (b)
-                  (member b repls))
-                (buffer-list)))))
+           (repls (cider-repls type ensure))
+           (repl (if (<= (length repls) 1)
+                     (car repls)
+                   ;; pick the most recent one
+                   (seq-find (lambda (b)
+                               (member b repls))
+                             (buffer-list)))))
+      (if (and ensure (null repl))
+          (user-error "No %s REPL in current session (%s)"
+                      type (car (sesman-current-session 'CIDER)))
+        repl))))
 
-(defun cider-repls (&optional type)
+(defun cider-repls (&optional type ensure)
   "Return cider REPLs of TYPE from the current session.
-If TYPE is nil, return all repls."
-  (let ((repls (cdr (sesman-current-session 'CIDER))))
+If TYPE is nil or \"multi\", return all repls.  If ENSURE is non-nil, throw
+an error if no linked session exists."
+  (let ((repls (cdr (if ensure
+                        (sesman-ensure-session 'CIDER)
+                      (sesman-current-session 'CIDER)))))
     (if (or (null type) (equal type "multi"))
         repls
       (seq-filter (lambda (b)
@@ -558,30 +568,72 @@ Error is signaled if no REPL buffer of specified type exists."
   (let ((cur-type (cider-repl-type-for-buffer)))
     (cl-case which
       (:clj-strict (when (equal cur-type "cljs")
-                     (user-error "Clojure-only operation requested in ClojureScript buffer")))
+                     (user-error "Clojure-only operation requested in a ClojureScript buffer")))
       (:cljs-strict (when (equal cur-type "clj")
-                      (user-error "ClojureScript-only operation requested in Clojure buffer"))))
+                      (user-error "ClojureScript-only operation requested in a Clojure buffer"))))
     (let* ((type (cl-case which
                    ((:clj :clj-strict) "clj")
                    ((:cljs :cljs-strict) "cljs")
-                   (:auto cur-type cur-type)))
-           (repls (cider-repls type)))
-      (unless repls
-        ;; cannot happen with "multi"
-        (user-error "No %s REPLs found.  Have you linked a session?" type))
+                   (:auto cur-type)))
+           (repls (cider-repls type 'ensure)))
       (mapcar function repls))))
 
+;; REPLs double as connections in CIDER, so it's useful to be able to refer to
+;; them as connections in certain contexts.
+(defalias 'cider-current-connection #'cider-current-repl)
+(defalias 'cider-connections #'cider-repls)
+(defalias 'cider-map-connections #'cider-map-repls)
+(defalias 'cider-connection-type-for-buffer #'cider-repl-type-for-buffer)
 
-;; tmp
-(defun cider-connections (&optional type)
-  "Return cider REPLs of TYPE from the current session.
-+If TYPE is nil, return all repls."
-  (let ((repls (cdr (sesman-current-session 'CIDER))))
-    (if (or (null type) (equal type "multi"))
-        repls
-      (seq-filter (lambda (b)
-                    (string= type (cider-repl-type b)))
-                  repls))))
+
+;; Deprecation after #2324
+
+(define-obsolete-function-alias 'cider-current-repl-buffer 'cider-current-repl "0.18")
+(define-obsolete-function-alias 'cider-repl-buffers 'cider-repls "0.18")
+(define-obsolete-function-alias 'cider-current-session 'cider-nrepl-eval-session "0.18")
+(define-obsolete-function-alias 'cider-current-tooling-session 'cider-nrepl-tooling-session "0.18")
+(define-obsolete-function-alias 'cider-display-connection-info 'cider-describe-current-connection "0.18")
+(define-obsolete-function-alias 'nrepl-connection-buffer-name 'nrepl-repl-buffer-name "0.18")
+(define-obsolete-function-alias 'cider-repl-set-type 'cider-set-repl-type "0.18")
+
+(make-obsolete 'cider-assoc-buffer-with-connection 'sesman-link-with-buffer "0.18")
+(make-obsolete 'cider-assoc-project-with-connection 'sesman-link-with-project "0.18")
+(make-obsolete 'cider-change-buffers-designation nil "0.18")
+(make-obsolete 'cider-clear-buffer-local-connection nil "0.18")
+(make-obsolete 'cider-close-nrepl-session 'cider-quit "0.18")
+(make-obsolete 'cider-create-sibling-cljs-repl 'cider-connect-sibling-cljs "0.18")
+(make-obsolete 'cider-current-messages-buffer nil "0.18")
+(make-obsolete 'cider-default-connection "see sesman." "0.18")
+(make-obsolete 'cider-extract-designation-from-current-repl-buffer nil "0.18")
+(make-obsolete 'cider-find-connection-buffer-for-project-directory 'sesman-linked-sessions "0.18")
+(make-obsolete 'cider-find-reusable-repl-buffer nil "0.18")
+(make-obsolete 'cider-make-connection-default "see sesman." "0.18")
+(make-obsolete 'cider-other-connection nil "0.18")
+(make-obsolete 'cider-project-connections 'sesman-linked-sessions "0.18")
+(make-obsolete 'cider-project-connections-types nil "0.18")
+(make-obsolete 'cider-prompt-for-project-on-connect nil "0.18")
+(make-obsolete 'cider-read-connection `sesman-ask-for-session "0.18")
+(make-obsolete 'cider-replicate-connection nil "0.18")
+(make-obsolete 'cider-request-dispatch "see sesman." "0.18")
+(make-obsolete 'cider-rotate-default-connection "see sesman." "0.18")
+(make-obsolete 'cider-toggle-buffer-connection nil "0.18")
+(make-obsolete 'cider-toggle-request-dispatch nil "0.18")
+(make-obsolete 'nrepl-connection-buffer-name-template 'nrepl-repl-buffer-name-template "0.18")
+(make-obsolete 'nrepl-create-client-buffer-function nil "0.18")
+(make-obsolete 'nrepl-post-client-callback nil "0.18")
+(make-obsolete 'nrepl-prompt-to-kill-server-buffer-on-quit nil "0.18")
+(make-obsolete 'nrepl-use-this-as-repl-buffer nil "0.18")
+
+;; connection manager
+(make-obsolete 'cider-client-name-repl-type "see sesman." "0.18")
+(make-obsolete 'cider-connection-browser "see sesman." "0.18")
+(make-obsolete 'cider-connections-buffer-mode "see sesman." "0.18")
+(make-obsolete 'cider-connections-buffer-mode-map "see sesman." "0.18")
+(make-obsolete 'cider-connections-close-connection "see sesman." "0.18")
+(make-obsolete 'cider-connections-goto-connection "see sesman." "0.18")
+(make-obsolete 'cider-connections-make-default "see sesman." "0.18")
+(make-obsolete 'cider-display-connected-message "see sesman." "0.18")
+(make-obsolete 'cider-project-name "see sesman." "0.18")
 
 (provide 'cider-connection)
 

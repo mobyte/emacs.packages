@@ -276,6 +276,16 @@ a number of keys will be prompted to the user.
 ;;;### (autoloads nil "cider-find" "cider-find.el" (0 0 0 0))
 ;;; Generated autoloads from cider-find.el
 
+(autoload 'cider-find-var "cider-find" "\
+Find definition for VAR at LINE.
+Prompt according to prefix ARG and `cider-prompt-for-symbol'.
+A single or double prefix argument inverts the meaning of
+`cider-prompt-for-symbol'.  A prefix of `-` or a double prefix argument causes
+the results to be displayed in a different window.  The default value is
+thing at point.
+
+\(fn &optional ARG VAR LINE)" t nil)
+
 (autoload 'cider-find-dwim "cider-find" "\
 Find and display the SYMBOL-FILE at point.
 SYMBOL-FILE could be a var or a resource.  If thing at point is empty then
@@ -702,13 +712,6 @@ View the manual in your default browser.
 ;;; Generated autoloads from nrepl-dict.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "nrepl-dict" '("nrepl-")))
-
-;;;***
-
-;;;### (autoloads nil "sesman" "sesman.el" (0 0 0 0))
-;;; Generated autoloads from sesman.el
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "sesman" '("sesman-")))
 
 ;;;***
 

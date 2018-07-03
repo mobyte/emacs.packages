@@ -12,7 +12,7 @@
 ;; Maintainer: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://www.github.com/clojure-emacs/cider
 ;; Version: 0.18.0-snapshot
-;; Package-Requires: ((emacs "25") (clojure-mode "5.7.0") (pkg-info "0.4") (queue "0.1.1") (spinner "1.7") (seq "2.16"))
+;; Package-Requires: ((emacs "25") (clojure-mode "5.7.0") (pkg-info "0.4") (queue "0.1.1") (spinner "1.7") (seq "2.16") (sesman "0.1.1"))
 ;; Keywords: languages, clojure, cider
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -1177,8 +1177,9 @@ choose."
 
 ;; TODO: Implement a check for command presence over tramp
 (defun cider--resolve-command (command)
-  "Find COMMAND on `exec-path' if possible, or return nil.
-In case `default-directory' is non-local we assume the command is available."
+  "Find COMMAND in exec path (see variable `exec-path').
+Return nil if not found.  In case `default-directory' is non-local we
+assume the command is available."
   (when-let* ((command (or (and (file-remote-p default-directory) command)
                            (executable-find command)
                            (executable-find (concat command ".bat")))))

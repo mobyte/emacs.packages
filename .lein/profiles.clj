@@ -1,5 +1,6 @@
 {:user
- {;; :plugins [[refactor-nrepl "2.3.0-SNAPSHOT"]]
+ {:plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]
+            [cider/cider-nrepl "0.18.0-SNAPSHOT"]]
   ;; :repl-options {:nrepl-middleware
   ;;                [cider.nrepl.middleware.apropos/wrap-apropos
   ;;                 cider.nrepl.middleware.classpath/wrap-classpath
@@ -17,13 +18,13 @@
   ;;                 cider.nrepl.middleware.trace/wrap-trace
   ;;                 cider.nrepl.middleware.undef/wrap-undef
   ;;                 refactor-nrepl.middleware/wrap-refactor]}
-  :dependencies [;; [org.clojure/tools.nrepl "0.2.12"]
-                 [spyscope "0.1.5"]
-                 [org.clojure/tools.namespace "0.2.11"]
-                 [leiningen #=(leiningen.core.main/leiningen-version)]
-                 [io.aviso/pretty "0.1.8"]
-                 [im.chit/vinyasa "0.4.7"]
-                 [alembic "0.3.2"]]
+  ;; :dependencies [;; [org.clojure/tools.nrepl "0.2.12"]
+  ;;                [spyscope "0.1.5"]
+  ;;                [org.clojure/tools.namespace "0.2.11"]
+  ;;                [leiningen #=(leiningen.core.main/leiningen-version)]
+  ;;                [io.aviso/pretty "0.1.8"]
+  ;;                [im.chit/vinyasa "0.4.7"]
+  ;;                [alembic "0.3.2"]]
   ;; :injections [(require 'spyscope.core)
   ;;              (require '[vinyasa.inject :as inject])
   ;;              (require 'io.aviso.repl)
