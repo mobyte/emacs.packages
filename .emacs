@@ -93,7 +93,7 @@
  '(org-agenda-files (quote ("~/tmp/1.org")))
  '(package-selected-packages
    (quote
-    (yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -103,7 +103,7 @@
  '(transient-mark-mode t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
-(set-default-font "Monaco 16")
+(set-default-font "Monaco 12")
 (set-background-color "black")
 (set-face-background 'default "black")
 (set-face-background 'region "black")
@@ -392,7 +392,6 @@ current git branch as a string.  Otherwise return an empty string."
         scheme-mode-hook
         t-mode-hook))
 
-
 ;;;; repl mode
 
 ;;(add-hook 'clojure-mode-hook 'projectile-mode)
@@ -473,6 +472,9 @@ current git branch as a string.  Otherwise return an empty string."
   (defun seq-map-indexed ()))
 (require 'clj-refactor)
 
+;; (use-package aggressive-indent
+;;   :ensure t)
+
 (defun my-clojure-mode-hook ()
   (clj-refactor-mode 1)
   ;; do not group required namespaces by prefix
@@ -486,7 +488,7 @@ current git branch as a string.  Otherwise return an empty string."
   (cljr-add-keybindings-with-prefix "C-c C-r"))
 
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
-
+;; (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
 
 ;; auto complete
 
@@ -794,11 +796,11 @@ current git branch as a string.  Otherwise return an empty string."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-scrollbar-bg ((t (:background "#191919"))))
- '(company-scrollbar-fg ((t (:background "#0c0c0c"))))
+ '(company-scrollbar-bg ((t (:background "#199919991999"))))
+ '(company-scrollbar-fg ((t (:background "#0ccc0ccc0ccc"))))
  '(company-tooltip ((t (:inherit default))))
  '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
- '(company-tooltip-selection ((t (:inherit font-lock-function-name-face :background "#3f3f3f")))))
+ '(company-tooltip-selection ((t (:inherit font-lock-function-name-face :background "#3fff3fff3fff")))))
 
 ;;* some actions on start
 
