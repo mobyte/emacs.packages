@@ -486,6 +486,32 @@ Minor mode for REPL interaction from a Clojure buffer.
 
 ;;;***
 
+;;;### (autoloads nil "cider-ns" "cider-ns.el" (0 0 0 0))
+;;; Generated autoloads from cider-ns.el
+
+(autoload 'cider-ns-refresh "cider-ns" "\
+Reload modified and unloaded namespaces on the classpath.
+
+With a single prefix argument, or if MODE is `refresh-all', reload all
+namespaces on the classpath unconditionally.
+
+With a double prefix argument, or if MODE is `clear', clear the state of
+the namespace tracker before reloading.  This is useful for recovering from
+some classes of error (for example, those caused by circular dependencies)
+that a normal reload would not otherwise recover from.  The trade-off of
+clearing is that stale code from any deleted files may not be completely
+unloaded.
+
+With a negative prefix argument, or if MODE is `inhibit-fns', prevent any
+refresh functions (defined in `cider-ns-refresh-before-fn' and
+`cider-ns-refresh-after-fn') from being invoked.
+
+\(fn &optional MODE)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-ns" '("cider-ns-")))
+
+;;;***
+
 ;;;### (autoloads nil "cider-overlays" "cider-overlays.el" (0 0 0
 ;;;;;;  0))
 ;;; Generated autoloads from cider-overlays.el
@@ -552,32 +578,6 @@ Clear any collected profile data.
 
 ;;;***
 
-;;;### (autoloads nil "cider-refresh" "cider-refresh.el" (0 0 0 0))
-;;; Generated autoloads from cider-refresh.el
-
-(autoload 'cider-refresh "cider-refresh" "\
-Reload modified and unloaded namespaces on the classpath.
-
-With a single prefix argument, or if MODE is `refresh-all', reload all
-namespaces on the classpath unconditionally.
-
-With a double prefix argument, or if MODE is `clear', clear the state of
-the namespace tracker before reloading.  This is useful for recovering from
-some classes of error (for example, those caused by circular dependencies)
-that a normal reload would not otherwise recover from.  The trade-off of
-clearing is that stale code from any deleted files may not be completely
-unloaded.
-
-With a negative prefix argument, or if MODE is `inhibit-fns', prevent any
-refresh functions (defined in `cider-refresh-before-fn' and
-`cider-refresh-after-fn') from being invoked.
-
-\(fn &optional MODE)" t nil)
-
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-refresh" '("cider-")))
-
-;;;***
-
 ;;;### (autoloads nil "cider-repl" "cider-repl.el" (0 0 0 0))
 ;;; Generated autoloads from cider-repl.el
 
@@ -630,7 +630,7 @@ See `def-cider-selector-method' for defining new methods.
 
 \(fn &optional OTHER-WINDOW)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-selector" '("??" "?c" "?e" "?q" "?r" "?m" "?x" "?d" "?s" "def-cider-selector-method" "cider-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-selector" '("??" "?c" "?e" "?q" "?r" "?m" "?x" "?p" "?d" "?s" "def-cider-selector-method" "cider-selector-")))
 
 ;;;***
 

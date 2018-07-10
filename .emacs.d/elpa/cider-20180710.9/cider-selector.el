@@ -44,9 +44,11 @@ Each element is a list (KEY DESCRIPTION FUNCTION).
 DESCRIPTION is a one-line description of what the key selects.")
 
 (defvar cider-selector-other-window nil
-  "If non-nil use `switch-to-buffer-other-window'.")
+  "If non-nil use `switch-to-buffer-other-window'.
+Not meant to be set by users.  It's used internally
+by `cider-selector'.")
 
-(defun cider--recently-visited-buffer (mode)
+(defun cider-selector--recently-visited-buffer (mode)
   "Return the most recently visited buffer, deriving its `major-mode' from MODE.
 Only considers buffers that are not already visible."
   (cl-loop for buffer in (buffer-list)
@@ -125,11 +127,11 @@ is chosen.  The returned buffer is selected with
 
 (def-cider-selector-method ?c
   "Most recently visited clojure-mode buffer."
-  (cider--recently-visited-buffer 'clojure-mode))
+  (cider-selector--recently-visited-buffer 'clojure-mode))
 
 (def-cider-selector-method ?e
   "Most recently visited emacs-lisp-mode buffer."
-  (cider--recently-visited-buffer 'emacs-lisp-mode))
+  (cider-selector--recently-visited-buffer 'emacs-lisp-mode))
 
 (def-cider-selector-method ?q "Abort."
   (top-level))
@@ -146,14 +148,17 @@ is chosen.  The returned buffer is selected with
   "*cider-error* buffer."
   cider-error-buffer)
 
+(def-cider-selector-method ?p
+  "CIDER profiler buffer."
+  cider-profile-buffer)
+
 (def-cider-selector-method ?d
   "*cider-doc* buffer."
   cider-doc-buffer)
 
-(declare-function cider-find-or-create-scratch-buffer "cider-scratch")
 (def-cider-selector-method ?s
   "*cider-scratch* buffer."
-  (cider-find-or-create-scratch-buffer))
+  (cider-scratch-find-or-create-buffer))
 
 (provide 'cider-selector)
 

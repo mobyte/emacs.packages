@@ -34,6 +34,14 @@
 (require 'clojure-mode)
 (require 'easymenu)
 
+(defcustom cider-scratch-initial-message
+  ";; This buffer is for Clojure experiments and evaluation.\n
+;; Press C-j to evaluate the last expression.\n\n"
+  "The initial message displayed in new scratch buffers."
+  :type 'string
+  :group 'cider
+  :package-version '(cider . "0.18.0"))
+
 (defvar cider-clojure-interaction-mode-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map clojure-mode-map)
@@ -53,12 +61,12 @@
 (defun cider-scratch ()
   "Go to the scratch buffer named `cider-scratch-buffer-name'."
   (interactive)
-  (pop-to-buffer (cider-find-or-create-scratch-buffer)))
+  (pop-to-buffer (cider-scratch-find-or-create-buffer)))
 
-(defun cider-find-or-create-scratch-buffer ()
+(defun cider-scratch-find-or-create-buffer ()
   "Find or create the scratch buffer."
   (or (get-buffer cider-scratch-buffer-name)
-      (cider-create-scratch-buffer)))
+      (cider-scratch--create-buffer)))
 
 (define-derived-mode cider-clojure-interaction-mode clojure-mode "Clojure Interaction"
   "Major mode for typing and evaluating Clojure forms.
@@ -67,23 +75,22 @@ before point, and prints its value into the buffer, advancing point.
 
 \\{cider-clojure-interaction-mode-map}")
 
-(defun cider--scratch-insert-welcome-message ()
+(defun cider-scratch--insert-welcome-message ()
   "Insert the welcome message for the scratch buffer."
-  (insert ";; This buffer is for Clojure experiments and evaluation.\n"
-          ";; Press C-j to evaluate the last expression.\n\n"))
+  (insert cider-scratch-initial-message))
 
-(defun cider-create-scratch-buffer ()
+(defun cider-scratch--create-buffer ()
   "Create a new scratch buffer."
   (with-current-buffer (get-buffer-create cider-scratch-buffer-name)
     (cider-clojure-interaction-mode)
-    (cider--scratch-insert-welcome-message)
+    (cider-scratch--insert-welcome-message)
     (current-buffer)))
 
 (defun cider-scratch-reset ()
   "Reset the current scratch buffer."
   (interactive)
   (erase-buffer)
-  (cider--scratch-insert-welcome-message))
+  (cider-scratch--insert-welcome-message))
 
 (provide 'cider-scratch)
 
