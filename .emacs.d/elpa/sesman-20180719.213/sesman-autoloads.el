@@ -21,18 +21,17 @@ Restart sesman session.
 
 (autoload 'sesman-quit "sesman" "\
 Terminate sesman session.
-When WHICH is nil, kill only the current session; when a single
-universal argument or 'linked, kill all linked session; when a
-double universal argument, t or 'all, kill all sessions.
+When WHICH is nil, kill only the current session; when a single universal
+argument or 'linked, kill all linked session; when a double universal argument,
+t or 'all, kill all sessions.
 
 \(fn WHICH)" t nil)
 
 (autoload 'sesman-show-session-info "sesman" "\
 Display session(s) info.
-When WHICH is nil, show info for current session; when a single
-universal argument or 'linked, show info for all linked session;
-when a double universal argument or 'all, show info for all
-sessions.
+When WHICH is nil, show info for current session; when a single universal
+argument or 'linked, show info for all linked sessions; when a double universal
+argument or 'all, show info for all sessions.
 
 \(fn WHICH)" t nil)
 
