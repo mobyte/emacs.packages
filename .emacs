@@ -369,6 +369,10 @@ current git branch as a string.  Otherwise return an empty string."
 
 (projectile-global-mode)
 
+(eval-after-load "projectile"
+  '(progn
+     (define-key projectile-mode-map  (kbd "C-c p f") 'projectile-find-file)))
+
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
   t)

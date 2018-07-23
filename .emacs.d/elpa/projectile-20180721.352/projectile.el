@@ -4,9 +4,9 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20180711.102
+;; Package-Version: 20180721.352
 ;; Keywords: project, convenience
-;; Version: 1.0.0-snapshot
+;; Version: 1.1.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -72,7 +72,7 @@
   "Manage and navigate projects easily."
   :group 'tools
   :group 'convenience
-  :link '(url-link :tag "Github" "https://github.com/bbatsov/projectile")
+  :link '(url-link :tag "GitHub" "https://github.com/bbatsov/projectile")
   :link '(url-link :tag "Online Manual" "https://projectile.readthedocs.io/")
   :link '(emacs-commentary-link :tag "Commentary" "projectile"))
 
@@ -149,7 +149,7 @@ Otherwise consider the current directory the project root."
           (const :tag "Default" default)
           (function :tag "Custom function")))
 
-(defcustom projectile-keymap-prefix (kbd "C-c p")
+(defcustom projectile-keymap-prefix (kbd "C-c C-p")
   "Projectile keymap prefix."
   :group 'projectile
   :type 'string)
@@ -2898,22 +2898,42 @@ SEARCH-TERM is a regexp."
 
 ;;;###autoload
 (defun projectile-run-shell ()
-  "Invoke `shell' in the project's root."
+  "Invoke `shell' in the project's root.
+
+Switch to the project specific shell buffer if it already exists."
   (interactive)
   (projectile-with-default-dir (projectile-project-root)
     (shell (concat "*shell " (projectile-project-name) "*"))))
 
 ;;;###autoload
 (defun projectile-run-eshell ()
-  "Invoke `eshell' in the project's root."
+  "Invoke `eshell' in the project's root.
+
+Switch to the project specific eshell buffer if it already exists."
   (interactive)
   (let ((eshell-buffer-name (concat "*eshell " (projectile-project-name) "*")))
     (projectile-with-default-dir (projectile-project-root)
       (eshell))))
 
 ;;;###autoload
+(defun projectile-run-ielm ()
+  "Invoke `ielm' in the project's root.
+
+Switch to the project specific ielm buffer if it already exists."
+  (interactive)
+  (let ((ielm-buffer-name (format "*ielm %s*" (projectile-project-name))))
+    (if (get-buffer ielm-buffer-name)
+        (switch-to-buffer ielm-buffer-name)
+      (projectile-with-default-dir (projectile-project-root)
+        (ielm))
+      ;; ielm's buffer name is hardcoded, so we have to rename it after creation
+      (rename-buffer ielm-buffer-name))))
+
+;;;###autoload
 (defun projectile-run-term (program)
-  "Invoke `term' in the project's root."
+  "Invoke `term' in the project's root.
+
+Switch to the project specific term buffer if it already exists."
   (interactive (list nil))
   (let* ((term (concat "term " (projectile-project-name)))
          (buffer (concat "*" term "*")))
@@ -3860,6 +3880,7 @@ is chosen."
     (define-key map (kbd "v") #'projectile-vc)
     (define-key map (kbd "V") #'projectile-browse-dirty-projects)
     (define-key map (kbd "x e") #'projectile-run-eshell)
+    (define-key map (kbd "x i") #'projectile-run-ielm)
     (define-key map (kbd "x t") #'projectile-run-term)
     (define-key map (kbd "x s") #'projectile-run-shell)
     (define-key map (kbd "z") #'projectile-cache-current-file)
@@ -3900,6 +3921,7 @@ is chosen."
    "--"
    ["Run shell" projectile-run-shell]
    ["Run eshell" projectile-run-eshell]
+   ["Run ielm" projectile-run-ielm]
    ["Run term" projectile-run-term]
    "--"
    ["Cache current file" projectile-cache-current-file]
