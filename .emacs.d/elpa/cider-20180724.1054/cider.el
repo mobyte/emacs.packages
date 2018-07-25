@@ -374,7 +374,7 @@ Throws an error if PROJECT-TYPE is unknown.  Known types are
   "List of dependencies where elements are lists of artifact name and version.
 Added to `cider-jack-in-dependencies' when doing `cider-jack-in-cljs'.")
 (put 'cider-jack-in-cljs-dependencies 'risky-local-variable t)
-(cider-add-to-alist 'cider-jack-in-cljs-dependencies "cider/piggieback" "0.3.5")
+(cider-add-to-alist 'cider-jack-in-cljs-dependencies "cider/piggieback" "0.3.6")
 
 (defvar cider-jack-in-dependencies-exclusions nil
   "List of exclusions for jack in dependencies.
@@ -646,9 +646,7 @@ Generally you should not disable this unless you run into some faulty check."
 
 (defun cider-check-nashorn-requirements ()
   "Check whether we can start a Nashorn ClojureScript REPL."
-  (cider-verify-piggieback-is-present)
-  (when (string-prefix-p "1.7" (cider--java-version))
-    (user-error "Nashorn is supported only on Java 8 or newer")))
+  (cider-verify-piggieback-is-present))
 
 (defun cider-check-node-requirements ()
   "Check whether we can start a Node ClojureScript REPL."
@@ -690,7 +688,7 @@ Generally you should not disable this unless you run into some faulty check."
 We have to prompt the user to select a build, that's why
 this is a command, not just a string."
   (let ((form "(do (require '[shadow.cljs.devtools.api :as shadow]) (shadow/watch :%s) (shadow/nrepl-select :%s))")
-        (build (string-remove-prefix ":" (read-from-minibuffer "Select shadow-cljs build: "))))
+        (build (string-remove-prefix ":" (read-from-minibuffer "Select shadow-cljs build (e.g. dev): "))))
     (format form build build)))
 
 (defcustom cider-figwheel-main-default-options nil
@@ -704,10 +702,16 @@ Figwheel for details."
 
 (defun cider-figwheel-main-init-form ()
   "Produce the figwheel-main ClojureScript init form."
-  (let ((form "(do (require 'figwheel.main) (figwheel.main/start %s))")
-        (options (or cider-figwheel-main-default-options
-                     (read-from-minibuffer "Select figwheel-main build: "))))
-    (format form options)))
+  (let* ((form "(do (require 'figwheel.main) (figwheel.main/start %s))")
+         (options (string-trim
+                   (or cider-figwheel-main-default-options
+                       (read-from-minibuffer "Select figwheel-main build (e.g. :dev): "))))
+         (normalized-options (if (or (string-prefix-p "{" options)
+                                     (string-prefix-p "(" options)
+                                     (string-prefix-p ":" options))
+                                 options
+                               (concat ":" options))))
+    (format form normalized-options)))
 
 (defun cider-custom-cljs-repl-init-form ()
   "Prompt for a form that would start a ClojureScript REPL.
@@ -843,6 +847,8 @@ nil."
 
 (defvar cider-start-map
   (let ((map (define-prefix-command 'cider-start-map)))
+    (define-key map (kbd "x") #'cider)
+    (define-key map (kbd "C-x") #'cider)
     (define-key map (kbd "j j") #'cider-jack-in-clj)
     (define-key map (kbd "j s") #'cider-jack-in-cljs)
     (define-key map (kbd "j m") #'cider-jack-in-clj&cljs)

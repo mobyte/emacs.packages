@@ -1,5 +1,5 @@
-(define-package "clj-refactor" "20180708.57" "A collection of clojure refactoring functions"
-  '((emacs "24.4")
+(define-package "clj-refactor" "20180725.349" "A collection of clojure refactoring functions"
+  '((emacs "25.1")
     (s "1.8.0")
     (seq "2.19")
     (yasnippet "0.6.1")
