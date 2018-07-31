@@ -25,7 +25,7 @@ When WHICH is nil, kill only the current session; when a single universal
 argument or 'linked, kill all linked session; when a double universal argument,
 t or 'all, kill all sessions.
 
-\(fn WHICH)" t nil)
+\(fn &optional WHICH)" t nil)
 
 (autoload 'sesman-show-session-info "sesman" "\
 Display session(s) info.
@@ -33,7 +33,7 @@ When WHICH is nil, show info for current session; when a single universal
 argument or 'linked, show info for all linked sessions; when a double universal
 argument or 'all, show info for all sessions.
 
-\(fn WHICH)" t nil)
+\(fn &optional WHICH)" t nil)
 
 (autoload 'sesman-show-links "sesman" "\
 Display links active in the current context.
@@ -41,19 +41,25 @@ Display links active in the current context.
 \(fn)" t nil)
 
 (autoload 'sesman-link-with-buffer "sesman" "\
-Associate a session with current buffer.
+Associate SESSION with BUFFER.
+BUFFER defaults to current buffer. On universal argument, or if BUFFER is 'ask,
+ask for buffer.
 
-\(fn)" t nil)
+\(fn &optional BUFFER SESSION)" t nil)
 
 (autoload 'sesman-link-with-directory "sesman" "\
-Associate a session with current directory.
+Associate a SESSION with DIR.
+DIR defaults to `default-directory'. On universal argument, or if DIR is 'ask,
+ask for directory.
 
-\(fn)" t nil)
+\(fn &optional DIR SESSION)" t nil)
 
 (autoload 'sesman-link-with-project "sesman" "\
-Associate a session with current project.
+Link the SESSION with PROJECT.
+PROJECT defaults to current project. On universal argument, or if PROJECT is
+'ask, ask for the project.
 
-\(fn)" t nil)
+\(fn &optional PROJECT SESSION)" t nil)
 
 (autoload 'sesman-unlink "sesman" "\
 Break any of the previously created links.
