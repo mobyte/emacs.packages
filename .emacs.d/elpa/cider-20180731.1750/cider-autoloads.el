@@ -298,6 +298,11 @@ thing at point.
 
 \(fn &optional ARG VAR LINE)" t nil)
 
+(autoload 'cider-find-dwim-at-mouse "cider-find" "\
+Find and display variable or resource at mouse EVENT.
+
+\(fn EVENT)" t nil)
+
 (autoload 'cider-find-dwim "cider-find" "\
 Find and display the SYMBOL-FILE at point.
 SYMBOL-FILE could be a var or a resource.  If thing at point is empty then
