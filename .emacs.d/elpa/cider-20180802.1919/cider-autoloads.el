@@ -506,6 +506,29 @@ Minor mode for REPL interaction from a Clojure buffer.
 ;;;### (autoloads nil "cider-ns" "cider-ns.el" (0 0 0 0))
 ;;; Generated autoloads from cider-ns.el
 
+(autoload 'cider-ns-reload "cider-ns" "\
+Send a (require 'ns :reload) to the REPL.
+
+With an argument PROMPT, it prompts for a namespace name.  This is the
+Clojure out of the box reloading experience and does not rely on
+org.clojure/tools.namespace.  See Commentary of this file for a longer list
+of differences.  From the Clojure doc: \":reload forces loading of all the
+identified libs even if they are already loaded\".
+
+\(fn &optional PROMPT)" t nil)
+
+(autoload 'cider-ns-reload-all "cider-ns" "\
+Send a (require 'ns :reload-all) to the REPL.
+
+With an argument PROMPT, it prompts for a namespace name.  This is the
+Clojure out of the box reloading experience and does not rely on
+org.clojure/tools.namespace.  See Commentary of this file for a longer list
+of differences.  From the Clojure doc: \":reload-all implies :reload and
+also forces loading of all libs that the identified libs directly or
+indirectly load via require\".
+
+\(fn &optional PROMPT)" t nil)
+
 (autoload 'cider-ns-refresh "cider-ns" "\
 Reload modified and unloaded namespaces on the classpath.
 
