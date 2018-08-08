@@ -186,7 +186,7 @@ command which is about to be called are committed."
 (defun magit-wip-commit-initial-backup ()
   "Before saving, commit current file to a worktree wip ref.
 
-The user has to add this function to `backup-buffer'.
+The user has to add this function to `before-save-hook'.
 
 Commit the current state of the visited file before saving the
 current buffer to that file.  This backs up the same version of
@@ -301,7 +301,7 @@ commit message."
 (defun magit--wip-ref (namespace &optional ref)
   (concat magit-wip-namespace namespace
           (or (and ref (string-prefix-p "refs/" ref) ref)
-              (and-let* ((branch (or ref (magit-get-current-branch))))
+              (when-let ((branch (or ref (magit-get-current-branch))))
                 (concat "refs/heads/" branch))
               "HEAD")))
 

@@ -1001,16 +1001,18 @@ be committed."
 If there is no revision at point or with a prefix argument prompt
 for a revision."
   (interactive
-   (let* ((mcommit (magit-section-when module-commit))
-          (atpoint (or (and (bound-and-true-p magit-blame-mode)
-                            (oref (magit-current-blame-chunk) orig-rev))
-                       mcommit
-                       (magit-branch-or-commit-at-point))))
-     (nconc (cons (or (and (not current-prefix-arg) atpoint)
-                      (magit-read-branch-or-commit "Show commit" atpoint))
-                  (magit-show-commit--arguments))
-            (and mcommit (list (magit-section-parent-value
-                                (magit-current-section)))))))
+   (pcase-let* ((mcommit (magit-section-when module-commit))
+                (atpoint (or (and (bound-and-true-p magit-blame-mode)
+                                  (oref (magit-current-blame-chunk) orig-rev))
+                             mcommit
+                             (magit-branch-or-commit-at-point)))
+                (`(,args ,files) (magit-show-commit--arguments)))
+     (list (or (and (not current-prefix-arg) atpoint)
+               (magit-read-branch-or-commit "Show commit" atpoint))
+           args
+           files
+           (and mcommit (list (magit-section-parent-value
+                               (magit-current-section)))))))
   (require 'magit)
   (magit-with-toplevel
     (when module
@@ -2008,9 +2010,10 @@ or a ref which is not a branch, then it inserts nothing."
   (magit-insert-section section (commit-message)
     (oset section heading-highlight-face 'magit-diff-hunk-heading-highlight)
     (let ((beg (point)))
-      (insert (with-temp-buffer
-                (magit-rev-insert-format "%B" rev)
-                (magit-revision--wash-message)))
+      (insert (save-excursion ; The risky var query can move point.
+                (with-temp-buffer
+                  (magit-rev-insert-format "%B" rev)
+                  (magit-revision--wash-message))))
       (if (= (point) (+ beg 2))
           (progn (backward-delete-char 2)
                  (insert "(no message)\n"))
