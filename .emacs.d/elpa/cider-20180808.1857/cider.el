@@ -129,7 +129,7 @@ version from the CIDER package or library.")
   :package-version '(cider . "0.14.0"))
 
 (defcustom cider-boot-parameters
-  "repl -s -H :: wait"
+  "nrepl-server -b :: wait"
   "Params passed to boot to start an nREPL server via `cider-jack-in'."
   :type 'string
   :group 'cider
@@ -373,7 +373,7 @@ Throws an error if PROJECT-TYPE is unknown."
   "List of dependencies where elements are lists of artifact name and version.
 Added to `cider-jack-in-dependencies' when doing `cider-jack-in-cljs'.")
 (put 'cider-jack-in-cljs-dependencies 'risky-local-variable t)
-(cider-add-to-alist 'cider-jack-in-cljs-dependencies "cider/piggieback" "0.3.6")
+(cider-add-to-alist 'cider-jack-in-cljs-dependencies "cider/piggieback" "0.3.8")
 
 (defvar cider-jack-in-dependencies-exclusions nil
   "List of exclusions for jack in dependencies.
@@ -390,6 +390,12 @@ Elements of the list are artifact name and list of exclusions to apply for the a
 
 (defconst cider-latest-clojure-version "1.10.0"
   "Latest supported version of Clojure.")
+
+(defconst cider-required-middleware-version "0.18.0"
+  "The minimum CIDER nREPL version that's known to work properly with CIDER.")
+
+(defconst cider-latest-middleware-version "0.18.0"
+  "The latest CIDER nREPL version that's known to work properly with CIDER.")
 
 (defcustom cider-jack-in-auto-inject-clojure nil
   "Version of clojure to auto-inject into REPL.
@@ -418,7 +424,7 @@ that extend CIDER, not for users.  For example, a refactoring package might
 want to inject some middleware only when within a project context.)")
 (put 'cider-jack-in-lein-plugins 'risky-local-variable t)
 (cider-add-to-alist 'cider-jack-in-lein-plugins
-                    "cider/cider-nrepl" (upcase cider-version))
+                    "cider/cider-nrepl" cider-latest-middleware-version)
 
 (defvar cider-jack-in-cljs-lein-plugins nil
   "List of Leiningen plugins to be injected at jack-in.
