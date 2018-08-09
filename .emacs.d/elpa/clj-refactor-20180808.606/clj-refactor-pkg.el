@@ -1,4 +1,4 @@
-(define-package "clj-refactor" "20180725.1258" "A collection of clojure refactoring functions"
+(define-package "clj-refactor" "20180808.606" "A collection of commands for refactoring Clojure code"
   '((emacs "25.1")
     (s "1.8.0")
     (seq "2.19")
