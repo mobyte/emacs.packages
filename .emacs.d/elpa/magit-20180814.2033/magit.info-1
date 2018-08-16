@@ -30,7 +30,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.13.0 (2.13.0-142-g2fc79d08+1).
+This manual is for Magit version 2.13.0 (2.13.0-163-g574562a87+1).
 
      Copyright (C) 2015-2018 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -300,6 +300,8 @@ FAQ - Issues and Errors
 * The mode-line information isn't always up-to-date::
 * A branch and tag sharing the same name breaks SOMETHING::
 * My Git hooks work on the command-line but not inside Magit::
+* git-commit-mode isn't used when committing from the command-line::
+* Point ends up inside invisible text when jumping to a file-visiting buffer::
 
 
 
@@ -6261,6 +6263,12 @@ Also see *note (gitman)git-reset::.
      the commit refers to the ‘HEAD’, then this effectively unstages all
      changes.
 
+‘X w’     (‘magit-reset-worktree’)
+
+     Reset the working tree to some commit read from the user and
+     defaulting to the commit at point.  Keep the ‘HEAD’ and index
+     as-is.
+
 ‘X f’     (‘magit-file-checkout’)
 
      Update file in the working tree and index to the contents from a
@@ -7318,6 +7326,17 @@ changes from the commits shown in the log or reflog.
      With a negative prefix argument only the worktree wip ref is shown.
      The absolute numeric value of the prefix argument controls how many
      "branches" of each wip ref are shown.
+
+‘X w’     (‘magit-reset-worktree’)
+
+     This command resets the working tree to some commit read from the
+     user and defaulting to the commit at point, while keeping the
+     ‘HEAD’ and index as-is.
+
+     This can be used to restore files to the state committed to a wip
+     ref.  Note that this will discard any unstaged changes that might
+     have existed before invoking this command (but of course only after
+     committing that to the working tree wip ref).
 
    There exists a total of three global modes that save to the wip refs,
 which might seem excessive, but allows fine tuning of when exactly

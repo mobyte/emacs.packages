@@ -1014,6 +1014,8 @@ A.2 FAQ - Issues and Errors
 * The mode-line information isn't always up-to-date::
 * A branch and tag sharing the same name breaks SOMETHING::
 * My Git hooks work on the command-line but not inside Magit::
+* git-commit-mode isn't used when committing from the command-line::
+* Point ends up inside invisible text when jumping to a file-visiting buffer::
 
 
 File: magit.info,  Node: Magit is slow,  Next: I changed several thousand files at once and now Magit is unusable,  Up: FAQ - Issues and Errors
@@ -1174,7 +1176,7 @@ that has ambiguous refnames, please report any issues you encounter so
 that we can investigate whether there is a simple fix.
 
 
-File: magit.info,  Node: My Git hooks work on the command-line but not inside Magit,  Prev: A branch and tag sharing the same name breaks SOMETHING,  Up: FAQ - Issues and Errors
+File: magit.info,  Node: My Git hooks work on the command-line but not inside Magit,  Next: git-commit-mode isn't used when committing from the command-line,  Prev: A branch and tag sharing the same name breaks SOMETHING,  Up: FAQ - Issues and Errors
 
 A.2.11 My Git hooks work on the command-line but not inside Magit
 -----------------------------------------------------------------
@@ -1185,6 +1187,74 @@ that setting on to other ‘git’ process it starts itself.  It does so by
 setting the environment variable ‘GIT_LITERAL_PATHSPECS’, not by calling
 subprocesses with the ‘--literal-pathspecs’.  You can therefore override
 this setting in hook scripts using ‘unset GIT_LITERAL_PATHSPECS’.
+
+
+File: magit.info,  Node: git-commit-mode isn't used when committing from the command-line,  Next: Point ends up inside invisible text when jumping to a file-visiting buffer,  Prev: My Git hooks work on the command-line but not inside Magit,  Up: FAQ - Issues and Errors
+
+A.2.12 ‘git-commit-mode’ isn’t used when committing from the command-line
+-------------------------------------------------------------------------
+
+The reason for this is that ‘git-commit.el’ has not been loaded yet
+and/or that the server has not been started yet.  These things have
+always already been taken care of when you commit from Magit because in
+order to do so, Magit has to be loaded and doing that involves loading
+‘git-commit’ and starting the server.
+
+   If you want to commit from the command-line, then you have to take
+care of these things yourself.  Your ‘init.el’ file should contain:
+
+     (require 'git-commit)
+     (server-mode)
+
+   Instead of ‘(require ’git-commit)‘ you may also use:
+
+     (load "/path/to/magit-autoloads.el")
+
+   You might want to do that because loading ‘git-commit’ causes large
+parts of Magit to be loaded.
+
+   There are also some variations of ‘(server-mode)’ that you might want
+to try.  Personally I use:
+
+     (use-package server
+       :config (or (server-running-p) (server-mode)))
+
+   Now you can use:
+
+     $ emacs&
+     $ EDITOR=emacsclient git commit
+
+   However you cannot use:
+
+     $ killall emacs
+     $ EDITOR="emacsclient --alternate-editor emacs" git commit
+
+   This will actually end up using ‘emacs’, not ‘emacsclient’.  If you
+do this, then can still edit the commit message but ‘git-commit-mode’
+won’t be used and you have to exit ‘emacs’ to finish the process.
+
+   Tautology ahead.  If you want to be able to use ‘emacsclient’ to
+connect to a running ‘emacs’ instance, even though no ‘emacs’ instance
+is running, then you cannot use ‘emacsclient’ directly.
+
+   Instead you have to create a script that does something like this:
+
+   Try to use ‘emacsclient’ (without using ‘--alternate-editor’).  If
+that succeeds, do nothing else.  Otherwise start ‘emacs &’ (and
+‘init.el’ must call ‘server-start’) and try to use ‘emacsclient’ again.
+
+
+File: magit.info,  Node: Point ends up inside invisible text when jumping to a file-visiting buffer,  Prev: git-commit-mode isn't used when committing from the command-line,  Up: FAQ - Issues and Errors
+
+A.2.13 Point ends up inside invisible text when jumping to a file-visiting buffer
+---------------------------------------------------------------------------------
+
+This can happen when you type ‘RET’ on a hunk to visit the respective
+file at the respective position.  One solution to this problem is to use
+‘global-reveal-mode’.  It makes sure that text around point is always
+visible.  It that is too drastic for your taste, then you may instead
+use ‘magit-diff-visit-file-hook’ to reveal the text, possibly using
+‘reveal-post-command’ or for Org buffers ‘org-reveal’.
 
 
 File: magit.info,  Node: Debugging Tools,  Next: Keystroke Index,  Prev: FAQ,  Up: Top
@@ -1534,7 +1604,7 @@ Appendix C Keystroke Index
                                                               (line  18)
 * M-x magit-version:                     Git Executable.      (line  17)
 * M-x magit-version <1>:                 Debugging Tools.     (line  10)
-* M-x magit-wip-commit:                  Wip Modes.           (line 163)
+* M-x magit-wip-commit:                  Wip Modes.           (line 174)
 * M-x with-editor-debug:                 Debugging Tools.     (line  38)
 * n:                                     Section Movement.    (line  16)
 * n <1>:                                 Blaming.             (line  91)
@@ -1653,11 +1723,13 @@ Appendix C Keystroke Index
 * x:                                     Editing Rebase Sequences.
                                                               (line  76)
 * x <1>:                                 Resetting.           (line   8)
-* X f:                                   Resetting.           (line  37)
+* X f:                                   Resetting.           (line  43)
 * X h:                                   Resetting.           (line  25)
 * X i:                                   Resetting.           (line  30)
 * X m:                                   Resetting.           (line  14)
 * X s:                                   Resetting.           (line  19)
+* X w:                                   Resetting.           (line  37)
+* X w <1>:                               Wip Modes.           (line 101)
 * Y:                                     Cherries.            (line  17)
 * y:                                     References Buffer.   (line   6)
 * y <1>:                                 Editing Rebase Sequences.
@@ -1893,7 +1965,7 @@ Appendix D Command Index
 * magit-fetch-modules:                   Submodule Popup.     (line  57)
 * magit-fetch-popup:                     Fetching.            (line  11)
 * magit-fetch-refspec:                   Fetching.            (line  33)
-* magit-file-checkout:                   Resetting.           (line  37)
+* magit-file-checkout:                   Resetting.           (line  43)
 * magit-file-checkout <1>:               Minor Mode for Buffers Visiting Files.
                                                               (line 131)
 * magit-file-delete:                     Minor Mode for Buffers Visiting Files.
@@ -2030,6 +2102,8 @@ Appendix D Command Index
                                                               (line  87)
 * magit-reset-index <1>:                 Resetting.           (line  30)
 * magit-reset-soft:                      Resetting.           (line  19)
+* magit-reset-worktree:                  Resetting.           (line  37)
+* magit-reset-worktree <1>:              Wip Modes.           (line 101)
 * magit-reverse:                         Applying.            (line  44)
 * magit-reverse-in-index:                Staging and Unstaging.
                                                               (line  62)
@@ -2147,7 +2221,7 @@ Appendix D Command Index
 * magit-version:                         Git Executable.      (line  17)
 * magit-version <1>:                     Debugging Tools.     (line  10)
 * magit-visit-ref:                       References Buffer.   (line 166)
-* magit-wip-commit:                      Wip Modes.           (line 163)
+* magit-wip-commit:                      Wip Modes.           (line 174)
 * magit-wip-log:                         Wip Modes.           (line  85)
 * magit-wip-log-current:                 Wip Modes.           (line  93)
 * magit-worktree-branch:                 Worktree.            (line  17)
@@ -2386,7 +2460,7 @@ Appendix E Function Index
 * magit-status-maybe-update-revision-buffer: Section Movement.
                                                               (line  77)
 * magit-tag-release:                     Tagging.             (line  28)
-* magit-wip-commit-initial-backup:       Wip Modes.           (line 134)
+* magit-wip-commit-initial-backup:       Wip Modes.           (line 145)
 * magit-wip-log:                         Wip Modes.           (line  85)
 * magit-wip-log-current:                 Wip Modes.           (line  93)
 * with-editor-usage-message:             Editing Commit Messages.
@@ -2576,14 +2650,14 @@ Appendix F Variable Index
 * magit-use-sticky-arguments:            Popup Buffers and Prefix Commands.
                                                               (line  36)
 * magit-visit-ref-behavior:              References Buffer.   (line 177)
-* magit-wip-after-apply-mode:            Wip Modes.           (line 115)
-* magit-wip-after-apply-mode-lighter:    Wip Modes.           (line 175)
-* magit-wip-after-save-local-mode-lighter: Wip Modes.         (line 171)
-* magit-wip-after-save-mode:             Wip Modes.           (line 109)
-* magit-wip-before-change-mode:          Wip Modes.           (line 129)
-* magit-wip-before-change-mode-lighter:  Wip Modes.           (line 179)
+* magit-wip-after-apply-mode:            Wip Modes.           (line 126)
+* magit-wip-after-apply-mode-lighter:    Wip Modes.           (line 186)
+* magit-wip-after-save-local-mode-lighter: Wip Modes.         (line 182)
+* magit-wip-after-save-mode:             Wip Modes.           (line 120)
+* magit-wip-before-change-mode:          Wip Modes.           (line 140)
+* magit-wip-before-change-mode-lighter:  Wip Modes.           (line 190)
 * magit-wip-merge-branch:                Wip Modes.           (line  63)
-* magit-wip-namespace:                   Wip Modes.           (line 183)
+* magit-wip-namespace:                   Wip Modes.           (line 194)
 * notes.displayRef:                      Notes.               (line  64)
 * pull.rebase:                           The Branch Config Popup.
                                                               (line  70)

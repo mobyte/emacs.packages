@@ -1833,17 +1833,8 @@ repositories are displayed.
 ;;; Generated autoloads from magit-reset.el
  (autoload 'magit-reset-popup "magit" nil t)
 
-(autoload 'magit-reset-index "magit-reset" "\
-Reset the index to COMMIT.
-Keep the head and working tree as-is, so if COMMIT refers to the
-head this effectively unstages all changes.
-
-\(git reset COMMIT .)
-
-\(fn COMMIT)" t nil)
-
 (autoload 'magit-reset "magit-reset" "\
-Reset the head and index to COMMIT, but not the working tree.
+Reset the `HEAD' and index to COMMIT, but not the working tree.
 With a prefix argument also reset the working tree.
 
 \(git reset --mixed|--hard COMMIT)
@@ -1851,23 +1842,38 @@ With a prefix argument also reset the working tree.
 \(fn COMMIT &optional HARD)" t nil)
 
 (autoload 'magit-reset-head "magit-reset" "\
-Reset the head and index to COMMIT, but not the working tree.
+Reset the `HEAD' and index to COMMIT, but not the working tree.
 
 \(git reset --mixed COMMIT)
 
 \(fn COMMIT)" t nil)
 
 (autoload 'magit-reset-soft "magit-reset" "\
-Reset the head to COMMIT, but not the index and working tree.
+Reset the `HEAD' to COMMIT, but not the index and working tree.
 
 \(git reset --soft REVISION)
 
 \(fn COMMIT)" t nil)
 
 (autoload 'magit-reset-hard "magit-reset" "\
-Reset the head, index, and working tree to COMMIT.
+Reset the `HEAD', index, and working tree to COMMIT.
 
 \(git reset --hard REVISION)
+
+\(fn COMMIT)" t nil)
+
+(autoload 'magit-reset-index "magit-reset" "\
+Reset the index to COMMIT.
+Keep the `HEAD' and working tree as-is, so if COMMIT refers to the
+head this effectively unstages all changes.
+
+\(git reset COMMIT .)
+
+\(fn COMMIT)" t nil)
+
+(autoload 'magit-reset-worktree "magit-reset" "\
+Reset the worktree to COMMIT.
+Keep the `HEAD' and index as-is.
 
 \(fn COMMIT)" t nil)
 
