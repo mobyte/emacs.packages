@@ -202,11 +202,15 @@ Retrieve the underlying connection's CIDER-nREPL version and checks if the
 middleware used is compatible with CIDER.  If not, will display a warning
 message in the REPL area."
   (let* ((version-dict        (nrepl-aux-info "cider-version" (cider-current-repl)))
-         (middleware-version  (nrepl-dict-get version-dict "version-string" "not installed")))
-    (unless (version<= cider-required-middleware-version middleware-version)
+         (middleware-version  (nrepl-dict-get version-dict "version-string")))
+    (cond
+     ((null middleware-version)
+      (cider-emit-manual-warning "troubleshooting/#cider-complains-of-the-cider-nrepl-version"
+                                 "CIDER requires cider-nrepl to be fully functional. Many things will not work without it!"))
+     ((version< middleware-version cider-required-middleware-version)
       (cider-emit-manual-warning "troubleshooting/#cider-complains-of-the-cider-nrepl-version"
                                  "CIDER %s requires cider-nrepl %s+, but you're currently using cider-nrepl %s. Things will break!"
-                                 cider-version cider-required-middleware-version middleware-version))))
+                                 cider-version cider-required-middleware-version middleware-version)))))
 
 (declare-function cider-interactive-eval-handler "cider-eval")
 ;; TODO: Use some null handler here
@@ -658,6 +662,13 @@ session."
                       type (car (sesman-current-session 'CIDER)))
         repl))))
 
+(defun cider--match-repl-type (type buffer)
+  "Return non-nil if TYPE matches BUFFER's REPL type."
+  (let ((buffer-repl-type (cider-repl-type buffer)))
+    (cond ((null buffer-repl-type) nil)
+          ((or (null type) (equal type "multi")) t)
+          (t (string= type buffer-repl-type)))))
+
 (defun cider-repls (&optional type ensure)
   "Return cider REPLs of TYPE from the current session.
 If TYPE is nil or \"multi\", return all repls.  If ENSURE is non-nil, throw
@@ -665,11 +676,8 @@ an error if no linked session exists."
   (let ((repls (cdr (if ensure
                         (sesman-ensure-session 'CIDER)
                       (sesman-current-session 'CIDER)))))
-    (if (or (null type) (equal type "multi"))
-        repls
-      (seq-filter (lambda (b)
-                    (string= type (cider-repl-type b)))
-                  repls))))
+    (seq-filter (lambda (b)
+                  (cider--match-repl-type type b)) repls)))
 
 (defun cider-map-repls (which function)
   "Call FUNCTION once for each appropriate REPL as indicated by WHICH.

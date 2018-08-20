@@ -1,11 +1,11 @@
-(define-package "cider" "20180813.1518" "Clojure Interactive Development Environment that Rocks"
+(define-package "cider" "20180818.258" "Clojure Interactive Development Environment that Rocks"
   '((emacs "25")
-    (clojure-mode "5.7.0")
+    (clojure-mode "5.9")
     (pkg-info "0.4")
-    (queue "0.1.1")
+    (queue "0.2")
     (spinner "1.7")
     (seq "2.16")
-    (sesman "0.1.1"))
+    (sesman "0.2"))
   :keywords
   '("languages" "clojure" "cider")
   :authors
