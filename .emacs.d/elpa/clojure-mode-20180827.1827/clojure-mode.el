@@ -9,9 +9,9 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20180818.255
+;; Package-Version: 20180827.1827
 ;; Keywords: languages clojure clojurescript lisp
-;; Version: 5.9.0
+;; Version: 5.10.0-snapshot
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
@@ -1091,6 +1091,12 @@ will align the values like this:
   :safe #'booleanp
   :type 'boolean)
 
+(defcustom clojure-align-reader-conditionals nil
+  "Whether to align reader conditionals, as if they were maps."
+  :package-version '(clojure-mode . "5.10")
+  :safe #'booleanp
+  :type 'boolean)
+
 (defcustom clojure-align-binding-forms
   '("let" "when-let" "when-some" "if-let" "if-some" "binding" "loop"
     "doseq" "for" "with-open" "with-local-vars" "with-redefs")
@@ -1104,6 +1110,10 @@ will align the values like this:
   :package-version '(clojure-mode . "5.1")
   :safe #'listp
   :type '(repeat string))
+
+(defvar clojure--beginning-of-reader-conditional-regexp
+  "#\\?@(\\|#\\?("
+  "Regexp denoting the beginning of a reader conditional.")
 
 (defun clojure--position-for-alignment ()
   "Non-nil if the sexp around point should be automatically aligned.
@@ -1119,32 +1129,36 @@ For instance, in a map literal point is left immediately before
 the first key; while, in a let-binding, point is left inside the
 binding vector and immediately before the first binding
 construct."
-  ;; Are we in a map?
-  (or (and (eq (char-before) ?{)
-           (not (eq (char-before (1- (point))) ?\#)))
-      ;; Are we in a cond form?
-      (let* ((fun    (car (member (thing-at-point 'symbol) clojure-align-cond-forms)))
-             (method (and fun (clojure--get-indent-method fun)))
-             ;; The number of special arguments in the cond form is
-             ;; the number of sexps we skip before aligning.
-             (skip   (cond ((numberp method) method)
-                           ((null method) 0)
-                           ((sequencep method) (elt method 0)))))
-        (when (and fun (numberp skip))
-          (clojure-forward-logical-sexp skip)
-          (comment-forward (point-max))
-          fun)) ; Return non-nil (the var name).
-      ;; Are we in a let-like form?
-      (when (member (thing-at-point 'symbol)
-                    clojure-align-binding-forms)
-        ;; Position inside the binding vector.
-        (clojure-forward-logical-sexp)
-        (backward-sexp)
-        (when (eq (char-after) ?\[)
-          (forward-char 1)
-          (comment-forward (point-max))
-          ;; Return non-nil.
-          t))))
+  (let ((point (point)))
+    ;; Are we in a map?
+    (or (and (eq (char-before) ?{)
+             (not (eq (char-before (1- point)) ?\#)))
+        ;; Are we in a reader conditional?
+        (and clojure-align-reader-conditionals
+             (looking-back clojure--beginning-of-reader-conditional-regexp (- (point) 4)))
+        ;; Are we in a cond form?
+        (let* ((fun    (car (member (thing-at-point 'symbol) clojure-align-cond-forms)))
+               (method (and fun (clojure--get-indent-method fun)))
+               ;; The number of special arguments in the cond form is
+               ;; the number of sexps we skip before aligning.
+               (skip   (cond ((numberp method) method)
+                             ((null method) 0)
+                             ((sequencep method) (elt method 0)))))
+          (when (and fun (numberp skip))
+            (clojure-forward-logical-sexp skip)
+            (comment-forward (point-max))
+            fun)) ; Return non-nil (the var name).
+        ;; Are we in a let-like form?
+        (when (member (thing-at-point 'symbol)
+                      clojure-align-binding-forms)
+          ;; Position inside the binding vector.
+          (clojure-forward-logical-sexp)
+          (backward-sexp)
+          (when (eq (char-after) ?\[)
+            (forward-char 1)
+            (comment-forward (point-max))
+            ;; Return non-nil.
+            t)))))
 
 (defun clojure--find-sexp-to-align (end)
   "Non-nil if there's a sexp ahead to be aligned before END.
@@ -1153,10 +1167,14 @@ Place point as in `clojure--position-for-alignment'."
   (let ((found))
     (while (and (not found)
                 (search-forward-regexp
-                 (concat "{\\|(" (regexp-opt
-                                  (append clojure-align-binding-forms
-                                          clojure-align-cond-forms)
-                                  'symbols))
+                 (concat (when clojure-align-reader-conditionals
+                           (concat clojure--beginning-of-reader-conditional-regexp
+                                   "\\|"))
+                         "{\\|("
+                         (regexp-opt
+                          (append clojure-align-binding-forms
+                                  clojure-align-cond-forms)
+                          'symbols))
                  end 'noerror))
 
       (let ((ppss (syntax-ppss)))
@@ -1956,7 +1974,8 @@ This will skip over sexps that don't represent objects, so that ^hints and
         (clojure-forward-logical-sexp 1)
         (clojure-backward-logical-sexp 1)
         (looking-at-p first-form))
-    (scan-error nil)))
+    (scan-error nil)
+    (end-of-buffer nil)))
 
 (defun clojure-sexp-starts-until-position (position)
   "Return the starting points for forms before POSITION.
@@ -1993,10 +2012,11 @@ testing, give an easy way to turn this new behavior off."
         (setq haystack (cdr haystack))))
     found))
 
-(defun clojure-beginning-of-defun-function ()
+(defun clojure-beginning-of-defun-function (&optional n)
   "Go to top level form.
 Set as `beginning-of-defun-function' so that these generic
-operators can be used."
+operators can be used.  Given a positive N it will do it that
+many times."
   (let ((beginning-of-defun-function nil))
     (if (and clojure-toplevel-inside-comment-form
              (clojure-top-level-form-p "comment"))
@@ -2014,8 +2034,8 @@ operators can be used."
                                                      (clojure-sexp-starts-until-position
                                                       clojure-comment-end))))
                 (progn (goto-char sexp-start) t)
-              (progn (beginning-of-defun) t))))
-      (progn (beginning-of-defun) t))))
+              (beginning-of-defun n))))
+      (beginning-of-defun n))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

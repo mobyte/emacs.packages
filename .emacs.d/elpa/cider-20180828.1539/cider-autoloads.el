@@ -548,6 +548,8 @@ refresh functions (defined in `cider-ns-refresh-before-fn' and
 
 \(fn &optional MODE)" t nil)
 
+(define-obsolete-function-alias 'cider-refresh 'cider-ns-refresh "0.18")
+
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-ns" '("cider-ns-")))
 
 ;;;***
