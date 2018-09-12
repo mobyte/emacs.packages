@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20180824.2239
+;; Package-Version: 20180911.540
 ;; Keywords: project, convenience
 ;; Version: 1.1.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -2068,8 +2068,9 @@ would be `find-file-other-window' or `find-file-other-frame'"
   (let ((file (projectile-completing-read "Find file: "
                                           (projectile-current-project-files)))
         (ff (or ff-variant #'find-file)))
-    (funcall ff (expand-file-name file (projectile-project-root)))
-    (run-hooks 'projectile-find-file-hook)))
+    (when file
+      (funcall ff (expand-file-name file (projectile-project-root)))
+      (run-hooks 'projectile-find-file-hook))))
 
 ;;;###autoload
 (defun projectile-find-file (&optional arg)
@@ -2346,7 +2347,8 @@ TEST-DIR which specifies the path to the tests relative to the project root."
                                   :test "gulp test")
 (projectile-register-project-type 'npm '("package.json")
                                   :compile "npm install"
-                                  :test "npm test")
+                                  :test "npm test"
+                                  :test-suffix ".test")
 ;; Angular
 (projectile-register-project-type 'angular '("angular.json" ".angular-cli.json")
                                   :compile "ng build"

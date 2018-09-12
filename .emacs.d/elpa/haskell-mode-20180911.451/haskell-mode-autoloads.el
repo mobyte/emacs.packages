@@ -1060,6 +1060,13 @@ within that region.
 
 ;;;***
 
+;;;### (autoloads nil "haskell-svg" "haskell-svg.el" (0 0 0 0))
+;;; Generated autoloads from haskell-svg.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "haskell-svg" '("haskell-svg-")))
+
+;;;***
+
 ;;;### (autoloads nil "haskell-unicode-input-method" "haskell-unicode-input-method.el"
 ;;;;;;  (0 0 0 0))
 ;;; Generated autoloads from haskell-unicode-input-method.el
