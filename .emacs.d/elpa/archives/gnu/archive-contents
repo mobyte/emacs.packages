@@ -389,7 +389,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 7 8)
+	    [(1 7 9)
 	     ((emacs
 	       (25))
 	      (stream
@@ -435,7 +435,7 @@
  (excorporate .
 	      [(0 7 7)
 	       ((emacs
-		 (24 1))
+		 (24 4))
 		(fsm
 		 (0 2))
 		(soap-client
@@ -769,6 +769,11 @@
 	 "Random-access singly-linked lists" single
 	 ((:url . "http://elpa.gnu.org/packages/myers.html")
 	  (:keywords "list" "containers"))])
+ (nadvice .
+	  [(0 1)
+	   nil "Forward compatibility for Emacs-24.4's nadvice" single
+	   ((:url . "http://elpa.gnu.org/packages/nadvice.html")
+	    (:keywords))])
  (nameless .
 	   [(1 0 2)
 	    ((emacs
