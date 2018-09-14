@@ -433,15 +433,17 @@
 		  ((:keywords "convenience")
 		   (:url . "https://github.com/ergoemacs/ergoemacs-mode"))])
  (excorporate .
-	      [(0 7 7)
+	      [(0 8 0)
 	       ((emacs
-		 (24 4))
+		 (24 1))
 		(fsm
 		 (0 2))
 		(soap-client
 		 (3 1 4))
 		(url-http-ntlm
-		 (2 0 3)))
+		 (2 0 3))
+		(nadvice
+		 (0 2)))
 	       "Exchange integration" tar
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
@@ -770,7 +772,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/myers.html")
 	  (:keywords "list" "containers"))])
  (nadvice .
-	  [(0 1)
+	  [(0 2)
 	   nil "Forward compatibility for Emacs-24.4's nadvice" single
 	   ((:url . "http://elpa.gnu.org/packages/nadvice.html")
 	    (:keywords))])
@@ -995,7 +997,9 @@
 	  (cl-lib
 	   (0 5))
 	  (cl-generic
-	   (0 3)))
+	   (0 3))
+	  (cl-print
+	   (1 0)))
 	 "A collaborative editing framework for Emacs" tar
 	 ((:keywords "rudel" "collaboration")
 	  (:url . "http://rudel.sourceforge.net/"))])
