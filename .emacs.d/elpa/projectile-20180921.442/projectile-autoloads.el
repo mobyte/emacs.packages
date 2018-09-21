@@ -27,10 +27,10 @@ just return nil.
 (autoload 'projectile-invalidate-cache "projectile" "\
 Remove the current project's files from `projectile-projects-cache'.
 
-With a prefix argument ARG prompts for the name of the project whose cache
+With a prefix argument PROMPT prompts for the name of the project whose cache
 to invalidate.
 
-\(fn ARG)" t nil)
+\(fn PROMPT)" t nil)
 
 (autoload 'projectile-purge-file-from-cache "projectile" "\
 Purge FILE from the cache of the current project.
@@ -110,7 +110,7 @@ Other file extensions can be customized with the variable `projectile-other-file
 (autoload 'projectile-find-file-dwim "projectile" "\
 Jump to a project's files using completion based on context.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 If point is on a filename, Projectile first tries to search for that
 file in project:
@@ -131,12 +131,12 @@ the content of that directory.  If it is executed on a partial filename like
 
 - If it finds nothing, display a list of all files in project for selecting.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-file-dwim-other-window "projectile" "\
 Jump to a project's files using completion based on context in other window.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 If point is on a filename, Projectile first tries to search for that
 file in project:
@@ -158,12 +158,12 @@ is presented.
 
 - If it finds nothing, display a list of all files in project for selecting.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-file-dwim-other-frame "projectile" "\
 Jump to a project's files using completion based on context in other frame.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 If point is on a filename, Projectile first tries to search for that
 file in project:
@@ -185,55 +185,55 @@ is presented.
 
 - If it finds nothing, display a list of all files in project for selecting.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-file "projectile" "\
 Jump to a project's file using completion.
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-file-other-window "projectile" "\
 Jump to a project's file using completion and show it in another window.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-file-other-frame "projectile" "\
 Jump to a project's file using completion and show it in another frame.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-dir "projectile" "\
 Jump to a project's directory using completion.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-dir-other-window "projectile" "\
 Jump to a project's directory in other window using completion.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-dir-other-frame "projectile" "\
 Jump to a project's directory in other window using completion.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-test-file "projectile" "\
 Jump to a project's test file using completion.
 
-With a prefix ARG invalidates the cache first.
+With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
-\(fn &optional ARG)" t nil)
+\(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-project-info "projectile" "\
 Display info for current project.
@@ -480,9 +480,9 @@ Remove the current project from the list of known projects.
 (autoload 'projectile-ibuffer "projectile" "\
 Open an IBuffer window showing all buffers in the current project.
 
-Let user choose another project when PREFIX is supplied.
+Let user choose another project when PROMPT-FOR-PROJECT is supplied.
 
-\(fn PREFIX)" t nil)
+\(fn PROMPT-FOR-PROJECT)" t nil)
 
 (autoload 'projectile-commander "projectile" "\
 Execute a Projectile command with a single letter.
