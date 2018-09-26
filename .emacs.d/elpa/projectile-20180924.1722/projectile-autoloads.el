@@ -207,6 +207,11 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
 \(fn &optional INVALIDATE-CACHE)" t nil)
 
+(autoload 'projectile-toggle-project-read-only "projectile" "\
+Toggle project read only
+
+\(fn)" t nil)
+
 (autoload 'projectile-find-dir "projectile" "\
 Jump to a project's directory using completion.
 

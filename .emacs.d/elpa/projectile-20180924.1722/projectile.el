@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20180923.1716
+;; Package-Version: 20180924.1722
 ;; Keywords: project, convenience
 ;; Version: 1.1.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -2094,6 +2094,20 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (interactive "P")
   (projectile--find-file invalidate-cache #'find-file-other-frame))
 
+;;;###autoload
+(defun projectile-toggle-project-read-only ()
+  "Toggle project read only"
+  (interactive)
+  (let ((inhibit-read-only t)
+        (val (not buffer-read-only))
+        (default-directory (projectile-project-root)))
+    (add-dir-local-variable nil 'buffer-read-only val)
+    (save-buffer)
+    (kill-buffer)
+    (when buffer-file-name
+      (read-only-mode (if val +1 -1))
+      (message "Projectile: project read-only-mode is %s" (if val "on" "off")))))
+
 
 ;;;; Sorting project files
 (defun projectile-sort-files (files)
@@ -3556,6 +3570,9 @@ With a prefix ARG invokes `projectile-commander' instead of
 Invokes the command referenced by `projectile-switch-project-action' on switch.
 With a prefix ARG invokes `projectile-commander' instead of
 `projectile-switch-project-action.'"
+  (unless (projectile-project-p project-to-switch)
+    (projectile-remove-known-project project-to-switch)
+    (error "Directory %s is not a project" project-to-switch))
   (let ((switch-project-action (if arg
                                    'projectile-commander
                                  projectile-switch-project-action)))
@@ -4026,6 +4043,7 @@ is chosen."
    ["Replace in project" projectile-replace]
    ["Multi-occur in project" projectile-multi-occur]
    ["Browse dirty projects" projectile-browse-dirty-projects]
+   ["Toggle project wide read-only" projectile-toggle-project-read-only]
    "--"
    ["Run shell" projectile-run-shell]
    ["Run eshell" projectile-run-eshell]

@@ -2315,6 +2315,22 @@ single module from the user.
 
 \(fn MODULES ARGS)" t nil)
 
+(autoload 'magit-submodule-remove "magit-submodule" "\
+Unregister MODULES and remove their working directories.
+
+For safety reasons, do not remove the gitdirs and if a module has
+uncomitted changes, then do not remove it at all.  If a module's
+gitdir is located inside the working directory, then move it into
+the gitdir of the superproject first.
+
+With the \"--force\" argument offer to remove dirty working
+directories and with a prefix argument offer to delete gitdirs.
+Both actions are very dangerous and have to be confirmed.  There
+are additional safety precautions in place, so you might be able
+to recover from making a mistake here, but don't count on it.
+
+\(fn MODULES ARGS TRASH-GITDIRS)" t nil)
+
 (autoload 'magit-insert-modules "magit-submodule" "\
 Insert submodule sections.
 Hook `magit-module-sections-hook' controls which module sections

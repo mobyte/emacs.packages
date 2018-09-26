@@ -451,8 +451,8 @@ absolute path is returned."
     ;; (unless ...), in case a `--separate-git-dir' repository was switched to
     ;; the standard structure (i.e., "topdir/.git/").
     (setq magit--separated-gitdirs (cl-delete topdir
-                                            magit--separated-gitdirs
-                                            :key #'car :test #'equal))
+                                              magit--separated-gitdirs
+                                              :key #'car :test #'equal))
     (unless (equal (file-name-as-directory (expand-file-name ".git" topdir))
                    gitdir)
       (push (cons topdir gitdir) magit--separated-gitdirs))))
@@ -596,12 +596,12 @@ NOERROR is non-nil, in which case return nil."
   (or (file-directory-p default-directory)
       (and (not noerror)
            (let ((exists (file-exists-p default-directory)))
-	     (signal (if exists 'file-error 'file-missing)
-		     (list "Running git in directory"
-		           (if exists
+             (signal (if exists 'file-error 'file-missing)
+                     (list "Running git in directory"
+                           (if exists
                                "Not a directory"
                              "No such file or directory")
-		           default-directory))))))
+                           default-directory))))))
 
 (defun magit-git-repo-p (directory &optional non-bare)
   "Return t if DIRECTORY is a Git repository.
