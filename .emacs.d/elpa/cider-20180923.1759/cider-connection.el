@@ -156,7 +156,7 @@ buffer."
         ;; inform sentinel not to kill the server, if any
         (thread-first (get-buffer-process repl)
           (process-plist)
-          (plist-put :no-server-kill t))))
+          (plist-put :keep-server t))))
     (let ((proc (get-buffer-process repl)))
       (when (and (process-live-p proc)
                  (or (not nrepl-server-buffer)
@@ -167,11 +167,7 @@ buffer."
     (when-let* ((messages-buffer (and nrepl-log-messages
                                       (nrepl-messages-buffer repl))))
       (kill-buffer messages-buffer))
-    (if no-kill
-        (with-current-buffer repl
-          (goto-char (point-max))
-          (cider-repl-emit-interactive-stderr
-           (format "*** Closed on %s ***\n" (current-time-string))))
+    (unless no-kill
       (kill-buffer repl)))
   (when repl
     (sesman-remove-object 'CIDER nil repl (not no-kill) t)))
@@ -609,6 +605,40 @@ Assume that the current buffer is a REPL."
           (with-current-buffer nrepl-messages-buffer
             (rename-buffer (nrepl-messages-buffer-name params))))))))
 
+(defun cider--choose-reusable-repl-buffer (params)
+  "Find connection-less REPL buffer and ask the user for confirmation.
+Return nil if no such buffers exists or the user has chosen not to reuse
+the buffer.  If multiple dead REPLs exist, ask the user to choose one.
+PARAMS is a plist as received by `cider-repl-create'."
+  (when-let* ((repls (seq-filter (lambda (b)
+                                   (with-current-buffer b
+                                     (and (derived-mode-p 'cider-repl-mode)
+                                          (not (process-live-p (get-buffer-process b))))))
+                                 (buffer-list))))
+    (let* ((proj-dir (plist-get params :project-dir))
+           (host (plist-get params :host))
+           (port (plist-get params :port))
+           (cljsp (string-match-p "cljs" (plist-get params :repl-type)))
+           (scored-repls
+            (delq nil
+                  (mapcar (lambda (b)
+                            (let ((bparams (cider--gather-connect-params nil b)))
+                              (when (eq cljsp (string-match-p "cljs" (plist-get bparams :repl-type)))
+                                (cons (buffer-name b)
+                                      (+
+                                       (if (equal proj-dir (plist-get bparams :project-dir)) 8 0)
+                                       (if (equal host (plist-get bparams :host)) 4 0)
+                                       (if (equal port (plist-get bparams :port)) 2 0))))))
+                          repls))))
+      (when scored-repls
+        (if (> (length scored-repls) 1)
+            (when (y-or-n-p "Dead REPLs exist.  Reuse? ")
+              (let ((sorted-repls (seq-sort (lambda (a b) (> (cdr a) (cdr b))) scored-repls)))
+                (get-buffer (completing-read "REPL to reuse: "
+                                             (mapcar #'car sorted-repls) nil t nil nil (caar sorted-repls)))))
+          (when (y-or-n-p (format "A dead REPL %s exists.  Reuse? " (caar scored-repls)))
+            (get-buffer (caar scored-repls))))))))
+
 (declare-function cider-default-err-handler "cider-eval")
 (declare-function cider-repl-mode "cider-repl")
 (declare-function cider-repl--state-handler "cider-repl")
@@ -624,6 +654,7 @@ function with the repl buffer set as current."
   ;; Connection might not have been set as yet. Please don't send requests in
   ;; this function, but use cider--connected-handler instead.
   (let ((buffer (or (plist-get params :repl-buffer)
+                    (cider--choose-reusable-repl-buffer params)
                     (get-buffer-create (generate-new-buffer-name "*cider-uninitialized-repl*"))))
         (ses-name (or (plist-get params :session-name)
                       (cider-make-session-name params))))
@@ -645,8 +676,8 @@ function with the repl buffer set as current."
             cider-repl-init-function (plist-get params :repl-init-function))
       (cider-repl-reset-markers)
       (add-hook 'nrepl-response-handler-functions #'cider-repl--state-handler nil 'local)
-      (add-hook 'nrepl-connected-hook 'cider--connected-handler nil 'local)
-      (add-hook 'nrepl-disconnected-hook 'cider--disconnected-handler nil 'local)
+      (add-hook 'nrepl-connected-hook #'cider--connected-handler nil 'local)
+      (add-hook 'nrepl-disconnected-hook #'cider--disconnected-handler nil 'local)
       (current-buffer))))
 
 

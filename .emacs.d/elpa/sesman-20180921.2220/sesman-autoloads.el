@@ -71,6 +71,7 @@ buffer.
 Break any of the previously created links.
 
 \(fn)" t nil)
+ (autoload 'sesman-map "sesman" "Session management prefix keymap." t 'keymap)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "sesman" '("sesman-")))
 

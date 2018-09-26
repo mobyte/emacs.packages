@@ -4,7 +4,7 @@
 
 ;; Author: Hrvoje Niksic <hniksic@gmail.com>
 ;; Keywords: hypermedia, extensions
-;; Package-Version: 20180918.1948
+;; Package-Version: 20180923.1829
 ;; Version: 1.55
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -83,7 +83,6 @@
 
 (require 'cl)
 (eval-when-compile
-  (defvar unresolved)
   (defvar font-lock-auto-fontify)
   (defvar font-lock-support-mode)
   (defvar global-font-lock-mode))
@@ -829,10 +828,11 @@ This is used to protect mailto links without modifying their meaning."
       (while (re-search-forward "\n\^L" nil t)
         (let* ((beg (match-beginning 0))
                (end (match-end 0))
+               (form-feed-pos (1+ beg))
                ;; don't process ^L if invisible or covered by `display'
                (show (and (htmlize-decode-invisibility-spec
-                           (get-char-property beg 'invisible))
-                          (not (get-char-property beg 'display)))))
+                           (get-char-property form-feed-pos 'invisible))
+                          (not (get-char-property form-feed-pos 'display)))))
           (when show
             (htmlize-make-tmp-overlay beg end disp)))))))
 
@@ -917,17 +917,6 @@ If no rgb.txt file is found, return nil."
 
 ;;; Face handling.
 
-(defun htmlize-face-specifies-property (face prop)
-  ;; Return t if face specifies PROP, as opposed to it being inherited
-  ;; from the default face.  The problem with e.g.
-  ;; `face-foreground-instance' is that it returns an instance for
-  ;; EVERY face because every face inherits from the default face.
-  ;; However, we'd like htmlize-face-{fore,back}ground to return nil
-  ;; when called with a face that doesn't specify its own foreground
-  ;; or background.
-  (or (eq face 'default)
-      (assq 'global (specifier-spec-list (face-property face prop)))))
-
 (defun htmlize-face-color-internal (face fg)
   ;; Used only under GNU Emacs.  Return the color of FACE, but don't
   ;; return "unspecified-fg" or "unspecified-bg".  If the face is
@@ -980,15 +969,9 @@ If no rgb.txt file is found, return nil."
 	   (setq rgb-string (gethash (downcase color) htmlize-color-rgb-hash)))
 	  (t
 	   ;; We're getting the RGB components from Emacs.
-	   (let ((rgb
-		  (if (fboundp 'color-instance-rgb-components)
-		      (mapcar (lambda (arg)
-				(/ arg 256))
-			      (color-instance-rgb-components
-			       (make-color-instance color)))
-		    (mapcar (lambda (arg)
-			      (/ arg 256))
-			    (color-values color)))))
+	   (let ((rgb (mapcar (lambda (arg)
+                                (/ arg 256))
+                              (color-values color))))
 	     (when rgb
 	       (setq rgb-string (apply #'format "#%02x%02x%02x" rgb))))))
     ;; If RGB-STRING is still nil, it means the color cannot be found,
@@ -1698,28 +1681,19 @@ it's called with the same value of KEY.  All other times, the cached
   ;; actually fontify the buffer.  If font-lock is not in use, we
   ;; don't care because, except in htmlize-file, we don't force
   ;; font-lock on the user.
-  (when (and (boundp 'font-lock-mode)
-	     font-lock-mode)
+  (when font-lock-mode
     ;; In part taken from ps-print-ensure-fontified in GNU Emacs 21.
-    (cond
-     ((and (boundp 'jit-lock-mode)
-	   (symbol-value 'jit-lock-mode))
+    (when (and (boundp 'jit-lock-mode)
+               (symbol-value 'jit-lock-mode))
       (htmlize-with-fontify-message
        (jit-lock-fontify-now (point-min) (point-max))))
-     ((and (boundp 'lazy-lock-mode)
-	   (symbol-value 'lazy-lock-mode))
-      (htmlize-with-fontify-message
-       (lazy-lock-fontify-region (point-min) (point-max))))
-     ((and (boundp 'lazy-shot-mode)
-	   (symbol-value 'lazy-shot-mode))
-      (htmlize-with-fontify-message
-       ;; lazy-shot is amazing in that it must *refontify* the region,
-       ;; even if the whole buffer has already been fontified.  <sigh>
-       (lazy-shot-fontify-region (point-min) (point-max))))
-     ;; There's also fast-lock, but we don't need to handle specially,
-     ;; I think.  fast-lock doesn't really defer fontification, it
-     ;; just saves it to an external cache so it's not done twice.
-     )))
+
+    (if (fboundp 'font-lock-ensure)
+        (font-lock-ensure)
+      ;; Emacs prior to 25.1
+      (with-no-warnings
+        (font-lock-mode 1)
+        (font-lock-fontify-buffer)))))
 
 
 ;;;###autoload
@@ -1837,11 +1811,7 @@ does not name a directory, it will be used as output file name."
 	(font-lock-auto-fontify nil)
 	(global-font-lock-mode nil)
 	;; Ignore the size limit for the purposes of htmlization.
-	(font-lock-maximum-size nil)
-	;; Disable font-lock support modes.  This will only work in
-	;; more recent Emacs versions, so htmlize-buffer-1 still needs
-	;; to call htmlize-ensure-fontified.
-	(font-lock-support-mode nil))
+	(font-lock-maximum-size nil))
     (with-temp-buffer
       ;; Insert FILE into the temporary buffer.
       (insert-file-contents file)
@@ -1851,11 +1821,6 @@ does not name a directory, it will be used as output file name."
       (let ((buffer-file-name file))
 	;; Set the major mode for the sake of font-lock.
 	(normal-mode)
-        (if (fboundp 'font-lock-ensure)
-            (font-lock-ensure)
-          ;; Emacs prior to 25.1
-          (font-lock-mode 1)
-	  (font-lock-fontify-buffer))
 	;; htmlize the buffer and save the HTML.
 	(with-current-buffer (htmlize-buffer-1)
 	  (unwind-protect
@@ -1910,7 +1875,7 @@ corresponding source file."
 (provide 'htmlize)
 
 ;; Local Variables:
-;; byte-compile-warnings: (not cl-functions lexical unresolved obsolete)
+;; byte-compile-warnings: (not cl-functions unresolved obsolete)
 ;; End:
 
 ;;; htmlize.el ends here

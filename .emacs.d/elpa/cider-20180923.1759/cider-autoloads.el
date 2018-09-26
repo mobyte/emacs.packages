@@ -13,6 +13,7 @@
 Display CIDER's version.
 
 \(fn)" t nil)
+ (autoload 'cider-start-map "cider" "CIDER jack-in and connect keymap." t 'keymap)
 
 (autoload 'cider-jack-in-clj "cider" "\
 Start an nREPL server for the current project and connect to it.
