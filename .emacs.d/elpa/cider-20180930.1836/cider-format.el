@@ -68,6 +68,7 @@ Uses the following heuristic to try to maintain point position:
              (endp (> (+ pos l) pos-max))
              (snippet (thread-last (buffer-substring-no-properties
                                     pos (min (+ pos l) pos-max))
+                        (regexp-quote)
                         (replace-regexp-in-string "[[:space:]\t\n\r]+" "[[:space:]\t\n\r]*"))))
         (delete-region start end)
         (insert indented)
@@ -92,9 +93,8 @@ START and END represent the region's boundaries."
   "Format the code in the current defun."
   (interactive)
   (cider-ensure-connected)
-  (save-excursion
-    (mark-defun)
-    (cider-format-region (region-beginning) (region-end))))
+  (let ((defun-bounds (cider-defun-at-point 't)))
+    (cider-format-region (car defun-bounds) (cadr defun-bounds))))
 
 
 ;;; Format buffer
