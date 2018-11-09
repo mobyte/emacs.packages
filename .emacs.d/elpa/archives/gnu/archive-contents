@@ -389,7 +389,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 7 14)
+	    [(1 7 15)
 	     ((emacs
 	       (25))
 	      (stream
@@ -806,7 +806,7 @@
 	 ((:keywords "extensions" "lisp")
 	  (:url . "https://github.com/Malabarba/names"))])
  (nhexl-mode .
-	     [(0 9)
+	     [(1 0)
 	      ((emacs
 		(24 4))
 	       (cl-lib
