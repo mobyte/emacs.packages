@@ -25,60 +25,60 @@ magit.info-2: 307175
 Tag Table:
 (Indirect)
 Node: Top754
-Node: Introduction6308
-Node: Installation11031
-Node: Installing from Melpa11361
-Node: Installing from the Git Repository12434
-Node: Post-Installation Tasks14980
-Node: Getting Started16265
-Node: Interface Concepts21612
-Node: Modes and Buffers21943
-Node: Switching Buffers23692
-Node: Naming Buffers28235
-Node: Quitting Windows31542
-Node: Automatic Refreshing of Magit Buffers33174
-Node: Automatic Saving of File-Visiting Buffers35942
-Node: Automatic Reverting of File-Visiting Buffers37127
-Node: Risk of Reverting Automatically42123
-Node: Sections44506
-Node: Section Movement45447
-Node: Section Visibility49544
-Node: Section Hooks54403
-Node: Section Types and Values56810
-Node: Section Options58113
-Node: Popup Buffers and Prefix Commands58585
-Node: Completion Confirmation and the Selection60966
-Node: Action Confirmation61403
-Node: Completion and Confirmation68749
-Node: The Selection71935
-Node: The hunk-internal region74834
-Node: Support for Completion Frameworks75923
-Node: Additional Completion Options80739
-Node: Running Git81338
-Node: Viewing Git Output81611
-Node: Git Process Status82744
-Node: Running Git Manually83709
-Node: Git Executable86111
-Node: Global Git Arguments88393
-Node: Inspecting89199
-Node: Status Buffer90346
-Node: Status Sections93110
-Node: Status Header Sections97913
-Node: Status Module Sections100543
-Node: Status Options103048
-Node: Repository List104802
-Node: Logging106960
-Node: Refreshing Logs109413
-Node: Log Buffer110798
-Node: Log Margin114593
-Node: Select from Log117233
-Node: Reflog119337
-Node: Cherries120869
-Node: Diffing122596
-Node: Refreshing Diffs125549
-Node: Diff Buffer129040
-Node: Diff Options133624
-Node: Revision Buffer137900
+Node: Introduction6307
+Node: Installation11030
+Node: Installing from Melpa11360
+Node: Installing from the Git Repository12433
+Node: Post-Installation Tasks14979
+Node: Getting Started16264
+Node: Interface Concepts21611
+Node: Modes and Buffers21942
+Node: Switching Buffers23691
+Node: Naming Buffers28234
+Node: Quitting Windows31541
+Node: Automatic Refreshing of Magit Buffers33173
+Node: Automatic Saving of File-Visiting Buffers35941
+Node: Automatic Reverting of File-Visiting Buffers37126
+Node: Risk of Reverting Automatically42122
+Node: Sections44505
+Node: Section Movement45446
+Node: Section Visibility49543
+Node: Section Hooks54402
+Node: Section Types and Values56809
+Node: Section Options58112
+Node: Popup Buffers and Prefix Commands58584
+Node: Completion Confirmation and the Selection60965
+Node: Action Confirmation61402
+Node: Completion and Confirmation68748
+Node: The Selection71934
+Node: The hunk-internal region74833
+Node: Support for Completion Frameworks75922
+Node: Additional Completion Options80738
+Node: Running Git81337
+Node: Viewing Git Output81610
+Node: Git Process Status82743
+Node: Running Git Manually83708
+Node: Git Executable86110
+Node: Global Git Arguments88392
+Node: Inspecting89198
+Node: Status Buffer90345
+Node: Status Sections93109
+Node: Status Header Sections97912
+Node: Status Module Sections100542
+Node: Status Options103047
+Node: Repository List104801
+Node: Logging106959
+Node: Refreshing Logs109412
+Node: Log Buffer110797
+Node: Log Margin114592
+Node: Select from Log117232
+Node: Reflog119336
+Node: Cherries120868
+Node: Diffing122595
+Node: Refreshing Diffs125548
+Node: Diff Buffer129039
+Node: Diff Options133623
+Node: Revision Buffer137899
 Node: Ediffing140833
 Node: References Buffer144429
 Node: References Sections154193
