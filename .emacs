@@ -12,6 +12,22 @@
 ;; (add-to-list 'package-archives
 ;;              '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
+
+
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+                '((bm                 . "marmalade")
+                  (smex               . "melpa-stable")
+                  (zenburn-theme      . "melpa-stable")
+                  (anti-zenburn-theme . "melpa-stable")
+                  (zen-and-art-theme  . "marmalade")
+                  (cider              . "melpa-stable")
+                  (clojure-mode       . "melpa-stable")
+                  (htmlize            . "marmalade")
+                  (rainbow-delimiters . "melpa-stable")
+                  ;; "unstable" package
+                  (icicles            . "melpa"))))
+
 (package-initialize)
 
 ;; Other places to find .el files
