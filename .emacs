@@ -14,19 +14,19 @@
 ;; (add-to-list 'package-pinned-packages '(cider . "melpa-stable") t)
 
 
-(when (boundp 'package-pinned-packages)
-  (setq package-pinned-packages
-                '((bm                 . "marmalade")
-                  (smex               . "melpa-stable")
-                  (zenburn-theme      . "melpa-stable")
-                  (anti-zenburn-theme . "melpa-stable")
-                  (zen-and-art-theme  . "marmalade")
-                  (cider              . "melpa-stable")
-                  (clojure-mode       . "melpa-stable")
-                  (htmlize            . "marmalade")
-                  (rainbow-delimiters . "melpa-stable")
-                  ;; "unstable" package
-                  (icicles            . "melpa"))))
+;; (when (boundp 'package-pinned-packages)
+;;   (setq package-pinned-packages
+;;                 '((bm                 . "marmalade")
+;;                   (smex               . "melpa-stable")
+;;                   (zenburn-theme      . "melpa-stable")
+;;                   (anti-zenburn-theme . "melpa-stable")
+;;                   (zen-and-art-theme  . "marmalade")
+;;                   (cider              . "melpa-stable")
+;;                   (clojure-mode       . "melpa-stable")
+;;                   (htmlize            . "marmalade")
+;;                   (rainbow-delimiters . "melpa-stable")
+;;                   ;; "unstable" package
+;;                   (icicles            . "melpa"))))
 
 (package-initialize)
 
@@ -107,9 +107,22 @@
  '(ispell-program-name "/usr/bin/aspell")
  '(make-backup-files nil)
  '(org-agenda-files (quote ("~/tmp/1.org")))
+ '(org-file-apps
+   (quote
+    (("pdf" . "kpdf %s")
+     ("docx" . "soffice %s")
+     ("xlsx" . "soffice %s")
+     ("pptx" . "soffice %s")
+     ("doc" . "soffice %s")
+     ("xls" . "soffice %s")
+     ("ppt" . "soffice %s")
+     ("ods" . "soffice %s")
+     ("odw" . "soffice %s")
+     ("odp" . "soffice %s")
+     ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -119,17 +132,18 @@
  '(transient-mark-mode t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
-(set-default-font "Monaco 12")
-(set-background-color "black")
-(set-face-background 'default "black")
-(set-face-background 'region "black")
-(set-face-foreground 'default "white")
-(set-face-foreground 'region "gray60")
-(set-foreground-color "white")
-(set-cursor-color "white")
-;;(global-hl-line-mode 1)
-;;(set-face-background 'hl-line "#330")
-(set-face-background 'region "#134F78")
+(load-theme 'reverse t)
+;; (set-default-font "Monaco 12")
+;; (set-background-color "black")
+;; (set-face-background 'default "black")
+;; (set-face-background 'region "black")
+;; (set-face-foreground 'default "white")
+;; (set-face-foreground 'region "gray60")
+;; (set-foreground-color "white")
+;; (set-cursor-color "white")
+;; (set-face-background 'region "#134F78")
+;;;;(global-hl-line-mode 1)
+;;;;(set-face-background 'hl-line "#330")
 
 (setq mode-require-final-newline nil)
 (setq require-final-newline nil)
@@ -149,10 +163,17 @@
 (setq browse-url-browser-function 'browse-url-generic browse-url-generic-program "opera")
 ;;* ido mode
 
+(require 'ido)
+(ido-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(ido-mode 1)
 (global-set-key (kbd "C-x C-b") nil)
+
+;; (make-local-variable 'ido-decorations)
+;; (setf (nth 2 ido-decorations) " | ") ;; "\n" | default " | "
+(setq ido-default-file-method 'selected-window)
+(setq ido-default-buffer-method 'selected-window)
+(setq max-mini-window-height 0.5) ;; 0.5 | default 0.25
 
 ;;* smex
 
@@ -165,6 +186,7 @@
 ;;                              (smex)))
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;;* general keybinding settings
 
@@ -382,17 +404,6 @@ current git branch as a string.  Otherwise return an empty string."
 (setq magit-visit-ref-behavior '(checkout-any focus-on-ref))
 
 ;;* paredit
-
-(projectile-global-mode)
-
-(eval-after-load "projectile"
-  '(progn
-     (projectile-mode +1)
-     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-     ;;(define-key projectile-mode-map  (kbd "C-c p f") 'projectile-find-file)
-     ))
-
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
@@ -632,21 +643,67 @@ current git branch as a string.  Otherwise return an empty string."
 ;;   (cider-quit)
 ;;   (cider-jack-in))
 
-(require 'ob)
+(require 'ob-clojure)
+(require 'ob-shell)
 
-(add-to-list 'org-babel-tangle-lang-exts '("clojure" . "clj"))
+;; use CIDER as the Clojure execution backend
+(setq org-babel-clojure-backend 'cider)
 
-(defvar org-babel-default-header-args:clojure 
-  '((:results . "silent") (:tangle . "yes")))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((shell . t)
+   (clojure . t)))
 
-(defun org-babel-execute:clojure (body params)
-  "Evaluate a block of Clojure code with Babel."
-  (lisp-eval-string body)
-  "Done!")
+(setq org-confirm-babel-evaluate nil)
 
-(provide 'ob-clojure)
-(setq org-src-fontify-natively t)
+;; Useful keybindings when using Clojure from Org
+;; (org-defkey org-mode-map (kbd "C-x C-e") 'cider-eval-last-sexp)
+;; (org-defkey org-mode-map (kbd "C-c C-d") 'cider-doc)
 
+;; No timeout when executing calls on Cider via nrepl
+;; (setq org-babel-clojure-sync-nrepl-timeout nil)
+
+;; let `ob-clojure' babel src blocks allow evaluation.
+(add-to-list 'org-babel-default-header-args:clojure
+             '(:eval . "yes"))
+(add-to-list 'org-babel-default-header-args:clojure
+             '(:results . "output"))
+;; (add-to-list 'org-babel-default-header-args:clojure
+;;              '(:show-process . t))
+
+
+;;* ivy mode
+;; (ivy-mode 1)
+;;;;(setq ivy-use-virtual-buffers t)
+;;;;(setq enable-recursive-minibuffers t)
+;; (global-set-key "\C-s" 'swiper)
+;; (global-set-key (kbd "C-c C-r") 'ivy-resume)
+;; (global-set-key (kbd "<f6>") 'ivy-resume)
+;; (global-set-key (kbd "M-x") 'counsel-M-x)
+;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;;;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;;;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;;;; (global-set-key (kbd "<f1> l") 'counsel-find-library)
+;;;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;;;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c g") 'counsel-git)
+;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;; (global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+;; (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+;; (define-key projectile-mode-map (kbd "C-c p") 'counsel-projectile-command-map)
+
+;;* projectile
+(projectile-global-mode)
+
+(eval-after-load "projectile"
+  '(progn
+     (projectile-mode +1)
+     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+     ;;(define-key projectile-mode-map  (kbd "C-c p f") 'projectile-find-file)
+     ))
 ;;* ibuffer
 
 (require 'ibuffer)
@@ -689,14 +746,18 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (global-set-key (kbd "C-x x") 'ibuffer)
 ;;(global-set-key (kbd "C-x C-b") 'ibuffer)
 
-;;* ace jump
+;;* ace jump and avy
 
-(require 'ace-jump-mode)
-(setq key-chord-one-key-delay 0.16)
+;; (require 'ace-jump-mode)
+;; (setq key-chord-one-key-delay 0.16)
 
-(key-chord-define-global "jf" 'ace-jump-mode)
-(key-chord-define-global "fj" 'ace-jump-mode)
+;; (key-chord-define-global "jf" 'ace-jump-mode)
+;; (key-chord-define-global "fj" 'ace-jump-mode)
 ;;(key-chord-define-global "jj" 'ace-jump-char-mode)
+
+(key-chord-define-global "jf" 'avy-goto-word-1)
+(key-chord-define-global "fj" 'avy-goto-word-1)
+
 (key-chord-mode 1)
 
 (global-set-key (kbd "C-c SPC") 'ace-jump-char-mode)
@@ -753,7 +814,10 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (load-file "~/.emacs.d/mobyte/mobnote-mode.el")
 ;;* load org-mode settings
 
-(setq org-directory "/Users/Documents/org")
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(setq org-directory "/Users/mobyte/Documents/org")
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
@@ -843,12 +907,6 @@ current git branch as a string.  Otherwise return an empty string."
 (cd "~/")
 (server-start)
 
-;;* local buffer variables
-
-;; Local Variables:
-;; eval: (outline-minor-mode 1)
-;; eval: (hide-sublevels 1)
-;; End:
 ;;* presentation toggle
 
 (defun switch-to-presentation ()
