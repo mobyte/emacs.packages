@@ -99,10 +99,7 @@ multiple files is toggled as follows:
 (defvar auto-compile-on-load-mode nil "\
 Non-nil if Auto-Compile-On-Load mode is enabled.
 See the `auto-compile-on-load-mode' command
-for a description of this minor mode.
-Setting this variable directly does not take effect;
-either customize it (see the info node `Easy Customization')
-or call the function `auto-compile-on-load-mode'.")
+for a description of this minor mode.")
 
 (custom-autoload 'auto-compile-on-load-mode "auto-compile" nil)
 
@@ -117,7 +114,7 @@ Also see the related `auto-compile-on-save-mode'.
 
 \(fn &optional ARG)" t nil)
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "auto-compile" '("auto-compile-" "mode-line-" "turn-on-auto-compile-mode")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "auto-compile" '("auto-compile-" "require" "load" "mode-line-" "save-buffers-kill-" "byte-compile-log-warning" "turn-on-auto-compile-mode")))
 
 ;;;***
 
