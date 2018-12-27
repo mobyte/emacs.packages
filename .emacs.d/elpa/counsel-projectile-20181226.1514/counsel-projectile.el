@@ -4,7 +4,7 @@
 
 ;; Author: Eric Danan
 ;; URL: https://github.com/ericdanan/counsel-projectile
-;; Package-Version: 20181126.1441
+;; Package-Version: 20181226.1514
 ;; Keywords: project, convenience
 ;; Version: 0.3.0-snapshot
 ;; Package-Requires: ((counsel "0.10.0") (projectile "1.0.0"))
@@ -648,9 +648,7 @@ construct the command.")
   "Grep for STRING in the current project."
   (or (counsel-more-chars)
       (let ((default-directory (ivy-state-directory ivy-last))
-            (regex (counsel-unquote-regex-parens
-                    (setq ivy--old-re
-                          (ivy--regex string)))))
+            (regex (counsel--grep-regex string)))
         (counsel--async-command (format counsel-projectile-grep-command
                                         (shell-quote-argument regex)))
         nil)))
@@ -672,24 +670,8 @@ construct the command.")
 
 (defun counsel-projectile-grep-occur ()
   "Generate a custom occur buffer for `counsel-projectile-grep'."
-  ;; Copied from `counsel-grep-like-occur', except that we don't
-  ;; prepend "./" to the candidates since grep already does so.
-  (unless (eq major-mode 'ivy-occur-grep-mode)
-    (ivy-occur-grep-mode)
-    (setq default-directory (ivy-state-directory ivy-last)))
-  (setq ivy-text
-        (and (string-match "\"\\(.*\\)\"" (buffer-name))
-             (match-string 1 (buffer-name))))
-  (let* ((cmd (format counsel-projectile-grep-command
-                      (shell-quote-argument
-                       (counsel-unquote-regex-parens
-                        (ivy--regex ivy-text)))))
-         (cands (split-string (shell-command-to-string cmd) "\n" t)))
-    ;; Need precise number of header lines for `wgrep' to work.
-    (insert (format "-*- mode:grep; default-directory: %S -*-\n\n\n"
-                    default-directory))
-    (insert (format "%d candidates:\n" (length cands)))
-    (ivy--occur-insert-lines cands)))
+  (counsel-grep-like-occur
+   counsel-projectile-grep-command))
 
 ;;;###autoload
 (defun counsel-projectile-grep (&optional options-or-cmd)
@@ -744,6 +726,7 @@ called with a prefix argument."
                             (swiper--cleanup))
                   :caller 'counsel-projectile-grep)))))
 
+(cl-pushnew 'counsel-projectile-grep ivy-highlight-grep-commands)
 (counsel-set-async-exit-code 'counsel-projectile-grep 1 "No matches found")
 (ivy-set-occur 'counsel-projectile-grep 'counsel-projectile-grep-occur)
 (ivy-set-display-transformer 'counsel-projectile-grep  'counsel-projectile-grep-transformer)
