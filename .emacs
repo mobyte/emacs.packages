@@ -164,9 +164,9 @@
 ;;* ido mode
 
 (require 'ido)
-(ido-mode 1)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
+(ido-mode 1)
 (global-set-key (kbd "C-x C-b") nil)
 
 ;; (make-local-variable 'ido-decorations)
