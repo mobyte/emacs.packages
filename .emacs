@@ -122,7 +122,7 @@
      ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -133,7 +133,7 @@
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
 (load-theme 'reverse t)
-(set-default-font "Monaco 16")
+(set-default-font "Monaco 13")
 ;; (set-background-color "black")
 ;; (set-face-background 'default "black")
 ;; (set-face-background 'region "black")
@@ -371,6 +371,14 @@ current git branch as a string.  Otherwise return an empty string."
 ;; (define-key ac-completing-map (kbd "C-n") 'ac-next)
 ;; (define-key ac-completing-map (kbd "C-p") 'ac-previous)
 
+;;* highlight symbol
+(require 'highlight-symbol)
+(global-set-key (kbd "M-h") 'highlight-symbol)
+(global-set-key (kbd "M-H") 'highlight-symbol-query-replace)
+;; (global-set-key [(control f3)] 'highlight-symbol)
+;; (global-set-key [f3] 'highlight-symbol-next)
+;; (global-set-key [(shift f3)] 'highlight-symbol-prev)
+;; (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 ;;* highlight line
 
 ;; (require 'hl-line+)
