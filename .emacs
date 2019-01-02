@@ -133,7 +133,7 @@
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
 (load-theme 'reverse t)
-(set-default-font "Monaco 13")
+(set-default-font "Monaco 16")
 ;; (set-background-color "black")
 ;; (set-face-background 'default "black")
 ;; (set-face-background 'region "black")
