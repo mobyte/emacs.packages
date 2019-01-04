@@ -373,7 +373,27 @@ current git branch as a string.  Otherwise return an empty string."
 
 ;;* highlight symbol
 (require 'highlight-symbol)
-(global-set-key (kbd "M-h") 'highlight-symbol)
+
+(defvar highlighted-buffers (make-hash-table :test 'equal))
+
+(defun highlighted-buffer-p ()
+  (gethash (current-buffer) highlighted-buffers))
+
+(defun remember-highlighted-buffer ()
+  (puthash (current-buffer) t highlighted-buffers))
+
+(defun forget-highlighted-buffer ()
+  (remhash (current-buffer) highlighted-buffers))
+
+(defun toggle-highlighted-symbol (&optional symbol)
+  (interactive)
+  (if (highlighted-buffer-p)
+      (progn (highlight-symbol-remove-all)
+             (forget-highlighted-buffer))
+    (progn (highlight-symbol symbol)
+           (remember-highlighted-buffer))))
+
+(global-set-key (kbd "M-h") 'toggle-highlighted-symbol)
 (global-set-key (kbd "M-H") 'highlight-symbol-query-replace)
 ;; (global-set-key [(control f3)] 'highlight-symbol)
 ;; (global-set-key [f3] 'highlight-symbol-next)
