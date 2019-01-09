@@ -593,6 +593,7 @@ This could cause problems.
                  problem)))))
 
 (add-hook 'clojure-mode-hook #'clojure--check-wrong-major-mode)
+(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
 
 (defsubst clojure-docstring-fill-prefix ()
   "The prefix string used by `clojure-fill-paragraph'.

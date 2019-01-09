@@ -279,10 +279,8 @@ into a new error buffer."
      (nconc '("op" "stacktrace")
             (when (cider--pprint-fn)
               `("pprint-fn" ,(cider--pprint-fn)))
-            (when cider-stacktrace-print-length
-              `("print-length" ,cider-stacktrace-print-length))
-            (when cider-stacktrace-print-level
-              `("print-level" ,cider-stacktrace-print-level)))
+            (when cider-stacktrace-print-options
+              `("print-options" ,cider-stacktrace-print-options)))
      (lambda (response)
        ;; While the return value of `cider--handle-stacktrace-response' is not
        ;; meaningful for the last message, we do not need the value of `causes'
@@ -560,21 +558,20 @@ COMMENT-POSTFIX is the text to output after the last line."
                                  #'multiline-comment-handler
                                  '())))
 
-(defun cider-popup-eval-out-handler (&optional buffer)
-  "Make a handler for evaluating and printing stdout/stderr in popup BUFFER.
-This is used by pretty-printing commands and intentionally discards their results."
-  (cl-flet ((popup-output-handler (buffer str)
-                                  (cider-emit-into-popup-buffer buffer
-                                                                (ansi-color-apply str)
-                                                                nil
-                                                                t)))
-    (nrepl-make-response-handler (or buffer (current-buffer))
-                                 '()
-                                 ;; stdout handler
-                                 #'popup-output-handler
-                                 ;; stderr handler
-                                 #'popup-output-handler
-                                 '())))
+(defun cider-popup-eval-handler (&optional buffer)
+  "Make a handler for printing evaluation results in popup BUFFER.
+This is used by pretty-printing commands."
+  (nrepl-make-response-handler (or buffer (current-buffer))
+                               (lambda (buffer value)
+                                 (cider-emit-into-popup-buffer buffer
+                                                               (ansi-color-apply value)
+                                                               nil
+                                                               t))
+                               (lambda (_buffer out)
+                                 (cider-emit-interactive-eval-output out))
+                               (lambda (_buffer err)
+                                 (cider-emit-interactive-eval-err-output err))
+                               '()))
 
 
 ;;; Interactive valuation commands
@@ -809,18 +806,21 @@ If invoked with a PREFIX argument, switch to the REPL buffer."
   (when prefix
     (cider-switch-to-repl-buffer)))
 
-(defun cider-eval-print-last-sexp ()
+(defun cider-eval-print-last-sexp (&optional pretty-print)
   "Evaluate the expression preceding point.
-Print its value into the current buffer."
-  (interactive)
+Print its value into the current buffer.
+With an optional PRETTY-PRINT prefix it pretty-prints the result."
+  (interactive "P")
   (cider-interactive-eval nil
                           (cider-eval-print-handler)
-                          (cider-last-sexp 'bounds)))
+                          (cider-last-sexp 'bounds)
+                          (when pretty-print
+                            (cider--nrepl-pprint-request-plist (cider--pretty-print-width)))))
 
 (defun cider--pprint-eval-form (form)
   "Pretty print FORM in popup buffer."
   (let* ((result-buffer (cider-popup-buffer cider-result-buffer nil 'clojure-mode 'ancillary))
-         (handler (cider-popup-eval-out-handler result-buffer)))
+         (handler (cider-popup-eval-handler result-buffer)))
     (cider-interactive-eval (when (stringp form) form)
                             handler
                             (when (consp form) form)
