@@ -604,7 +604,7 @@ See also `cider-jack-in-auto-inject-clojure'."
 These are set in `cider-jack-in-dependencies', `cider-jack-in-lein-plugins' and
 `cider-jack-in-nrepl-middlewares' are injected from the CLI according to
 the used PROJECT-TYPE.  Eliminates the need for hacking profiles.clj or the
-boot script for supporting cider with its nREPL middleware and
+boot script for supporting CIDER with its nREPL middleware and
 dependencies."
   (pcase project-type
     ('lein (cider-lein-jack-in-dependencies
@@ -1392,7 +1392,8 @@ PROJECT-DIR defaults to current project."
                         (boot        . "build.boot")
                         (clojure-cli . "deps.edn")
                         (shadow-cljs . "shadow-cljs.edn")
-                        (gradle      . "build.gradle"))))
+                        (gradle      . "build.gradle")
+                        (gradle      . "build.gradle.kts"))))
     (delq nil
           (mapcar (lambda (candidate)
                     (when (file-exists-p (cdr candidate))
