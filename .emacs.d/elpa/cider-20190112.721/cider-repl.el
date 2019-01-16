@@ -1164,7 +1164,8 @@ command will prompt for the name of the namespace to switch to."
     (print-stacktrace  "\\[\\([^][$ \t]+\\).* +\\([^ \t]+\\) +\\([0-9]+\\)\\]" 0 1 2 3)
     (timbre-log        "\\(TRACE\\|INFO\\|DEBUG\\|WARN\\|ERROR\\) +\\(\\[\\([^:]+\\):\\([0-9]+\\)\\]\\)" 2 3 nil 4)
     (cljs-message      "at line \\([0-9]+\\) +\\(.*\\)$" 0 nil 2 1)
-    (reflection        "Reflection warning, +\\(\\([^\n:]+\\):\\([0-9]+\\):[0-9]+\\)" 1 nil 2 3))
+    (warning           "warning,? +\\(\\([^\n:]+\\):\\([0-9]+\\):[0-9]+\\)" 1 nil 2 3)
+    (compilation       ".*compiling:(\\([^\n:)]+\\):\\([0-9]+\\):[0-9]+)" 0 nil 1 2))
   "Alist holding regular expressions for inline location references.
 Each element in the alist has the form (NAME REGEXP HIGHLIGHT VAR FILE
 LINE), where NAME is the identifier of the regexp, REGEXP - regexp matching
@@ -1176,27 +1177,24 @@ case."
   :group 'cider-repl
   :package-version '(cider. "0.16.0"))
 
-(defun cider--locref-at-point-1 (reg-list &optional pos)
-  "Workhorse for getting locref at POS.
+(defun cider--locref-at-point-1 (reg-list)
+  "Workhorse for getting locref at point.
 REG-LIST is an entry in `cider-locref-regexp-alist'."
-  (save-excursion
-    (let ((pos (or pos (point))))
-      (goto-char pos)
-      (beginning-of-line)
-      (when (re-search-forward (nth 1 reg-list) (point-at-eol) t)
-        (let ((ix-highlight (or (nth 2 reg-list) 0))
-              (ix-var (nth 3 reg-list))
-              (ix-file (nth 4 reg-list))
-              (ix-line (nth 5 reg-list)))
-          (list
-           :type (car reg-list)
-           :highlight (cons (match-beginning ix-highlight) (match-end ix-highlight))
-           :var  (and ix-var
-                      (replace-regexp-in-string "_" "-"
-                                                (match-string-no-properties ix-var)
-                                                nil t))
-           :file (and ix-file (match-string-no-properties ix-file))
-           :line (and ix-line (string-to-number (match-string-no-properties ix-line)))))))))
+  (beginning-of-line)
+  (when (re-search-forward (nth 1 reg-list) (point-at-eol) t)
+    (let ((ix-highlight (or (nth 2 reg-list) 0))
+          (ix-var (nth 3 reg-list))
+          (ix-file (nth 4 reg-list))
+          (ix-line (nth 5 reg-list)))
+      (list
+       :type (car reg-list)
+       :highlight (cons (match-beginning ix-highlight) (match-end ix-highlight))
+       :var  (and ix-var
+                  (replace-regexp-in-string "_" "-"
+                                            (match-string-no-properties ix-var)
+                                            nil t))
+       :file (and ix-file (match-string-no-properties ix-file))
+       :line (and ix-line (string-to-number (match-string-no-properties ix-line)))))))
 
 (defun cider-locref-at-point (&optional pos)
   "Return a plist of components of the location reference at POS.
@@ -1205,8 +1203,13 @@ found.  Returned keys are :type, :highlight, :var, :file, :line, where
 :highlight is a cons of positions, :var and :file are strings or nil, :line
 is a number.  See `cider-locref-regexp-alist' for how to specify regexes
 for locref look up."
-  (seq-some (lambda (rl) (cider--locref-at-point-1 rl pos))
-            cider-locref-regexp-alist))
+  (save-excursion
+    (goto-char (or pos (point)))
+    ;; Regexp lookup on long lines can result in significant hangs #2532. We
+    ;; assume that lines longer than 300 don't contain source references.
+    (when (< (- (point-at-eol) (point-at-bol)) 300)
+      (seq-some (lambda (rl) (cider--locref-at-point-1 rl))
+                cider-locref-regexp-alist))))
 
 (defun cider-jump-to-locref-at-point (&optional pos)
   "Identify location reference at POS and navigate to it.
