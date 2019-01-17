@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20190115.1414
+;; Package-Version: 20190115.1425
 ;; Version: 0.4.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -788,9 +788,10 @@ Set `avy-style' according to COMMMAND as well."
                                    #'avy--remove-leading-chars))))
              (avy--done))))))
 
-(defun avy--process (candidates overlay-fn)
+(defun avy--process (candidates &optional overlay-fn)
   "Select one of CANDIDATES using `avy-read'.
 Use OVERLAY-FN to visualize the decision overlay."
+  (setq overlay-fn (or overlay-fn (avy--style-fn avy-style)))
   (unless (and (consp (car candidates))
                (windowp (cdar candidates)))
     (setq candidates
@@ -1156,9 +1157,10 @@ exist."
     (post #'avy--overlay-post)
     (de-bruijn #'avy--overlay-at-full)
     (words #'avy--overlay-at-full)
+    (ignore #'ignore)
     (t (error "Unexpected style %S" style))))
 
-(defun avy--generic-jump (regex window-flip style &optional beg end)
+(defun avy--generic-jump (regex window-flip &optional beg end)
   "Jump to REGEX.
 The window scope is determined by `avy-all-windows'.
 When WINDOW-FLIP is non-nil, do the opposite of `avy-all-windows'.
@@ -1169,8 +1171,7 @@ BEG and END narrow the scope where candidates are searched."
              (not avy-all-windows)
            avy-all-windows)))
     (avy--process
-     (avy--regex-candidates regex beg end)
-     (avy--style-fn style))))
+     (avy--regex-candidates regex beg end))))
 
 ;;* Commands
 ;;;###autoload
@@ -1184,8 +1185,7 @@ The window scope is determined by `avy-all-windows' (ARG negates it)."
      (if (= 13 char)
          "\n"
        (regexp-quote (string char)))
-     arg
-     avy-style)))
+     arg)))
 
 ;;;###autoload
 (defun avy-goto-char-in-line (char)
@@ -1195,7 +1195,6 @@ The window scope is determined by `avy-all-windows' (ARG negates it)."
     (avy--generic-jump
      (regexp-quote (string char))
      avy-all-windows
-     avy-style
      (line-beginning-position)
      (line-end-position))))
 
@@ -1217,7 +1216,6 @@ BEG and END narrow the scope where candidates are searched."
     (avy--generic-jump
      (regexp-quote (string char1 char2))
      arg
-     avy-style
      beg end)))
 
 ;;;###autoload
@@ -1259,8 +1257,7 @@ When ARG is non-nil, do the opposite of `avy-all-windows'."
       (avy--process
        (avy--regex-candidates (if isearch-regexp
                                   isearch-string
-                                (regexp-quote isearch-string)))
-       (avy--style-fn avy-style))
+                                (regexp-quote isearch-string))))
       (isearch-done))))
 
 ;;;###autoload
@@ -1271,7 +1268,7 @@ When ARG is non-nil, do the opposite of `avy-all-windows'.
 BEG and END narrow the scope where candidates are searched."
   (interactive "P")
   (avy-with avy-goto-word-0
-    (avy--generic-jump avy-goto-word-0-regexp arg avy-style beg end)))
+    (avy--generic-jump avy-goto-word-0-regexp arg beg end)))
 
 (defun avy-goto-word-0-above (arg)
   "Jump to a word start between window start and point.
@@ -1311,7 +1308,7 @@ When SYMBOL is non-nil, jump to symbol start instead of word start."
                          (concat
                           (if symbol "\\_<" "\\b")
                           str)))))
-      (avy--generic-jump regex arg avy-style beg end))))
+      (avy--generic-jump regex arg beg end))))
 
 ;;;###autoload
 (defun avy-goto-word-1-above (char &optional arg)
@@ -1417,7 +1414,7 @@ BEG and END narrow the scope where candidates are searched."
                      (not (get-char-property (point) 'invisible))
                      (push (cons (point) (selected-window)) window-cands)))
               (setq candidates (nconc candidates window-cands))))))
-      (avy--process candidates (avy--style-fn avy-style)))))
+      (avy--process candidates))))
 
 ;;;###autoload
 (defun avy-goto-subword-1 (char &optional arg)
@@ -1570,13 +1567,14 @@ The window scope is determined by `avy-all-windows'.
 When ARG is non-nil, do the opposite of `avy-all-windows'.
 BEG and END narrow the scope where candidates are searched.
 When BOTTOM-UP is non-nil, display avy candidates from top to bottom"
-  (let ((avy-action #'identity))
+  (let ((avy-action #'identity)
+        (avy-style (if avy-linum-mode
+                       (progn
+                         (message "Goto line:")
+                         'ignore)
+                     avy-style)))
     (avy--process
-     (avy--line-cands arg beg end bottom-up)
-     (if avy-linum-mode
-         (progn (message "Goto line:")
-                'ignore)
-       (avy--style-fn avy-style)))))
+     (avy--line-cands arg beg end bottom-up))))
 
 ;;;###autoload
 (defun avy-goto-line (&optional arg)
@@ -1982,8 +1980,7 @@ The window scope is determined by `avy-all-windows' (ARG negates it)."
                            avy-all-windows)))
     (avy-with avy-goto-char-timer
       (avy--process
-       (avy--read-candidates)
-       (avy--style-fn avy-style)))))
+       (avy--read-candidates)))))
 
 (defun avy-push-mark ()
   "Store the current point and window."
@@ -2026,7 +2023,7 @@ The window scope is determined by `avy-all-windows' (ARG negates it)."
          (marker (save-excursion
                    (avy-with avy-goto-line
                      (unless (eq 't (avy--generic-jump (rx bol (1+ "*") (1+ space))
-                                                       nil avy-style))
+                                                       nil))
                        ;; `avy--generic-jump' returns t when aborted with C-g.
                        (point-marker)))))
          (filename (buffer-file-name (or (buffer-base-buffer (marker-buffer marker))
@@ -2051,8 +2048,7 @@ The window scope is determined by `avy-all-windows' (ARG negates it)."
       (avy--process
        (avy--read-candidates
         (lambda (input)
-          (format "^\\*+ .*\\(%s\\)" input)))
-       (avy--style-fn avy-style))
+          (format "^\\*+ .*\\(%s\\)" input))))
       (org-back-to-heading))))
 
 (provide 'avy)
