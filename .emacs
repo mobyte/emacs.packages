@@ -431,6 +431,8 @@ current git branch as a string.  Otherwise return an empty string."
 ;; *magit-refs*: checkout the ref (branch) on RETURN.
 (setq magit-visit-ref-behavior '(checkout-any focus-on-ref))
 
+(magit-define-popup-switch 'magit-log-popup ?f "first parent" "--first-parent")
+
 ;;* paredit
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."

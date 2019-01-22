@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/swiper
-;; Package-Version: 20181223.325
+;; Package-Version: 20190121.1552
 ;; Version: 0.10.0
 ;; Package-Requires: ((emacs "24.3") (swiper "0.9.0"))
 ;; Keywords: convenience, matching, tools
@@ -2425,6 +2425,11 @@ FZF-PROMPT, if non-nil, is passed as `ivy-read' prompt argument."
                         (message (cdr x)))
               :caller 'counsel-rpm)))
 
+(defcustom counsel-file-jump-args "* -type f -not -path '*\/.git*'"
+  "Arguments for the `find-command' when using `counsel-file-jump'."
+  :type 'string
+  :group 'ivy)
+
 ;;** `counsel-file-jump'
 ;;;###autoload
 (defun counsel-file-jump (&optional initial-input initial-directory)
@@ -2441,7 +2446,7 @@ INITIAL-DIRECTORY, if non-nil, is used as the root directory for search."
     (ivy-read "Find file: "
               (split-string
                (shell-command-to-string
-                (concat find-program " * -type f -not -path '*\/.git*'"))
+                (concat find-program " " counsel-file-jump-args))
                "\n" t)
               :matcher #'counsel--find-file-matcher
               :initial-input initial-input
@@ -2453,6 +2458,11 @@ INITIAL-DIRECTORY, if non-nil, is used as the root directory for search."
               :history 'file-name-history
               :keymap counsel-find-file-map
               :caller 'counsel-file-jump)))
+
+(defcustom counsel-dired-jump-args "* -type f -not -path '*\/.git*'"
+  "Arguments for the `find-command' when using `counsel-dired-jump'."
+  :type 'string
+  :group 'ivy)
 
 ;;** `counsel-dired-jump'
 ;;;###autoload
@@ -2470,7 +2480,7 @@ INITIAL-DIRECTORY, if non-nil, is used as the root directory for search."
     (ivy-read "Directory: "
               (split-string
                (shell-command-to-string
-                (concat find-program " * -type d -not -path '*\/.git*'"))
+                (concat find-program " " counsel-dired-jump-args))
                "\n" t)
               :initial-input initial-input
               :action (lambda (d) (dired-jump nil (expand-file-name d)))
