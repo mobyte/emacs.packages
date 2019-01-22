@@ -122,7 +122,7 @@
      ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
+    (diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -423,7 +423,7 @@ current git branch as a string.  Otherwise return an empty string."
 (defun magit-commit-mode-hook-fn ()
   (turn-off-auto-fill))
 
-(add-hook 'git-commit-mode-hook 'magit-commit-mode-hook-fn)
+(add-hook 'git-commit-mode-nhook 'magit-commit-mode-hook-fn)
 
 (setq git-commit-summary-max-length 120)
 (setq magit-push-always-verify nil)
@@ -431,6 +431,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;; *magit-refs*: checkout the ref (branch) on RETURN.
 (setq magit-visit-ref-behavior '(checkout-any focus-on-ref))
 
+(require 'magit)
 (magit-define-popup-switch 'magit-log-popup ?f "first parent" "--first-parent")
 
 ;;* paredit
