@@ -261,10 +261,10 @@ When non-nil, INITIAL-INPUT is the initial search pattern.
 
 \(fn &optional INITIAL-INPUT)" t nil)
 
-(autoload 'counsel-org-tag "counsel" "\
-Add or remove tags in `org-mode'.
+(autoload 'counsel--org-get-tags "counsel" "\
 
-\(fn)" t nil)
+
+\(fn)" nil nil)
 
 (autoload 'counsel-org-tag-agenda "counsel" "\
 Set tags for the current agenda item.
