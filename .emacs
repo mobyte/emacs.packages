@@ -86,22 +86,7 @@
  '(display-battery-mode nil)
  '(display-time-mode nil)
  '(global-font-lock-mode t)
- '(haskell-font-lock-symbols (quote unicode))
- '(haskell-hoogle-command nil)
- '(haskell-interactive-mode-hide-multi-line-errors nil)
- '(haskell-mode-hook
-   (quote
-    (linum-mode turn-on-haskell-indentation turn-on-haskell-doc-mode)))
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-load-or-reload-prompt t)
- '(haskell-process-log t)
- '(haskell-process-suggest-language-pragmas nil)
- '(haskell-process-suggest-no-warn-orphans t)
- '(haskell-process-type (quote cabal-repl))
- '(haskell-process-use-presentation-mode t)
- '(haskell-tags-on-save t)
  '(indent-tabs-mode nil)
- '(inferior-haskell-wait-and-jump t)
  '(inhibit-startup-screen t)
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(ispell-program-name "/usr/bin/aspell")
@@ -122,17 +107,14 @@
      ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses counsel-projectile aggressive-indent use-package yaml-mode company-cabal company-quickhelp shakespeare-mode company-ghc company-ghci haskell-mode magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile ace-jump-mode)))
- '(safe-local-variable-values
-   (quote
-    ((haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 4))))
+    (diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses aggressive-indent use-package yaml-mode company-cabal company-quickhelp magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile)))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
  '(uniquify-buffer-name-style (quote forward) nil (uniquify)))
 
 (load-theme 'reverse t)
+
 (set-default-font "Monaco 16")
 ;; (set-background-color "black")
 ;; (set-face-background 'default "black")
@@ -147,6 +129,23 @@
 
 (setq mode-require-final-newline nil)
 (setq require-final-newline nil)
+
+;;* zoom in/out
+(require 'zoom-frm)
+
+(defun default-font (arg)
+  (set-default-font "Monaco 16"))
+
+(define-key ctl-x-map [(control ?+)] 'zoom-in/out)
+(define-key ctl-x-map [(control ?-)] 'zoom-in/out)
+(define-key ctl-x-map [(control ?=)] 'zoom-in/out)
+(define-key ctl-x-map [(control ?0)] 'default-font)
+(global-set-key (vector (list 'control mouse-wheel-down-event)) 'zoom-in)
+(global-set-key (vector (list 'control mouse-wheel-up-event))   'zoom-out)
+(global-set-key [S-mouse-1]    'zoom-in)
+(global-set-key [C-S-mouse-1]  'zoom-out)
+;; Get rid of `mouse-set-font' or `mouse-appearance-menu':
+(global-set-key [S-down-mouse-1] nil)
 
 ;;* disable emacs gui elements
 
@@ -961,70 +960,6 @@ current git branch as a string.  Otherwise return an empty string."
   (when (not (string= "" default-directory))
     (shell)))
 
-;;* haskell http://stackoverflow.com/questions/26603649/haskell-repl-in-emacs
-(require 'haskell-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-(add-hook 'haskell-mode-hook 'linum-mode)
-(add-to-list 'exec-path "~/Library/Haskell/bin")
-(eval-after-load 'haskell-mode '(progn
-  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map "\C-ch" 'haskell-hoogle)))
-(eval-after-load 'haskell-cabal '(progn
-  (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
-
-(require 'company-ghci)
-(push 'company-ghci company-backends)
-(add-hook 'haskell-mode-hook 'company-mode)
-(add-hook 'haskell-interactive-mode-hook 'company-mode)
-
-;;;;;;
-
-(autoload 'ghc-init "ghc" nil t)
-(autoload 'ghc-debug "ghc" nil t)
-(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-(add-hook 'haskell-mode-hook 'company-mode)
-(add-to-list 'company-backends 'company-ghc)
-
-
-(eval-after-load 'haskell-mode '(progn
-  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-process-load-or-reload)
-  (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
-  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
-  (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
-  (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
-(eval-after-load 'haskell-cabal '(progn
-  (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
-  ;(define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
-  (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-  (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
-
-;;;;;;;
-
-
-
-;;(ac-config-default)
-(autoload 'ghc-init "ghc" nil t)
-(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-
-(defun my-ac-haskell-mode ()
-  (setq ac-sources (append ac-sources '(ac-source-ghc-mod))))
-
-(add-hook 'haskell-mode-hook 'my-ac-haskell-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-
-;; (ac-define-source ghc-mod
-;;                   '((depends ghc)
-;;                     (candidates . ghc-select-completion-symbol)
-;;                     (symbol . "s")
-;;                     (cache)))
 ;;* align whitespace
 
 (defun align-whitespace (start end)
