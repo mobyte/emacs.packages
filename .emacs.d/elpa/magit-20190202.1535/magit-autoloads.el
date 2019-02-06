@@ -1639,7 +1639,7 @@ Abort the current merge operation.
 ;;; Generated autoloads from magit-patch.el
  (autoload 'magit-patch-popup "magit-patch" nil t)
 
-(autoload 'magit-format-patch "magit-patch" "\
+(autoload 'magit-patch-create "magit-patch" "\
 Create patches for the commits in RANGE.
 When a single commit is given for RANGE, create a patch for the
 changes introduced by that commit (unlike 'git format-patch'
@@ -1647,16 +1647,6 @@ which creates patches for all commits that are reachable from
 `HEAD' but not from the specified commit).
 
 \(fn RANGE ARGS FILES)" t nil)
-
-(autoload 'magit-request-pull "magit-patch" "\
-Request upstream to pull from you public repository.
-
-URL is the url of your publically accessible repository.
-START is a commit that already is in the upstream repository.
-END is the last commit, usually a branch name, which upstream
-is asked to pull.  START has to be reachable from that commit.
-
-\(fn URL START END)" t nil)
  (autoload 'magit-patch-apply-popup "magit-patch" nil t)
 
 (autoload 'magit-patch-apply "magit-patch" "\
@@ -1688,6 +1678,16 @@ Of course the arguments that are required to actually show the
 same differences as those shown in the buffer are always used.
 
 \(fn FILE &optional ARG)" t nil)
+
+(autoload 'magit-request-pull "magit-patch" "\
+Request upstream to pull from you public repository.
+
+URL is the url of your publically accessible repository.
+START is a commit that already is in the upstream repository.
+END is the last commit, usually a branch name, which upstream
+is asked to pull.  START has to be reachable from that commit.
+
+\(fn URL START END)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-patch" '("magit-patch-save-arguments")))
 
@@ -1729,25 +1729,24 @@ Pull from a branch read in the minibuffer.
  (autoload 'magit-push-popup "magit-push" nil t)
 
 (autoload 'magit-push-current-to-pushremote "magit-push" "\
-Push the current branch to `branch.<name>.pushRemote'.
-If that variable is unset, then push to `remote.pushDefault'.
+Push the current branch to its push-remote.
 
-When `magit-push-current-set-remote-if-missing' is non-nil and
+When `magit-remote-set-if-missing' is non-nil and
 the push-remote is not configured, then read the push-remote from
 the user, set it, and then push to it.  With a prefix argument
 the push-remote can be changed before pushed to it.
 
-\(fn ARGS &optional PUSH-REMOTE)" t nil)
+\(fn ARGS &optional SET)" t nil)
 
 (autoload 'magit-push-current-to-upstream "magit-push" "\
 Push the current branch to its upstream branch.
 
-When `magit-push-current-set-remote-if-missing' is non-nil and
+When `magit-remote-set-if-missing' is non-nil and
 the upstream is not configured, then read the upstream from the
 user, set it, and then push to it.  With a prefix argument the
 upstream can be changed before pushed to it.
 
-\(fn ARGS &optional UPSTREAM)" t nil)
+\(fn ARGS &optional SET)" t nil)
 
 (autoload 'magit-push-current "magit-push" "\
 Push the current branch to a branch read in the minibuffer.
