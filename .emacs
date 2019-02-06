@@ -133,7 +133,8 @@
 ;;* zoom in/out
 (require 'zoom-frm)
 
-(defun default-font (arg)
+(defun default-font ()
+  (interactive)
   (set-default-font "Monaco 16"))
 
 (define-key ctl-x-map [(control ?+)] 'zoom-in/out)
