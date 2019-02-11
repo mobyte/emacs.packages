@@ -1,4 +1,4 @@
-(define-package "sesman" "20181109.1100" "Generic Session Manager"
+(define-package "sesman" "20190208.1437" "Generic Session Manager"
   '((emacs "25"))
   :keywords
   '("process")
