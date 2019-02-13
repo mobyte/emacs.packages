@@ -1025,5 +1025,5 @@ current git branch as a string.  Otherwise return an empty string."
 
 (require 'diminish)
 
-(diminish 'projectile-mode "PrjTile")
+(diminish 'projectile-mode "prj")
 (diminish 'paredit-mode "()")
