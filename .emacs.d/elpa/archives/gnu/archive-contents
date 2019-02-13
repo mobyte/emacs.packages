@@ -396,7 +396,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 9 6)
+	    [(1 9 7)
 	     ((emacs
 	       (25))
 	      (stream
@@ -574,7 +574,7 @@
 	   ((emacs
 	     (25)))
 	   "gnamù reader, a reader with espeak tts" tar
-	   ((:keywords "tools")
+	   ((:keywords "tools" "accessibility")
 	    (:url . "http://elpa.gnu.org/packages/greader.html"))])
  (heap .
        [(0 5)
@@ -1109,9 +1109,11 @@
 	       ((:keywords "soap" "web-services" "comm" "hypermedia")
 		(:url . "http://elpa.gnu.org/packages/soap-client.html"))])
  (sokoban .
-	  [(1 4 7)
+	  [(1 4 8)
 	   ((emacs
-	     (23 1)))
+	     (23 1))
+	    (cl-lib
+	     (0 5)))
 	   "Implementation of Sokoban for Emacs." tar
 	   ((:keywords "games")
 	    (:url . "http://elpa.gnu.org/packages/sokoban.html"))])
@@ -1362,10 +1364,10 @@
        ((:keywords "multimedia" "xpm")
 	(:url . "http://www.gnuvola.org/software/xpm/"))])
  (xr .
-     [(1 0)
-      nil "Convert string regexp to rx notation" single
-      ((:url . "http://elpa.gnu.org/packages/xr.html")
-       (:keywords "lisp" "maint" "regexps"))])
+     [(1 1)
+      nil "Convert string regexp to rx notation" tar
+      ((:keywords "lisp" "maint" "regexps")
+       (:url . "http://elpa.gnu.org/packages/xr.html"))])
  (yasnippet .
 	    [(0 13 0)
 	     ((cl-lib

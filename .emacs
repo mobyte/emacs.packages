@@ -107,7 +107,7 @@
      ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses aggressive-indent use-package yaml-mode company-cabal company-quickhelp magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile)))
+    (diminish diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses aggressive-indent use-package yaml-mode company-cabal company-quickhelp magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile)))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
@@ -968,3 +968,62 @@ current git branch as a string.  Otherwise return an empty string."
   (align-regexp start end "\\(\\s-*\\)\\s-" 1 0 t)
   ;;(indent-region start end)
   )
+;;* mode line
+(setq mode-line-position
+      '(;; %p print percent of buffer above top of window, o Top, Bot or All
+        ;; (-3 "%p")
+        ;; %I print the size of the buffer, with kmG etc
+        ;; (size-indication-mode ("/" (-4 "%I")))
+        ;; " "
+        ;; %l print the current line number
+        ;; %c print the current column
+        (line-number-mode ("%l" (column-number-mode ":%c")))))
+
+(defun shorten-directory (dir max-length)
+  "Show up to `max-length' characters of a directory name `dir'."
+  (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+        (output ""))
+    (when (and path (equal "" (car path)))
+      (setq path (cdr path)))
+    (while (and path (< (length output) (- max-length 4)))
+      (setq output (concat (car path) "/" output))
+      (setq path (cdr path)))
+    (when path
+      (setq output (concat ".../" output)))
+    output))
+
+(defvar mode-line-directory
+  '(:propertize
+    (:eval (if (buffer-file-name) (concat " " (shorten-directory default-directory 20)) " "))
+                face mode-line-directory)
+  "Formats the current directory.")
+
+(put 'mode-line-directory 'risky-local-variable t)
+
+(setq-default mode-line-buffer-identification
+              (propertized-buffer-identification "%b "))
+
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                ;; mode-line-mule-info -- I'm always on utf-8
+                ;; mode-line-client
+                mode-line-modified
+                ;; mode-line-remote -- no need to indicate this specially
+                ;; mode-line-frame-identification -- this is for text-mode emacs only
+                " "
+                mode-line-directory
+                mode-line-buffer-identification
+                " "
+                mode-line-position
+                ;; (vc-mode vc-mode)  -- I use magit, not vc-mode
+                ;; (flycheck-mode flycheck-mode-line)
+                " "
+                mode-line-modes
+                ;;mode-line-misc-info
+                mode-line-end-spaces))
+
+(require 'diminish)
+
+(diminish 'projectile-mode "PrjTile")
+(diminish 'paredit-mode "()")
