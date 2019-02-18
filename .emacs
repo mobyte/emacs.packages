@@ -994,9 +994,13 @@ current git branch as a string.  Otherwise return an empty string."
 
 (defvar mode-line-directory
   '(:propertize
-    (:eval (if (buffer-file-name) (concat " " (shorten-directory default-directory 20)) " "))
-                face mode-line-directory)
+    (:eval (if (buffer-file-name) (concat " " (shorten-directory default-directory 20)) " ")))
   "Formats the current directory.")
+
+(defvar mode-line-git-current-branch
+  '(:propertize
+    (:eval (concat " " "hello")))
+  "current branch")
 
 (put 'mode-line-directory 'risky-local-variable t)
 
@@ -1015,6 +1019,7 @@ current git branch as a string.  Otherwise return an empty string."
                 mode-line-directory
                 mode-line-buffer-identification
                 " "
+                mode-line-git-current-branch
                 mode-line-position
                 ;; (vc-mode vc-mode)  -- I use magit, not vc-mode
                 ;; (flycheck-mode flycheck-mode-line)
@@ -1027,3 +1032,5 @@ current git branch as a string.  Otherwise return an empty string."
 
 (diminish 'projectile-mode "prj")
 (diminish 'paredit-mode "()")
+(diminish 'eldoc-mode)
+(diminish 'cider-mode "cider")

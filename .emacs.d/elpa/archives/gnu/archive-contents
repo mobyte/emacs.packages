@@ -396,7 +396,7 @@
 	 ((:keywords "convenience" "languages")
 	  (:url . "https://github.com/joaotavora/eglot"))])
  (el-search .
-	    [(1 9 7)
+	    [(1 11 1)
 	     ((emacs
 	       (25))
 	      (stream
@@ -455,7 +455,7 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
-       [(0 22)
+       [(0 22 1)
 	((xelb
 	  (0 16)))
 	"Emacs X Window Manager" tar
