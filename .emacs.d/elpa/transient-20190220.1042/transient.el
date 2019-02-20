@@ -2154,9 +2154,9 @@ have a history of their own.")
                               transient-history-prev
                               transient-history-next
                               transient-quit-one
-                              transient-toggle-common)))
-                 (list (propertize (kbd (oref suffix key))
-                                   'face 'transient-key)))))
+                              transient-toggle-common
+                              transient-set-level)))
+                 (list (propertize (oref suffix key) 'face 'transient-key)))))
         transient--suffixes)
        #'string<)
       (propertize "|" 'face 'transient-unreachable-key)))))
@@ -2179,7 +2179,8 @@ have a history of their own.")
             (insert ?\n))))
       (when (or transient--helpp transient--editp)
         (transient--insert-help))
-      (let ((lv-force-update t))
+      (let ((lv-force-update t)
+            (lv-use-separator t))
         (lv-message "%s" (buffer-string))))))
 
 (cl-defgeneric transient--insert-group (group)
