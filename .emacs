@@ -1034,3 +1034,11 @@ current git branch as a string.  Otherwise return an empty string."
 (diminish 'paredit-mode "()")
 (diminish 'eldoc-mode)
 (diminish 'cider-mode "cider")
+;;* prettify
+;; (global-prettify-symbols-mode 1)
+
+;; (add-hook 'clojure-mode-hook
+;;             (lambda ()
+;;               (push '("fn"  . ?λ) prettify-symbols-alist)
+;;               (push '("defn"  . ?λ) prettify-symbols-alist)
+;;               (push '("s/defn"  . ?Λ) prettify-symbols-alist)))
