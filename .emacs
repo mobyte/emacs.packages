@@ -1042,3 +1042,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;;               (push '("fn"  . ?λ) prettify-symbols-alist)
 ;;               (push '("defn"  . ?λ) prettify-symbols-alist)
 ;;               (push '("s/defn"  . ?Λ) prettify-symbols-alist)))
+;;* personal customizations
+(let ((personal-settings "~/.emacs.d/opt/personal.el"))
+ (when (file-exists-p personal-settings)
+   (load-file personal-settings)))

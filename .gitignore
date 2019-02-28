@@ -14,3 +14,4 @@ resources/see-also.edn
 .emacs.d/smex-items
 .boot/cache/
 leiningen-2.9.0-standalone.jar
+.emacs.d/opt/
