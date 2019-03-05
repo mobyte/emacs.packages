@@ -2,9 +2,10 @@
   ("-w"))
  (magit-commit nil)
  (magit-log
-  ("-n1024" "--graph" "--decorate")
-  ("-n256" "--graph" "--decorate"))
- (magit-push nil)
+  ("-n256" "--graph" "--decorate")
+  ("-n1024" "--graph" "--decorate"))
+ (magit-push nil
+             ("--force-with-lease"))
  (magit-rebase nil)
  (magit-revert
   ("--edit")))
