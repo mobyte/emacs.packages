@@ -9,9 +9,9 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20190302.1102
+;; Package-Version: 20190313.1836
 ;; Keywords: languages clojure clojurescript lisp
-;; Version: 5.10.0
+;; Version: 5.11.0-snapshot
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
