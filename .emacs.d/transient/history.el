@@ -6,8 +6,8 @@
  (magit-log
   ("-n256" "--graph" "--decorate")
   ("-n1024" "--graph" "--decorate"))
- (magit-push
-  ("--force-with-lease"))
+ (magit-push nil
+             ("--force-with-lease"))
  (magit-rebase nil)
  (magit-revert
   ("--edit")))
