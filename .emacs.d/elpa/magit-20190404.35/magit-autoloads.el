@@ -132,7 +132,7 @@ Remove all changes from the staging area.
 ;;;;;;  0 0 0))
 ;;; Generated autoloads from magit-autorevert.el
 
-(defvar magit-auto-revert-mode (and (not global-auto-revert-mode) (not noninteractive)) "\
+(defvar magit-auto-revert-mode (not (or global-auto-revert-mode noninteractive)) "\
 Non-nil if Magit-Auto-Revert mode is enabled.
 See the `magit-auto-revert-mode' command
 for a description of this minor mode.
