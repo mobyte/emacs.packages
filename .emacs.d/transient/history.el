@@ -11,4 +11,5 @@
              ("--force-with-lease"))
  (magit-rebase nil)
  (magit-revert
-  ("--edit")))
+  ("--edit"))
+ (magit-stash nil))
