@@ -799,9 +799,10 @@ example, sets a variable use `define-infix-command' instead.
          (error "Needed command or argument, got %S" car)))
       (while (keywordp car)
         (let ((k pop))
-          (if (eq k :class)
-              (setq class pop)
-            (setq args (plist-put args k pop))))))
+          (cl-case k
+            (:class (setq class pop))
+            (:level (setq level pop))
+            (t (setq args (plist-put args k pop)))))))
     (unless (plist-get args :key)
       (when-let ((shortarg (plist-get args :shortarg)))
         (setq args (plist-put args :key shortarg))))
@@ -2104,6 +2105,10 @@ The last value is \"don't use any of these switches\"."
       (car choices))))
 
 ;;;; Readers
+
+(defun transient-read-directory (prompt _initial-input _history)
+  "Read a directory."
+  (expand-file-name (read-directory-name prompt)))
 
 (defun transient-read-existing-directory (prompt _initial-input _history)
   "Read an existing directory."

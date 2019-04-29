@@ -67,6 +67,9 @@
 (setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
 (exec-path-from-shell-initialize)
 
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+(exec-path-from-shell-copy-envs '("LC_ALL"))
 
 ;;* general settings
 
