@@ -605,6 +605,11 @@ be committed.
 (autoload 'magit-diff-buffer-file "magit-diff" "\
 Show diff for the blob or file visited in the current buffer.
 
+When the buffer visits a blob, then show the respective commit.
+When the buffer visits a file, then show the differenced between
+`HEAD' and the working tree.  In both cases limit the diff to
+the file or blob.
+
 \(fn)" t nil)
 
 (autoload 'magit-diff-paths "magit-diff" "\
@@ -1023,22 +1028,28 @@ prefix argument fetch all remotes.
 
 (autoload 'magit-find-file "magit-files" "\
 View FILE from REV.
-Switch to a buffer visiting blob REV:FILE,
-creating one if none already exists.
+Switch to a buffer visiting blob REV:FILE, creating one if none
+already exists.  If prior to calling this command the current
+buffer and/or cursor position is about the same file, then go
+to the line and column corresponding to that location.
 
 \(fn REV FILE)" t nil)
 
 (autoload 'magit-find-file-other-window "magit-files" "\
 View FILE from REV, in another window.
-Like `magit-find-file', but create a new window or reuse an
-existing one.
+Switch to a buffer visiting blob REV:FILE, creating one if none
+already exists.  If prior to calling this command the current
+buffer and/or cursor position is about the same file, then go to
+the line and column corresponding to that location.
 
 \(fn REV FILE)" t nil)
 
 (autoload 'magit-find-file-other-frame "magit-files" "\
 View FILE from REV, in another window.
-Like `magit-find-file', but create a new frame or reuse an
-existing one.
+Switch to a buffer visiting blob REV:FILE, creating one if none
+already exists.  If prior to calling this command the current
+buffer and/or cursor position is about the same file, then go to
+the line and column corresponding to that location.
 
 \(fn REV FILE)" t nil)
  (autoload 'magit-file-dispatch "magit" nil t)
@@ -1064,6 +1075,13 @@ Magit-File mode is enabled in all buffers where
 See `magit-file-mode' for more information on Magit-File mode.
 
 \(fn &optional ARG)" t nil)
+
+(autoload 'magit-blob-visit-file "magit-files" "\
+View the file from the worktree corresponding to the current blob.
+When visiting a blob or the version from the index, then go to
+the same location in the respective file in the working tree.
+
+\(fn)" t nil)
 
 (autoload 'magit-file-checkout "magit-files" "\
 Checkout FILE from REV.
@@ -1304,11 +1322,9 @@ Show log for the definition at point.
 Show log for the merge of COMMIT into BRANCH.
 
 More precisely, find merge commit M that brought COMMIT into
-BRANCH, and show the log of the range \"M^1..M\" or if \"--graph\"
-is a member of ARGS, then \"M^1^..M\" to include the merge-base.
-
-If COMMIT is directly on BRANCH, then show approximately twenty
-surrounding commits instead.
+BRANCH, and show the log of the range \"M^1..M\".  If COMMIT is
+directly on BRANCH, then show approximately twenty surrounding
+commits instead.
 
 This command requires git-when-merged, which is available from
 https://github.com/mhagger/git-when-merged.
