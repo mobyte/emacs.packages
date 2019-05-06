@@ -3101,7 +3101,7 @@ Appendix E Function Index
 * magit-log-maybe-update-revision-buffer: Section Movement.   (line  64)
 * magit-maybe-set-dedicated:             Switching Buffers.   (line 101)
 * magit-mode-display-buffer:             Refreshing Buffers.  (line  33)
-* magit-mode-quit-window:                Quitting Windows.    (line  31)
+* magit-mode-quit-window:                Quitting Windows.    (line  34)
 * magit-mode-setup:                      Refreshing Buffers.  (line  17)
 * magit-push-implicitly:                 Pushing.             (line  74)
 * magit-push-to-remote:                  Pushing.             (line  85)
@@ -3118,7 +3118,7 @@ Appendix E Function Index
 * magit-repolist-column-unpushed-to-upstream: Repository List.
                                                               (line  54)
 * magit-repolist-column-version:         Repository List.     (line  39)
-* magit-restore-window-configuration:    Quitting Windows.    (line  20)
+* magit-restore-window-configuration:    Quitting Windows.    (line  23)
 * magit-revert-buffers:                  Editing Commit Messages.
                                                               (line 178)
 * magit-run-git:                         Calling Git for Effect.
@@ -3231,7 +3231,7 @@ Appendix F Variable Index
 * magit-branch-prefer-remote-upstream:   Branch Commands.     (line 165)
 * magit-branch-read-upstream-first:      Branch Commands.     (line 159)
 * magit-buffer-name-format:              Naming Buffers.      (line  27)
-* magit-bury-buffer-function:            Quitting Windows.    (line  11)
+* magit-bury-buffer-function:            Quitting Windows.    (line  14)
 * magit-cherry-margin:                   Cherries.            (line  22)
 * magit-clone-always-transient:          Cloning Repository.  (line  12)
 * magit-clone-default-directory:         Cloning Repository.  (line  90)

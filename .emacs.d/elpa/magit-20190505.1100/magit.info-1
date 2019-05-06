@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.90.1 (v2.90.1-628-gabc75923d+1).
+This manual is for Magit version 2.90.1 (v2.90.1-652-gab4811f54+1).
 
      Copyright (C) 2015-2019 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -924,8 +924,11 @@ File: magit.info,  Node: Quitting Windows,  Next: Automatic Refreshing of Magit 
 
 ‘q’     (‘magit-mode-bury-buffer’)
 
-     This command buries the current Magit buffer.  With a prefix
-     argument, it instead kills the buffer.
+     This command buries the current Magit buffer.
+
+     With a prefix argument, it instead kills the buffer.  With a double
+     prefix argument, also kills all other Magit buffers associated with
+     the current project.
 
  -- User Option: magit-bury-buffer-function
 
