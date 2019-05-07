@@ -58,11 +58,11 @@ already exists.  If prior to calling this command the current
 buffer and/or cursor position is about the same file, then go to
 the line and column corresponding to that location."
   (interactive (magit-find-file-read-args "Find file in other window"))
-  (magit-find-file--internal rev file #'switch-to-buffer-other-frame))
+  (magit-find-file--internal rev file #'switch-to-buffer-other-window))
 
 ;;;###autoload
 (defun magit-find-file-other-frame (rev file)
-  "View FILE from REV, in another window.
+  "View FILE from REV, in another frame.
 Switch to a buffer visiting blob REV:FILE, creating one if none
 already exists.  If prior to calling this command the current
 buffer and/or cursor position is about the same file, then go to

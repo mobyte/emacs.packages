@@ -2663,10 +2663,10 @@ Appendix D Command Index
                                                               (line 161)
 * magit-find-file:                       General-Purpose Visit Commands.
                                                               (line   9)
+* magit-find-file-other-frame:           General-Purpose Visit Commands.
+                                                              (line  21)
 * magit-find-file-other-window:          General-Purpose Visit Commands.
                                                               (line  15)
-* magit-find-file-other-window <1>:      General-Purpose Visit Commands.
-                                                              (line  21)
 * magit-git-command:                     Running Git Manually.
                                                               (line  25)
 * magit-git-command-topdir:              Running Git Manually.
@@ -3001,10 +3001,10 @@ Appendix E Function Index
                                                               (line 161)
 * magit-find-file:                       General-Purpose Visit Commands.
                                                               (line   9)
+* magit-find-file-other-frame:           General-Purpose Visit Commands.
+                                                              (line  21)
 * magit-find-file-other-window:          General-Purpose Visit Commands.
                                                               (line  15)
-* magit-find-file-other-window <1>:      General-Purpose Visit Commands.
-                                                              (line  21)
 * magit-generate-buffer-name-default-function: Naming Buffers.
                                                               (line  17)
 * magit-get-section:                     Matching Sections.   (line  16)

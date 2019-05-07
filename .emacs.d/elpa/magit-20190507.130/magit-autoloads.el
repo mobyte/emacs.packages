@@ -1045,7 +1045,7 @@ the line and column corresponding to that location.
 \(fn REV FILE)" t nil)
 
 (autoload 'magit-find-file-other-frame "magit-files" "\
-View FILE from REV, in another window.
+View FILE from REV, in another frame.
 Switch to a buffer visiting blob REV:FILE, creating one if none
 already exists.  If prior to calling this command the current
 buffer and/or cursor position is about the same file, then go to
