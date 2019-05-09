@@ -9,7 +9,7 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20190413.909
+;; Package-Version: 20190508.1522
 ;; Keywords: languages clojure clojurescript lisp
 ;; Version: 5.11.0-snapshot
 ;; Package-Requires: ((emacs "25.1"))
@@ -397,7 +397,7 @@ The command will prompt you to select one of the available sections."
       (let ((section-url (concat clojure-reference-base-url (cdr (assoc section clojure-reference-sections)))))
         (browse-url section-url)))))
 
-(defconst clojure-cheatsheet-url "http://clojure.org/api/cheatsheet"
+(defconst clojure-cheatsheet-url "https://clojure.org/api/cheatsheet"
   "The URL of the official Clojure cheatsheet.")
 
 (defun clojure-view-cheatsheet ()
@@ -1573,6 +1573,7 @@ work).  To set it from Lisp code, use
   (when-not 1)
   (when-first 1)
   (do 0)
+  (delay 0)
   (future 0)
   (comment 0)
   (doto 1)
