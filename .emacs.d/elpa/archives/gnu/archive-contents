@@ -133,7 +133,7 @@
 	  ((:url . "https://github.com/Malabarba/beacon")
 	   (:keywords "convenience"))])
  (bnf-mode .
-	   [(0 4 1)
+	   [(0 4 2)
 	    ((cl-lib
 	      (0 5))
 	     (emacs

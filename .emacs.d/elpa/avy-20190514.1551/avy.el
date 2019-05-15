@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20190511.1400
+;; Package-Version: 20190514.1551
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -749,6 +749,11 @@ Set `avy-style' according to COMMMAND as well."
 
 (declare-function flyspell-correct-word-before-point "flyspell")
 
+(defcustom avy-flyspell-correct-function #'flyspell-correct-word-before-point
+  "Function called to correct word by `avy-action-ispell' when
+`flyspell-mode' is enabled."
+  :type 'function)
+
 (defun avy-action-ispell (pt)
   "Auto correct word at PT."
   (save-excursion
@@ -759,7 +764,7 @@ Set `avy-style' according to COMMMAND as well."
         (line-beginning-position)
         (line-end-position)))
       ((bound-and-true-p flyspell-mode)
-       (flyspell-correct-word-before-point))
+       (funcall avy-flyspell-correct-function))
       ((looking-at-p "\\b")
        (ispell-word))
       (t
