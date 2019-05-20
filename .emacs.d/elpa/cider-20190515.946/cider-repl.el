@@ -1159,17 +1159,24 @@ regexes from `cider-locref-regexp-alist' to infer locations at point."
       (let* ((var (plist-get loc :var))
              (line (plist-get loc :line))
              (file (or
-                    ;; retrieve from info middleware
+                    ;; 1) retrieve from info middleware
                     (when var
                       (or (cider-sync-request:ns-path var)
                           (nrepl-dict-get (cider-sync-request:info var) "file")))
-                    ;; when not found, return the file detected by regexp
                     (when-let* ((file (plist-get loc :file)))
-                      (if (file-name-absolute-p file)
-                          file
-                        ;; when not absolute, expand within the current project
-                        (when-let* ((proj (clojure-project-dir)))
-                          (expand-file-name file proj)))))))
+                      ;; 2) file detected by the regexp
+                      (or
+                       (if (file-name-absolute-p file)
+                           file
+                         ;; when not absolute, expand within the current project
+                         (when-let* ((proj (clojure-project-dir)))
+                           (let ((path (expand-file-name file proj)))
+                             (when (file-exists-p path)
+                               path))))
+                       ;; 3) infer ns from the abbreviated path (common in
+                       ;; reflection warnings)
+                       (let ((ns (cider-path-to-ns file)))
+                         (cider-sync-request:ns-path ns)))))))
         (if file
             (cider--jump-to-loc-from-info (nrepl-dict "file" file "line" line) t)
           (error "No source location for %s" var)))
@@ -1196,7 +1203,7 @@ One for all REPLs.")
 WIN, BUFFER and POS are the window, buffer and point under mouse position."
   (with-current-buffer buffer
     (if-let* ((hl (plist-get (cider-locref-at-point pos) :highlight)))
-        (move-overlay cider-locref-hoover-overlay (car hl) (cdr hl))
+        (move-overlay cider-locref-hoover-overlay (car hl) (cdr hl) buffer)
       (delete-overlay cider-locref-hoover-overlay))
     nil))
 
@@ -1440,6 +1447,8 @@ constructs."
 (declare-function cider-repl-history "cider-repl-history")
 (declare-function cider-run "cider-mode")
 (declare-function cider-ns-refresh "cider-ns")
+(declare-function cider-ns-reload "cider-ns")
+(declare-function cider-find-var "cider-find")
 (declare-function cider-version "cider")
 (declare-function cider-test-run-loaded-tests "cider-test")
 (declare-function cider-test-run-project-tests "cider-test")
@@ -1455,6 +1464,9 @@ constructs."
 (cider-repl-add-shortcut "trace-ns" #'cider-toggle-trace-ns)
 (cider-repl-add-shortcut "undef" #'cider-undef)
 (cider-repl-add-shortcut "refresh" #'cider-ns-refresh)
+(cider-repl-add-shortcut "reload" #'cider-ns-reload)
+(cider-repl-add-shortcut "find-var" #'cider-find-var)
+(cider-repl-add-shortcut "doc" #'cider-doc)
 (cider-repl-add-shortcut "help" #'cider-repl-shortcuts-help)
 (cider-repl-add-shortcut "test-ns" #'cider-test-run-ns-tests)
 (cider-repl-add-shortcut "test-all" #'cider-test-run-loaded-tests)
@@ -1465,13 +1477,13 @@ constructs."
 (cider-repl-add-shortcut "test-report" #'cider-test-show-report)
 (cider-repl-add-shortcut "run" #'cider-run)
 (cider-repl-add-shortcut "conn-info" #'cider-describe-connection)
-(cider-repl-add-shortcut "hasta la vista" #'cider-quit)
+(cider-repl-add-shortcut "version" #'cider-version)
+(cider-repl-add-shortcut "require-repl-utils" #'cider-repl-require-repl-utils)
+;; So many ways to quit :-)
 (cider-repl-add-shortcut "adios" #'cider-quit)
 (cider-repl-add-shortcut "sayonara" #'cider-quit)
 (cider-repl-add-shortcut "quit" #'cider-quit)
 (cider-repl-add-shortcut "restart" #'cider-restart)
-(cider-repl-add-shortcut "version" #'cider-version)
-(cider-repl-add-shortcut "require-repl-utils" #'cider-repl-require-repl-utils)
 
 (defconst cider-repl-shortcuts-help-buffer "*CIDER REPL Shortcuts Help*")
 
@@ -1676,9 +1688,6 @@ constructs."
               (cider-repl-wrap-fontify-function font-lock-fontify-region-function))
   (setq-local font-lock-unfontify-region-function
               (cider-repl-wrap-fontify-function font-lock-unfontify-region-function))
-  (make-local-variable 'completion-at-point-functions)
-  (add-to-list 'completion-at-point-functions
-               #'cider-complete-at-point)
   (set-syntax-table cider-repl-mode-syntax-table)
   (cider-eldoc-setup)
   ;; At the REPL, we define beginning-of-defun and end-of-defun to be
@@ -1693,6 +1702,7 @@ constructs."
     (cider-repl-history-load cider-repl-history-file)
     (add-hook 'kill-buffer-hook #'cider-repl-history-just-save t t)
     (add-hook 'kill-emacs-hook #'cider-repl-history-just-save))
+  (add-hook 'completion-at-point-functions #'cider-complete-at-point nil t)
   (add-hook 'paredit-mode-hook (lambda () (clojure-paredit-setup cider-repl-mode-map))))
 
 (provide 'cider-repl)

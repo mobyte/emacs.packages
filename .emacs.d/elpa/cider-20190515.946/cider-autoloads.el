@@ -747,6 +747,33 @@ View the manual in your default browser.
 
 ;;;***
 
+;;;### (autoloads nil "cider-xref" "cider-xref.el" (0 0 0 0))
+;;; Generated autoloads from cider-xref.el
+
+(autoload 'cider-xref-fn-refs "cider-xref" "\
+Show all functions that reference the var matching NS and SYMBOL.
+
+\(fn &optional NS SYMBOL)" t nil)
+
+(autoload 'cider-xref-fn-deps "cider-xref" "\
+Show all functions referenced by the var matching NS and SYMBOL.
+
+\(fn &optional NS SYMBOL)" t nil)
+
+(autoload 'cider-xref-fn-refs-select "cider-xref" "\
+Displays the references for NS and SYMBOL using completing read.
+
+\(fn &optional NS SYMBOL)" t nil)
+
+(autoload 'cider-xref-fn-deps-select "cider-xref" "\
+Displays the function dependencies for  NS and SYMBOL using completing read.
+
+\(fn &optional NS SYMBOL)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "cider-xref" '("cider-")))
+
+;;;***
+
 ;;;### (autoloads nil "nrepl-client" "nrepl-client.el" (0 0 0 0))
 ;;; Generated autoloads from nrepl-client.el
 

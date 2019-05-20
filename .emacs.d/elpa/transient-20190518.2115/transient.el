@@ -350,7 +350,7 @@ See info node `(transient)Enabling and Disabling Suffixes'."
 
 (defface transient-disabled-suffix
   '((t :background "red" :foreground "black" :weight bold))
-  "Face used for disables levels while editing suffix levels.
+  "Face used for disabled levels while editing suffix levels.
 See info node `(transient)Enabling and Disabling Suffixes'."
   :group 'transient-faces)
 
@@ -430,7 +430,7 @@ If `transient-save-history' is nil, then do nothing."
    (command     :initarg :command)
    (level       :initarg :level)
    (variable    :initarg :variable    :initform nil)
-   (value       :initarg :value       :initform nil)
+   (value       :initarg :value)
    (scope       :initarg :scope       :initform nil)
    (history     :initarg :history     :initform nil)
    (history-pos :initarg :history-pos :initform 0)
@@ -1018,6 +1018,9 @@ variable instead.")
 (defvar transient--timer nil)
 
 (defvar transient--stack nil)
+
+(defvar transient--buffer-name " *transient*"
+  "Name of the transient buffer.")
 
 (defvar transient--window nil
   "The window used to display the transient popup.")
@@ -2048,11 +2051,14 @@ Non-infix suffix commands usually don't have a value."
   nil)
 
 (cl-defmethod transient-init-value ((obj transient-prefix))
-  (let ((value (oref obj value)))
-    (if (functionp value)
-        (oset obj value (funcall value))
-      (when-let ((saved (assq (oref obj command) transient-values)))
-        (oset obj value (cdr saved))))))
+  (if (slot-boundp obj 'value)
+      (let ((value (oref obj value)))
+        (when (functionp value)
+          (oset obj value (funcall value))))
+    (oset obj value
+          (if-let ((saved (assq (oref obj command) transient-values)))
+              (cdr saved)
+            nil))))
 
 (cl-defmethod transient-init-value ((obj transient-switch))
   (oset obj value
@@ -2419,7 +2425,7 @@ have a history of their own.")
 (defun transient--show ()
   (transient--timer-cancel)
   (setq transient--showp t)
-  (let ((buf (get-buffer-create " *transient*"))
+  (let ((buf (get-buffer-create transient--buffer-name))
         (focus nil))
     (unless (window-live-p transient--window)
       (setq transient--window

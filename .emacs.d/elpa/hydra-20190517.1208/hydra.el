@@ -5,7 +5,7 @@
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; Maintainer: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/hydra
-;; Version: 0.14.0
+;; Version: 0.15.0
 ;; Keywords: bindings
 ;; Package-Requires: ((cl-lib "0.5") (lv "0"))
 
@@ -216,6 +216,8 @@ the body or the head."
   (posframe-show
    " *hydra-posframe*"
    :string str
+   :internal-border-width 1
+   :internal-border-color "red"
    :poshandler #'posframe-poshandler-window-center))
 
 (defun hydra-posframe-hide ()
