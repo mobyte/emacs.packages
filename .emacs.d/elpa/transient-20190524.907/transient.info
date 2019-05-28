@@ -44,7 +44,7 @@ reading a new value in the minibuffer.
    Calling a suffix command usually causes the transient to be exited
 but suffix commands can also be configured to not exit the transient.
 
-This manual is for Transient version 0.1.0 (v0.1.0-82-gf0a7a97+1).
+This manual is for Transient version 0.1.0 (v0.1.0-90-g4ce1868+1).
 
      Copyright (C) 2018-2019 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -760,8 +760,22 @@ transients can be further modified non-interactively.
      "suffixes (including infixes)" or "non-infix suffixes".  Here it
      means the former.  See *note Suffix Specifications::.
 
-   • LOC is a command, a key vector or a key description (a string as
-     returned by ‘key-description’).
+     SUFFIX may also be a group in the same form as expected by
+     ‘define-transient-command’.  See *note Group Specifications::.
+
+   • LOC is a command, a key vector, a key description (a string as
+     returned by ‘key-description’), or a list specifying coordinates
+     (the last element may also be a command or key).  For example ‘(1 0
+     -1)’ identifies the last suffix (‘-1’) of the first subgroup (‘0’)
+     of the second group (‘1’).
+
+     If LOC is a list of coordinates, then it can be used to identify a
+     group, not just an individual suffix command.
+
+     The function ‘transient-get-suffix’ can be useful to determine
+     whether a certain coordination list identifies the suffix or group
+     that you expect it to identify.  In hairy cases it may be necessary
+     to look at the definition of the transient prefix command.
 
    These functions operate on the information stored in the
 ‘transient--layout’ property of the PREFIX symbol.  Suffix entries in
@@ -770,29 +784,31 @@ plist should set at least ‘:key’, ‘:description’ and ‘:command’.
 
  -- Function: transient-insert-suffix prefix loc suffix
 
-     This function inserts SUFFIX into PREFIX before LOC.
+     This function inserts suffix or group SUFFIX into PREFIX before
+     LOC.
 
  -- Function: transient-append-suffix prefix loc suffix
 
-     This function inserts SUFFIX into PREFIX after LOC.
+     This function inserts suffix or group SUFFIX into PREFIX after LOC.
 
  -- Function: transient-replace-suffix prefix loc suffix
 
-     This function replaces the suffix at LOC in PREFIX with SUFFIX.
+     This function replaces the suffix or group at LOC in PREFIX with
+     suffix or group SUFFIX.
 
  -- Function: transient-remove-suffix prefix loc
 
-     This function removes the suffix at LOC in PREFIX.
+     This function removes the suffix or group at LOC in PREFIX.
 
  -- Function: transient-get-suffix prefix loc
 
-     This function returns the suffix at LOC in PREFIX.  The returned
-     value has the form mentioned above.
+     This function returns the suffix or group at LOC in PREFIX.  The
+     returned value has the form mentioned above.
 
  -- Function: transient-suffix-put prefix loc prop value
 
-     This function edits the suffix at LOC in PREFIX, by setting the
-     PROP of its plist to VALUE.
+     This function edits the suffix or group at LOC in PREFIX, by
+     setting the PROP of its plist to VALUE.
 
    Most of these functions do not signal an error if they cannot perform
 the requested modification.  The functions that insert new suffixes show
@@ -2261,7 +2277,7 @@ Appendix D Function Index
 * transient--history-init:               Prefix Classes.      (line  10)
 * transient--insert-group:               Group Methods.       (line   6)
 * transient-append-suffix:               Modifying Existing Transients.
-                                                              (line  32)
+                                                              (line  47)
 * transient-args:                        Using Infix Arguments.
                                                               (line  22)
 * transient-format:                      Suffix Format Methods.
@@ -2273,7 +2289,7 @@ Appendix D Function Index
 * transient-format-value:                Suffix Format Methods.
                                                               (line  25)
 * transient-get-suffix:                  Modifying Existing Transients.
-                                                              (line  44)
+                                                              (line  60)
 * transient-infix-read:                  Suffix Value Methods.
                                                               (line  17)
 * transient-infix-set:                   Suffix Value Methods.
@@ -2285,19 +2301,19 @@ Appendix D Function Index
 * transient-init-value:                  Suffix Value Methods.
                                                               (line   6)
 * transient-insert-suffix:               Modifying Existing Transients.
-                                                              (line  28)
+                                                              (line  42)
 * transient-prompt:                      Suffix Value Methods.
                                                               (line  34)
 * transient-remove-suffix:               Modifying Existing Transients.
-                                                              (line  40)
+                                                              (line  56)
 * transient-replace-suffix:              Modifying Existing Transients.
-                                                              (line  36)
+                                                              (line  51)
 * transient-scroll-down:                 Other Commands.      (line  18)
 * transient-scroll-up:                   Other Commands.      (line  12)
 * transient-show-help:                   Suffix Format Methods.
                                                               (line  30)
 * transient-suffix-put:                  Modifying Existing Transients.
-                                                              (line  49)
+                                                              (line  65)
 
 
 File: transient.info,  Node: Variable Index,  Prev: Function Index,  Up: Top
@@ -2349,33 +2365,33 @@ Node: Enabling and Disabling Suffixes19698
 Node: Other Commands22997
 Node: Other Options23953
 Node: Modifying Existing Transients30567
-Node: Defining New Commands33110
-Node: Defining Transients33446
-Node: Binding Suffix and Infix Commands35881
-Node: Group Specifications36736
-Node: Suffix Specifications40069
-Node: Defining Suffix and Infix Commands43627
-Node: Using Infix Arguments47036
-Node: Transient State50320
-Node: Classes and Methods56192
-Node: Group Classes58406
-Node: Group Methods60323
-Node: Prefix Classes60968
-Node: Suffix Classes62060
-Node: Suffix Methods64304
-Node: Suffix Value Methods64625
-Node: Suffix Format Methods67385
-Node: Prefix Slots68834
-Node: Suffix Slots68998
-Node: Predicate Slots71849
-Node: Related Abstractions and Packages73098
-Node: Comparison With Prefix Keys and Prefix Arguments73385
-Node: Comparison With Other Packages83697
-Node: FAQ87884
-Node: Keystroke Index91615
-Node: Command Index93249
-Node: Function Index95036
-Node: Variable Index99193
+Node: Defining New Commands33971
+Node: Defining Transients34307
+Node: Binding Suffix and Infix Commands36742
+Node: Group Specifications37597
+Node: Suffix Specifications40930
+Node: Defining Suffix and Infix Commands44488
+Node: Using Infix Arguments47897
+Node: Transient State51181
+Node: Classes and Methods57053
+Node: Group Classes59267
+Node: Group Methods61184
+Node: Prefix Classes61829
+Node: Suffix Classes62921
+Node: Suffix Methods65165
+Node: Suffix Value Methods65486
+Node: Suffix Format Methods68246
+Node: Prefix Slots69695
+Node: Suffix Slots69859
+Node: Predicate Slots72710
+Node: Related Abstractions and Packages73959
+Node: Comparison With Prefix Keys and Prefix Arguments74246
+Node: Comparison With Other Packages84558
+Node: FAQ88745
+Node: Keystroke Index92476
+Node: Command Index94110
+Node: Function Index95897
+Node: Variable Index100054
 
 End Tag Table
 
