@@ -1104,19 +1104,17 @@
 	      ((:url . "http://elpa.gnu.org/packages/rcirc-menu.html")
 	       (:keywords "comm"))])
  (realgud .
-	  [(1 4 8)
+	  [(1 5 0)
 	   ((load-relative
 	     (1 2))
 	    (loc-changes
 	     (1 2))
 	    (test-simple
 	     (1 2 0))
-	    (cl-lib
-	     (0 5))
 	    (emacs
-	     (24)))
+	     (25)))
 	   "A modular front-end for interacting with external debuggers" tar
-	   ((:keywords "debugger" "gdb" "python" "perl" "go" "bash" "nodejs" "zsh" "bashdb" "zshdb" "remake" "trepan" "perldb" "pdb")
+	   ((:keywords "debugger" "gdb" "python" "perl" "go" "bash" "zsh" "bashdb" "zshdb" "remake" "trepan" "perldb" "pdb")
 	    (:url . "http://github.com/realgud/realgud/"))])
  (realgud-ipdb .
 	       [(1 0 0)
@@ -1144,15 +1142,13 @@
 	       "Realgud front-end to Java's jdb debugger\"" tar
 	       ((:url . "http://github.com/realgud/realgud-jdb"))])
  (realgud-lldb .
-	       [(1 0 0)
+	       [(1 0 1)
 		((load-relative
 		  (1 2))
-		 (cl-lib
-		  (0 5))
 		 (realgud
-		  (1 4 5))
+		  (1 5 0))
 		 (emacs
-		  (24)))
+		  (25)))
 		"Realgud front-end to lldb" single
 		((:url . "http://github.com/realgud/realgud-lldb")
 		 (:keywords))])
@@ -1181,11 +1177,11 @@
 			"Realgud front-end to newer \"node inspect\"" tar
 			((:url . "http://github.com/realgud/realgud-node-inspect"))])
  (realgud-trepan-ni .
-		    [(1 0 0)
+		    [(1 0 1)
 		     ((load-relative
 		       (1 2))
 		      (realgud
-		       (1 4 8))
+		       (1 5 0))
 		      (cl-lib
 		       (0 5))
 		      (emacs

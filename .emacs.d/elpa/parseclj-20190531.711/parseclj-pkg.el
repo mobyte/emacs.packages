@@ -1,4 +1,4 @@
-(define-package "parseclj" "20190327.851" "Clojure/EDN parser"
+(define-package "parseclj" "20190531.711" "Clojure/EDN parser"
   '((emacs "25")
     (a "0.1.0alpha4"))
   :keywords
