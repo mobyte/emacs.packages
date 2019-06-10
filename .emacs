@@ -535,10 +535,20 @@ current git branch as a string.  Otherwise return an empty string."
 ;; skip the cider's welcome message
 (setq cider-repl-display-help-banner nil)
 
+(setq cider-known-endpoints
+      '(("host-a" "localhost" "4001")))
+
+(defun connect-oms (&optional params)
+  (interactive)
+  (cider-connect '(:host "localhost"
+                   :port 4001
+                   :project-dir "/Users/mobyte/repos/rewe-order-service")))
+
 ;; clj-refactor-mode
 
 (unless (fboundp 'seq-map-indexed)
   (defun seq-map-indexed ()))
+
 (require 'clj-refactor)
 
 ;; (use-package aggressive-indent
