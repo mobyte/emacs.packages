@@ -2,8 +2,7 @@
  {:dependencies [[org.clojure/clojure "1.10.1"]]
   :plugins [[cider/cider-nrepl "0.22.0-beta4"]
             [refactor-nrepl "2.4.0"]]
-  :repl-options {:init-ns oms.repl.git.git-gc
-                 :init (do (require 'clojure.pprint
+  :repl-options {:init (do (require 'clojure.pprint
                                     'clojure.tools.namespace.repl)
                            (intern 'clojure.core
                                    '>pprint clojure.pprint/pprint)
@@ -14,5 +13,11 @@
                  :skip-default-init false
                  :host "0.0.0.0"
                  :port 4001}
-  :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs" "-Djsse.enableSNIExtension=false" "-Xverify:none"]
+  :offline? true
+  :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
+                       "-Djsse.enableSNIExtension=false"
+                       "-XX:+TieredCompilation" 
+                       "-XX:TieredStopAtLevel=1" 
+                       "-XX:+CMSClassUnloadingEnabled" 
+                       "-Xverify:none"]
   :java-cmd "/Users/mobyte/src/jdk-12.0.1.jdk/Contents/Home/bin/java"}}
