@@ -10,10 +10,9 @@
                                    '>refresh clojure.tools.namespace.repl/refresh)
                            (intern 'clojure.core
                                    '>clear clojure.tools.namespace.repl/clear))
-                 :skip-default-init false
+                 :skip-default-init true
                  :host "0.0.0.0"
                  :port 4001}
-  :offline? true
   :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
                        "-Djsse.enableSNIExtension=false"
                        "-XX:+TieredCompilation" 

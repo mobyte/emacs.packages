@@ -203,6 +203,7 @@
 
 ;; command key to meta
 (setq mac-command-modifier 'meta)
+(setq mac-right-command-modifier 'meta)
 
 ;; set hotkey to switch frame
 (defun go-to-next-frame ()
