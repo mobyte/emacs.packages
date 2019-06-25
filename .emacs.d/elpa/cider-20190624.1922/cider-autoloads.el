@@ -670,7 +670,7 @@ Go to the scratch buffer named `cider-scratch-buffer-name'.
 (autoload 'cider-selector "cider-selector" "\
 Select a new buffer by type, indicated by a single character.
 The user is prompted for a single character indicating the method by
-which to choose a new buffer.  The `?' character describes then
+which to choose a new buffer.  The `?' character describes the
 available methods.  OTHER-WINDOW provides an optional target.
 See `def-cider-selector-method' for defining new methods.
 
