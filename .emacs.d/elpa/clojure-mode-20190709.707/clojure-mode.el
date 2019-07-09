@@ -9,7 +9,7 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20190508.1522
+;; Package-Version: 20190709.707
 ;; Keywords: languages clojure clojurescript lisp
 ;; Version: 5.11.0-snapshot
 ;; Package-Requires: ((emacs "25.1"))
@@ -555,9 +555,16 @@ replacement for `cljr-expand-let`."
   (clojure-font-lock-setup)
   (add-hook 'paredit-mode-hook #'clojure-paredit-setup)
   ;; `electric-layout-post-self-insert-function' prevents indentation in strings
-  ;; and comments, force indentation in docstrings:
+  ;; and comments, force indentation of non-inlined docstrings:
   (add-hook 'electric-indent-functions
-            (lambda (_char) (if (clojure-in-docstring-p) 'do-indent)))
+            (lambda (_char) (if (and (clojure-in-docstring-p)
+                                     ;; make sure we're not dealing with an inline docstring
+                                     ;; e.g. (def foo "inline docstring" bar)
+                                     (save-excursion
+                                       (beginning-of-line-text)
+                                       (eq (get-text-property (point) 'face)
+                                           'font-lock-doc-face)))
+                                'do-indent)))
   ;; integration with project.el
   (add-hook 'project-find-functions #'clojure-current-project))
 
@@ -2660,6 +2667,23 @@ lists up."
     (insert sexp)
     (clojure--replace-sexps-with-bindings-and-indent)))
 
+(defun clojure--rename-ns-alias-internal (current-alias new-alias)
+  "Rename a namespace alias CURRENT-ALIAS to NEW-ALIAS."
+  (clojure--find-ns-in-direction 'backward)
+  (let ((rgx (concat ":as +" current-alias))
+        (bound (save-excursion (forward-list 1) (point))))
+    (when (save-excursion (search-forward-regexp rgx bound t))
+      (save-excursion
+        (while (re-search-forward rgx bound t)
+          (replace-match (concat ":as " new-alias))))
+      (save-excursion
+        (while (re-search-forward (concat current-alias "/") nil t)
+          (replace-match (concat new-alias "/"))))
+      (save-excursion
+        (while (re-search-forward (concat "#::" current-alias "{") nil t)
+          (replace-match (concat "#::" new-alias "{"))))
+      (message "Successfully renamed alias '%s' to '%s'" current-alias new-alias))))
+
 ;;;###autoload
 (defun clojure-let-backward-slurp-sexp (&optional n)
   "Slurp the s-expression before the let form into the let form.
@@ -2701,6 +2725,20 @@ With a numeric prefix argument the let is introduced N lists up."
   "Move the form at point to a binding in the nearest let."
   (interactive)
   (clojure--move-to-let-internal (read-from-minibuffer "Name of bound symbol: ")))
+
+;;;###autoload
+(defun clojure-rename-ns-alias ()
+  "Rename a namespace alias."
+  (interactive)
+  (let ((current-alias (read-from-minibuffer "Current alias: ")))
+    (save-excursion
+      (clojure--find-ns-in-direction 'backward)
+      (let ((rgx (concat ":as +" current-alias))
+            (bound (save-excursion (forward-list 1) (point))))
+        (if (save-excursion (search-forward-regexp rgx bound t))
+          (let ((new-alias (read-from-minibuffer "New alias: ")))
+            (clojure--rename-ns-alias-internal current-alias new-alias))
+          (message "Cannot find namespace alias: '%s'" current-alias))))))
 
 
 ;;; ClojureScript

@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20190625.1949
+;; Package-Version: 20190630.1538
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -456,7 +456,7 @@ KEYS is the path from the root of `avy-tree' to LEAF."
            (throw 'done 'restart))
           ((memq char '(27 ?\C-g))
            ;; exit silently
-           (throw 'done 'exit))
+           (throw 'done 'abort))
           ((eq char ??)
            (avy-show-dispatch-help)
            (throw 'done 'restart))
@@ -519,13 +519,14 @@ multiple DISPLAY-FN invocations."
         (funcall cleanup-fn)
         (if (setq window (avy-mouse-event-window char))
             (throw 'done (cons char window))
-          ;; Ensure avy-current-path stores the full path prior to
-          ;; exit so other packages can utilize its value.
-          (setq avy-current-path
-                (concat avy-current-path (string (avy--key-to-char char))))
           (if (setq branch (assoc char tree))
-              (if (eq (car (setq tree (cdr branch))) 'leaf)
-                  (throw 'done (cdr tree)))
+              (progn
+                ;; Ensure avy-current-path stores the full path prior to
+                ;; exit so other packages can utilize its value.
+                (setq avy-current-path
+                      (concat avy-current-path (string (avy--key-to-char char))))
+                (if (eq (car (setq tree (cdr branch))) 'leaf)
+                    (throw 'done (cdr tree))))
             (funcall avy-handler-function char)))))))
 
 (defun avy-read-de-bruijn (lst keys)
@@ -868,6 +869,8 @@ multiple OVERLAY-FN invocations."
        (avy-process original-cands overlay-fn cleanup-fn))
       ;; ignore exit from `avy-handler-function'
       ((eq res 'exit))
+      ((eq res 'abort)
+       nil)
       (t
        (funcall avy-pre-action res)
        (setq res (car res))

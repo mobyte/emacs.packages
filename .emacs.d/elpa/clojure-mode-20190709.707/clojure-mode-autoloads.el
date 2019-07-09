@@ -115,6 +115,11 @@ Move the form at point to a binding in the nearest let.
 
 \(fn)" t nil)
 
+(autoload 'clojure-rename-ns-alias "clojure-mode" "\
+Rename a namespace alias.
+
+\(fn)" t nil)
+
 (autoload 'clojurescript-mode "clojure-mode" "\
 Major mode for editing ClojureScript code.
 

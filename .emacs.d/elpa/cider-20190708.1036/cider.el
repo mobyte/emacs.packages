@@ -400,7 +400,7 @@ Elements of the list are artifact name and list of exclusions to apply for the a
 (defconst cider-latest-clojure-version "1.10.0"
   "Latest supported version of Clojure.")
 
-(defconst cider-required-middleware-version "0.22.0-beta6"
+(defconst cider-required-middleware-version "0.22.0-beta8"
   "The CIDER nREPL version that's known to work properly with CIDER.")
 
 (defcustom cider-jack-in-auto-inject-clojure nil
@@ -725,7 +725,7 @@ The default options of `browser-repl' and `node-repl' are also included."
     (when (file-exists-p shadow-edn)
       (with-temp-buffer
         (insert-file-contents shadow-edn)
-        (let ((hash (car (parseedn-read))))
+        (let ((hash (car (parseedn-read '((shadow/env . identity))))))
           (cider--shadow-parse-builds hash))))))
 
 (defun cider-shadow-select-cljs-init-form ()
@@ -1282,21 +1282,21 @@ canceled the action, signal quit."
  ;;;###autoload
 (defalias 'cider-jack-in #'cider-jack-in-clj)
  ;;;###autoload
-(defalias 'cider-jack-in-clojure #'cider-jack-in-clj)
+(define-obsolete-function-alias 'cider-jack-in-clojure 'cider-jack-in-clj "0.22")
 ;;;###autoload
-(defalias 'cider-jack-in-clojurescript #'cider-jack-in-cljs)
+(define-obsolete-function-alias 'cider-jack-in-clojurescript 'cider-jack-in-cljs "0.22")
 
 ;;;###autoload
 (defalias 'cider-connect #'cider-connect-clj)
 ;;;###autoload
-(defalias 'cider-connect-clojure #'cider-connect-clj)
+(define-obsolete-function-alias 'cider-connect-clojure 'cider-connect-clj "0.22")
 ;;;###autoload
-(defalias 'cider-connect-clojurescript #'cider-connect-cljs)
+(define-obsolete-function-alias 'cider-connect-clojurescript 'cider-connect-cljs "0.22")
 
 ;;;###autoload
-(defalias 'cider-connect-sibling-clojure #'cider-connect-sibling-clj)
+(define-obsolete-function-alias 'cider-connect-sibling-clojure 'cider-connect-sibling-clj "0.22")
 ;;;###autoload
-(defalias 'cider-connect-sibling-clojurescript #'cider-connect-sibling-cljs)
+(define-obsolete-function-alias 'cider-connect-sibling-clojurescript 'cider-connect-sibling-cljs "0.22")
 
 
 ;;; Helpers
