@@ -13,6 +13,7 @@
                  :skip-default-init true
                  :host "0.0.0.0"
                  :port 4001}
+  ;; :offline? true
   :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
                        "-Djsse.enableSNIExtension=false"
                        "-XX:+TieredCompilation" 
