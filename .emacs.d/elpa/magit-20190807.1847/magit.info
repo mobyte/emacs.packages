@@ -20,7 +20,7 @@ END-INFO-DIR-ENTRY
 
 Indirect:
 magit.info-1: 754
-magit.info-2: 305516
+magit.info-2: 305510
 
 Tag Table:
 (Indirect)
@@ -120,68 +120,68 @@ Node: Fetching275341
 Node: Pulling277695
 Node: Pushing278888
 Node: Plain Patches282496
-Node: Maildir Patches283993
-Node: Miscellaneous285507
-Node: Tagging285823
-Node: Notes287751
-Node: Submodules290123
-Node: Listing Submodules290341
-Node: Submodule Transient292269
-Node: Subtree294791
-Node: Worktree296767
-Node: Common Commands297782
-Node: Wip Modes299829
-Node: Wip Graph305516
-Node: Legacy Wip Modes307830
-Node: Minor Mode for Buffers Visiting Files310725
-Node: Minor Mode for Buffers Visiting Blobs317826
-Node: Customizing318639
-Node: Per-Repository Configuration320235
-Node: Essential Settings321884
-Node: Safety322208
-Node: Performance323973
-Node: Microsoft Windows Performance330690
-Node: MacOS Performance331881
-Ref: MacOS Performance-Footnote-1333117
-Ref: MacOS Performance-Footnote-2333199
-Ref: MacOS Performance-Footnote-3333259
-Node: Plumbing333425
-Node: Calling Git334254
-Node: Getting a Value from Git335779
-Node: Calling Git for Effect338865
-Node: Section Plumbing345385
-Node: Creating Sections345613
-Node: Section Selection349513
-Node: Matching Sections351312
-Node: Refreshing Buffers357285
-Node: Conventions360433
-Node: Theming Faces360625
-Node: FAQ368740
-Node: FAQ - How to ...?369182
-Node: How to show git's output?369542
-Node: How to install the gitman info manual?370296
-Node: How to show diffs for gpg-encrypted files?371266
-Node: How does branching and pushing work?371862
-Node: Can Magit be used as ediff-version-control-package?372225
-Node: FAQ - Issues and Errors374214
-Node: Magit is slow375146
-Node: I changed several thousand files at once and now Magit is unusable375360
-Node: I am having problems committing376089
-Node: I am using MS Windows and cannot push with Magit376570
-Node: I am using OS X and SOMETHING works in shell but not in Magit377187
-Node: Diffs contain control sequences377993
-Node: Expanding a file to show the diff causes it to disappear379106
-Node: Point is wrong in the COMMIT_EDITMSG buffer379657
-Node: The mode-line information isn't always up-to-date380703
-Node: A branch and tag sharing the same name breaks SOMETHING381785
-Node: My Git hooks work on the command-line but not inside Magit382673
-Node: git-commit-mode isn't used when committing from the command-line383510
-Node: Point ends up inside invisible text when jumping to a file-visiting buffer385777
-Node: Debugging Tools386575
-Node: Keystroke Index388462
-Node: Command Index422176
-Node: Function Index458931
-Node: Variable Index475004
+Node: Maildir Patches283987
+Node: Miscellaneous285501
+Node: Tagging285817
+Node: Notes287745
+Node: Submodules290117
+Node: Listing Submodules290335
+Node: Submodule Transient292263
+Node: Subtree294785
+Node: Worktree296761
+Node: Common Commands297776
+Node: Wip Modes299823
+Node: Wip Graph305510
+Node: Legacy Wip Modes307824
+Node: Minor Mode for Buffers Visiting Files310719
+Node: Minor Mode for Buffers Visiting Blobs317820
+Node: Customizing318633
+Node: Per-Repository Configuration320229
+Node: Essential Settings321878
+Node: Safety322202
+Node: Performance323967
+Node: Microsoft Windows Performance330684
+Node: MacOS Performance331875
+Ref: MacOS Performance-Footnote-1333111
+Ref: MacOS Performance-Footnote-2333193
+Ref: MacOS Performance-Footnote-3333253
+Node: Plumbing333419
+Node: Calling Git334248
+Node: Getting a Value from Git335773
+Node: Calling Git for Effect338859
+Node: Section Plumbing345379
+Node: Creating Sections345607
+Node: Section Selection349507
+Node: Matching Sections351306
+Node: Refreshing Buffers357279
+Node: Conventions360427
+Node: Theming Faces360619
+Node: FAQ368734
+Node: FAQ - How to ...?369176
+Node: How to show git's output?369536
+Node: How to install the gitman info manual?370290
+Node: How to show diffs for gpg-encrypted files?371260
+Node: How does branching and pushing work?371856
+Node: Can Magit be used as ediff-version-control-package?372219
+Node: FAQ - Issues and Errors374208
+Node: Magit is slow375140
+Node: I changed several thousand files at once and now Magit is unusable375354
+Node: I am having problems committing376083
+Node: I am using MS Windows and cannot push with Magit376564
+Node: I am using OS X and SOMETHING works in shell but not in Magit377181
+Node: Diffs contain control sequences377987
+Node: Expanding a file to show the diff causes it to disappear379100
+Node: Point is wrong in the COMMIT_EDITMSG buffer379651
+Node: The mode-line information isn't always up-to-date380697
+Node: A branch and tag sharing the same name breaks SOMETHING381779
+Node: My Git hooks work on the command-line but not inside Magit382667
+Node: git-commit-mode isn't used when committing from the command-line383504
+Node: Point ends up inside invisible text when jumping to a file-visiting buffer385771
+Node: Debugging Tools386569
+Node: Keystroke Index388456
+Node: Command Index422170
+Node: Function Index458925
+Node: Variable Index474998
 
 End Tag Table
 

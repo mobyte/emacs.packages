@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.90.1 (v2.90.1-752-gbea3eff81+1).
+This manual is for Magit version 2.90.1 (v2.90.1-753-g71ed6f0d8+1).
 
      Copyright (C) 2015-2019 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -7282,8 +7282,8 @@ File: magit.info,  Node: Plain Patches,  Next: Maildir Patches,  Prev: Pushing, 
      Inside ‘magit-diff-mode’ or ‘magit-revision-mode’ buffers, ‘C-x
      C-w’ is also bound to this command.
 
-   FIXME It is also possible to save a plain patch file by using ‘C-x
-C-w’ inside a ‘magit-diff-mode’ or ‘magit-revision-mode’ buffer.
+   It is also possible to save a plain patch file by using ‘C-x C-w’
+inside a ‘magit-diff-mode’ or ‘magit-revision-mode’ buffer.
 
 
 File: magit.info,  Node: Maildir Patches,  Prev: Plain Patches,  Up: Transferring
