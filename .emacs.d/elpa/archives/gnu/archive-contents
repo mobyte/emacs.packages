@@ -635,7 +635,7 @@
 	   ("João Távora" . "joaotavora@gmail.com"))
 	  (:keywords "convenience" "languages"))])
  (el-search .
-	    [(1 12 6)
+	    [(1 12 6 1)
 	     ((emacs
 	       (25))
 	      (stream
