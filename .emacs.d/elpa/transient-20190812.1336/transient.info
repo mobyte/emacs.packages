@@ -44,7 +44,7 @@ reading a new value in the minibuffer.
    Calling a suffix command usually causes the transient to be exited
 but suffix commands can also be configured to not exit the transient.
 
-This manual is for Transient version 0.1.0 (v0.1.0-96-g01a166f+1).
+This manual is for Transient version 0.1.0 (v0.1.0-101-ga6ce195+1).
 
      Copyright (C) 2018-2019 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -1163,34 +1163,15 @@ The preferred way of doing that is to call the ‘transient-args’
 function, which for infix arguments serves about the same purpose as
 ‘prefix-arg’ serves for prefix arguments.
 
- -- Function: transient-args &optional prefix separate
+ -- Function: transient-args &optional prefix
 
-     This function returns the value of the transient from which the
-     current suffix was called.  If the current suffix command was not
-     called from a transient, then it returns ‘nil’.
+     This function returns the value of the transient prefix command
+     PREFIX.
 
-     If optional PREFIX is non-‘nil’, then it should be a symbol, a
-     transient prefix command.  In that case the value of the transient
-     is only returned if the suffix was invoked from *that* transient.
-     Otherwise ‘nil’ is returned.  This function is also used
-     internally, in which PREFIX can also be a ‘transient-prefix’
-     object.
-
-     If optional SEPARATE is non-‘nil’, then the arguments are separated
-     into two groups.  If SEPARATE is ‘t’, they are separated into atoms
-     and conses (‘nil’ isn’t a valid value, so it doesn’t matter that
-     that is both an atom and a cons).
-
-     SEPARATE can also be a predicate function, in which case the first
-     element is a list of the values for which it returns non-‘nil’ and
-     the second element is a list of the values for which it returns
-     ‘nil’.
-
-     For transients that are used to pass arguments to a subprocess
-     (such as ‘git’), ‘stringp’ is a useful value for SEPARATE, it
-     separates non-positional arguments from positional arguments.  The
-     value of Magit’s file argument (‘"--"’) for example looks like
-     this: ‘("--" file...)’."
+     If the current command was invoked from the transient prefix
+     command PREFIX, then it returns the active infix arguments.  If the
+     current command was not invoked from PREFIX, then it returns the
+     set, saved or default value for PREFIX.
 
  -- Variable: current-transient-suffixes
 
@@ -2325,11 +2306,11 @@ Appendix E Variable Index
 * Menu:
 
 * current-transient-command:             Using Infix Arguments.
-                                                              (line  66)
+                                                              (line  47)
 * current-transient-prefix:              Using Infix Arguments.
-                                                              (line  60)
+                                                              (line  41)
 * current-transient-suffixes:            Using Infix Arguments.
-                                                              (line  51)
+                                                              (line  32)
 * transient-default-level:               Enabling and Disabling Suffixes.
                                                               (line  38)
 * transient-detect-key-conflicts:        Other Options.       (line 136)
@@ -2352,46 +2333,46 @@ Appendix E Variable Index
 
 Tag Table:
 Node: Top751
-Node: Introduction3674
-Node: Usage9461
-Node: Invoking Transients9795
-Node: Aborting and Resuming Transients10828
-Node: Common Suffix Commands13487
-Node: Saving Values15240
-Ref: Saving Values-Footnote-116498
-Node: Using History16768
-Node: Getting Help for Suffix Commands18308
-Node: Enabling and Disabling Suffixes19698
-Node: Other Commands22997
-Node: Other Options23953
-Node: Modifying Existing Transients30567
-Node: Defining New Commands33971
-Node: Defining Transients34307
-Node: Binding Suffix and Infix Commands36742
-Node: Group Specifications37597
-Node: Suffix Specifications40930
-Node: Defining Suffix and Infix Commands44488
-Node: Using Infix Arguments47897
-Node: Transient State51181
-Node: Classes and Methods57053
-Node: Group Classes59267
-Node: Group Methods61184
-Node: Prefix Classes61829
-Node: Suffix Classes62921
-Node: Suffix Methods65165
-Node: Suffix Value Methods65486
-Node: Suffix Format Methods68246
-Node: Prefix Slots69695
-Node: Suffix Slots69859
-Node: Predicate Slots72710
-Node: Related Abstractions and Packages73959
-Node: Comparison With Prefix Keys and Prefix Arguments74246
-Node: Comparison With Other Packages84558
-Node: FAQ88745
-Node: Keystroke Index92476
-Node: Command Index94110
-Node: Function Index95897
-Node: Variable Index100054
+Node: Introduction3675
+Node: Usage9462
+Node: Invoking Transients9796
+Node: Aborting and Resuming Transients10829
+Node: Common Suffix Commands13488
+Node: Saving Values15241
+Ref: Saving Values-Footnote-116499
+Node: Using History16769
+Node: Getting Help for Suffix Commands18309
+Node: Enabling and Disabling Suffixes19699
+Node: Other Commands22998
+Node: Other Options23954
+Node: Modifying Existing Transients30568
+Node: Defining New Commands33972
+Node: Defining Transients34308
+Node: Binding Suffix and Infix Commands36743
+Node: Group Specifications37598
+Node: Suffix Specifications40931
+Node: Defining Suffix and Infix Commands44489
+Node: Using Infix Arguments47898
+Node: Transient State50118
+Node: Classes and Methods55990
+Node: Group Classes58204
+Node: Group Methods60121
+Node: Prefix Classes60766
+Node: Suffix Classes61858
+Node: Suffix Methods64102
+Node: Suffix Value Methods64423
+Node: Suffix Format Methods67183
+Node: Prefix Slots68632
+Node: Suffix Slots68796
+Node: Predicate Slots71647
+Node: Related Abstractions and Packages72896
+Node: Comparison With Prefix Keys and Prefix Arguments73183
+Node: Comparison With Other Packages83495
+Node: FAQ87682
+Node: Keystroke Index91413
+Node: Command Index93047
+Node: Function Index94834
+Node: Variable Index98991
 
 End Tag Table
 
