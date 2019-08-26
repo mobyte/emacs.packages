@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20190630.1538
+;; Package-Version: 20190822.1432
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -249,7 +249,7 @@ Typically, these modes don't use the text representation."
   "In case there is only one candidate jumps directly to it."
   :type 'boolean)
 
-(defcustom avy-del-last-char-by '(8 127)
+(defcustom avy-del-last-char-by '(?\b ?\d)
   "List of event types, i.e. key presses, that delete the last
 character read.  The default represents `C-h' and `DEL'.  See
 `event-convert-list'."
@@ -454,7 +454,7 @@ KEYS is the path from the root of `avy-tree' to LEAF."
     (cond ((setq dispatch (assoc char avy-dispatch-alist))
            (setq avy-action (cdr dispatch))
            (throw 'done 'restart))
-          ((memq char '(27 ?\C-g))
+          ((memq char '(?\e ?\C-g))
            ;; exit silently
            (throw 'done 'abort))
           ((eq char ??)
