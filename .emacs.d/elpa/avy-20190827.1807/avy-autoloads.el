@@ -59,6 +59,14 @@ BEG and END narrow the scope where candidates are searched.
 
 \(fn ARG &optional BEG END)" t nil)
 
+(autoload 'avy-goto-whitespace-end "avy" "\
+Jump to the end of a whitespace sequence.
+The window scope is determined by `avy-all-windows'.
+When ARG is non-nil, do the opposite of `avy-all-windows'.
+BEG and END narrow the scope where candidates are searched.
+
+\(fn ARG &optional BEG END)" t nil)
+
 (autoload 'avy-goto-word-1 "avy" "\
 Jump to the currently visible CHAR at a word start.
 The window scope is determined by `avy-all-windows'.
