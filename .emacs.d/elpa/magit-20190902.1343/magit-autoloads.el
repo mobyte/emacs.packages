@@ -1313,6 +1313,11 @@ Show log for all local branches and `HEAD'.
 
 \(fn &optional ARGS FILES)" t nil)
 
+(autoload 'magit-log-matching-branches "magit-log" "\
+Show log for all branches matching PATTERN and `HEAD'.
+
+\(fn PATTERN &optional ARGS FILES)" t nil)
+
 (autoload 'magit-log-all-branches "magit-log" "\
 Show log for all local and remote branches and `HEAD'.
 

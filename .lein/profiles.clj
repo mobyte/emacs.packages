@@ -1,6 +1,6 @@
 {:user
  {:dependencies [[org.clojure/clojure "1.10.1"]]
-  :plugins [[cider/cider-nrepl "0.22.0-beta12"]
+  :plugins [[cider/cider-nrepl "0.22.0"]
             [refactor-nrepl "2.5.0-SNAPSHOT"]]
   :repl-options {:init (do (require 'clojure.pprint
                                     'clojure.tools.namespace.repl)
