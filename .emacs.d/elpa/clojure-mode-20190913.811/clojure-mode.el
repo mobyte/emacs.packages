@@ -9,7 +9,7 @@
 ;;       Bozhidar Batsov <bozhidar@batsov.com>
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20190725.654
+;; Package-Version: 20190913.811
 ;; Keywords: languages clojure clojurescript lisp
 ;; Version: 5.11.0
 ;; Package-Requires: ((emacs "25.1"))
@@ -1091,7 +1091,7 @@ point) to check."
 (put 'defmacro 'clojure-doc-string-elt 2)
 (put 'definline 'clojure-doc-string-elt 2)
 (put 'defprotocol 'clojure-doc-string-elt 2)
-(put 'deftask 'clojure-doc-string-eld 2) ;; common Boot macro
+(put 'deftask 'clojure-doc-string-elt 2) ;; common Boot macro
 
 ;;; Vertical alignment
 (defcustom clojure-align-forms-automatically nil
@@ -1727,7 +1727,7 @@ are cached in a buffer local variable (`clojure-cached-project-dir')."
 (defun clojure-current-project (&optional dir-name)
   "Return the current project as a cons cell usable by project.el.
 
-Call is delegated down to `clojure-clojure-dir' with
+Call is delegated down to `clojure-project-dir' with
 optional DIR-NAME as argument."
   (let ((project-dir (clojure-project-dir dir-name)))
     (if project-dir
