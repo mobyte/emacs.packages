@@ -10,8 +10,9 @@
   ("-n256" "--graph" "--decorate")
   ("-n1024" "--graph" "--decorate"))
  (magit-merge nil)
- (magit-push nil
-             ("--force-with-lease"))
+ (magit-push
+  ("--force-with-lease")
+  nil)
  (magit-rebase nil)
  (magit-revert
   ("--edit"))
