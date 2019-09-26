@@ -385,9 +385,11 @@
 	   ("Gary D. Foster" . "Gary.Foster@Corp.Sun.COM"))
 	  (:maintainer "Luke Lee" . "luke.yx.lee@gmail.com"))])
  (csv-mode .
-	   [(1 8)
+	   [(1 9)
 	    ((emacs
-	      (24 1)))
+	      (24 1))
+	     (cl-lib
+	      (0 5)))
 	    "Major mode for editing comma/char separated values" single
 	    ((:url . "http://elpa.gnu.org/packages/csv-mode.html")
 	     (:keywords "convenience")
@@ -431,7 +433,7 @@
 		  ("Daiki Ueno" . "ueno@gnu.org"))
 		 (:maintainer nil . "emacs-devel@gnu.org"))])
  (debbugs .
-	  [(0 19)
+	  [(0 20)
 	   ((emacs
 	     (25 1))
 	    (soap-client
@@ -2099,14 +2101,14 @@
 	  (:maintainer "Justin Burkett" . "justin@burkett.cc")
 	  (:url . "https://github.com/justbur/emacs-vdiff"))])
  (verilog-mode .
-	       [(2019 6 21 103209889)
+	       [(2019 9 23 4801067)
 		nil "major mode for editing verilog source in Emacs" single
 		((:keywords "languages")
 		 (:authors
 		  ("Michael McNamara" . "mac@verilog.com")
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:maintainer "Michael McNamara" . "mac@verilog.com")
-		 (:url . "http://www.veripool.org"))])
+		 (:url . "https://www.veripool.org"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs
