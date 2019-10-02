@@ -120,7 +120,7 @@
      ("pdf" . "acroread %s"))))
  '(package-selected-packages
    (quote
-    (diminish diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses aggressive-indent use-package yaml-mode company-cabal company-quickhelp magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile)))
+    (ag diminish diff-hl highlight-symbol ob-clojurescript org-bullets reverse-theme avy git-messenger highlight-parentheses aggressive-indent use-package yaml-mode company-cabal company-quickhelp magit magit-popup zoom-frm smex shell-command projectile key-chord htmlize exec-path-from-shell company clj-refactor auto-complete auto-compile)))
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(transient-mark-mode t)
