@@ -4,7 +4,7 @@
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;; Version: 2.16.0
-;; Package-Version: 20191024.1908
+;; Package-Version: 20191102.2142
 ;; Keywords: lists
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -1273,7 +1273,10 @@ If two lists are provided as arguments, return the groupings as a list
 of cons cells. Otherwise, return the groupings as a list of lists.
 
 Please note! This distinction is being removed in an upcoming 3.0
-release of Dash. If you rely on this behavior, use -zip-pair instead."
+release of Dash. If you rely on this behavior, use `-zip-pair` instead,
+which will retain that behaviour in future versions.
+
+Alias: `-zip-pair'"
   (declare (pure t) (side-effect-free t))
   (when lists
     (let (results)
@@ -1537,7 +1540,8 @@ VARIABLE to the result of the first form, and so forth."
 (defmacro -some-> (x &optional form &rest more)
   "When expr is non-nil, thread it through the first form (via `->'),
 and when that result is non-nil, through the next form, etc."
-  (declare (debug ->))
+  (declare (debug ->)
+           (indent 1))
   (if (null form) x
     (let ((result (make-symbol "result")))
       `(-some-> (-when-let (,result ,x)
@@ -1547,7 +1551,8 @@ and when that result is non-nil, through the next form, etc."
 (defmacro -some->> (x &optional form &rest more)
   "When expr is non-nil, thread it through the first form (via `->>'),
 and when that result is non-nil, through the next form, etc."
-  (declare (debug ->))
+  (declare (debug ->)
+           (indent 1))
   (if (null form) x
     (let ((result (make-symbol "result")))
       `(-some->> (-when-let (,result ,x)
@@ -1557,7 +1562,8 @@ and when that result is non-nil, through the next form, etc."
 (defmacro -some--> (x &optional form &rest more)
   "When expr in non-nil, thread it through the first form (via `-->'),
 and when that result is non-nil, through the next form, etc."
-  (declare (debug ->))
+  (declare (debug ->)
+           (indent 1))
   (if (null form) x
     (let ((result (make-symbol "result")))
       `(-some--> (-when-let (,result ,x)
