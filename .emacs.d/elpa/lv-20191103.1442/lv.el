@@ -1,5 +1,5 @@
 ;;; lv.el --- Other echo area
-;; Package-Version: 20191025.1326
+;; Package-Version: 20191103.1442
 
 ;; Copyright (C) 2015  Free Software Foundation, Inc.
 
@@ -41,6 +41,11 @@
 
 (defcustom lv-use-separator nil
   "Whether to draw a line between the LV window and the Echo Area."
+  :group 'lv
+  :type 'boolean)
+
+(defcustom lv-use-padding nil
+  "Wheter to use horizontal padding in the LV window."
   :group 'lv
   :type 'boolean)
 
@@ -90,6 +95,14 @@ Only the background color is significant."
 (defvar lv-force-update nil
   "When non-nil, `lv-message' will refresh even for the same string.")
 
+(defun lv--pad-to-center (str width)
+  "Pad STR with spaces on the left to be centered to WIDTH."
+  (let* ((strs (split-string str "\n"))
+         (padding (make-string
+                   (/ (- width (length (car strs))) 2)
+                   ?\ )))
+    (mapconcat (lambda (s) (concat padding s)) strs "\n")))
+
 (defun lv-message (format-string &rest args)
   "Set LV window contents to (`format' FORMAT-STRING ARGS)."
   (let* ((str (apply #'format format-string args))
@@ -97,6 +110,8 @@ Only the background color is significant."
          deactivate-mark
          golden-ratio-mode)
     (with-selected-window (lv-window)
+      (when lv-use-padding
+        (setq str (lv--pad-to-center str (window-width))))
       (unless (and (string= (buffer-string) str)
                    (null lv-force-update))
         (delete-region (point-min) (point-max))
