@@ -1519,7 +1519,7 @@ same differences as those shown in the buffer are always used.
 (autoload 'magit-request-pull "magit-patch" "\
 Request upstream to pull from you public repository.
 
-URL is the url of your publically accessible repository.
+URL is the url of your publicly accessible repository.
 START is a commit that already is in the upstream repository.
 END is the last commit, usually a branch name, which upstream
 is asked to pull.  START has to be reachable from that commit.

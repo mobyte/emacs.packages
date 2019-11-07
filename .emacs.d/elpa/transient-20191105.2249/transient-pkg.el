@@ -1,13 +1,13 @@
-(define-package "with-editor" "20191024.1905" "Use the Emacsclient as $EDITOR"
-  '((emacs "24.4")
-    (async "1.9"))
+(define-package "transient" "20191105.2249" "Transient commands"
+  '((emacs "25.1")
+    (dash "2.15.0"))
   :keywords
-  '("tools")
+  '("bindings")
   :authors
   '(("Jonas Bernoulli" . "jonas@bernoul.li"))
   :maintainer
   '("Jonas Bernoulli" . "jonas@bernoul.li")
-  :url "https://github.com/magit/with-editor")
+  :url "https://github.com/magit/transient")
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:
