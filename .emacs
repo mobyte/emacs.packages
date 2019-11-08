@@ -65,6 +65,7 @@
 
 (setenv "BOOT_JVM_OPTIONS" "-XX:-OmitStackTraceInFastThrow")
 (setenv "EDITOR" "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
+(setq explicit-shell-file-name "/usr/local/bin/bash")
 (exec-path-from-shell-initialize)
 
 (require 'exec-path-from-shell)
