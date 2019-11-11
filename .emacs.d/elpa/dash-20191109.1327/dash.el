@@ -4,7 +4,7 @@
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;; Version: 2.16.0
-;; Package-Version: 20191102.2142
+;; Package-Version: 20191109.1327
 ;; Keywords: lists
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -404,7 +404,7 @@ See also: `-remove', `-map-last'"
 (defalias '--reject-last '--remove-last)
 
 (defun -remove-item (item list)
-  "Remove all occurences of ITEM from LIST.
+  "Remove all occurrences of ITEM from LIST.
 
 Comparison is done with `equal'."
   (declare (pure t) (side-effect-free t))
@@ -504,7 +504,7 @@ See also: `-replace-at'"
   (--map-when (equal it old) new list))
 
 (defun -replace-first (old new list)
-  "Replace the first occurence of OLD with NEW in LIST.
+  "Replace the first occurrence of OLD with NEW in LIST.
 
 Elements are compared using `equal'.
 
@@ -513,7 +513,7 @@ See also: `-map-first'"
   (--map-first (equal old it) new list))
 
 (defun -replace-last (old new list)
-  "Replace the last occurence of OLD with NEW in LIST.
+  "Replace the last occurrence of OLD with NEW in LIST.
 
 Elements are compared using `equal'.
 
@@ -1285,7 +1285,7 @@ Alias: `-zip-pair'"
         (setq lists (mapcar 'cdr lists)))
       (setq results (nreverse results))
       (if (= (length lists) 2)
-          ;; to support backward compatability, return
+          ;; to support backward compatibility, return
           ;; a cons cell if two lists were provided
           (--map (cons (car it) (cadr it)) results)
         results))))

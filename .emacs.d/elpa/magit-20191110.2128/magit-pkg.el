@@ -1,4 +1,4 @@
-(define-package "magit" "20191105.2244" "A Git porcelain inside Emacs."
+(define-package "magit" "20191110.2128" "A Git porcelain inside Emacs."
   '((emacs "25.1")
     (async "20180527")
     (dash "20180910")

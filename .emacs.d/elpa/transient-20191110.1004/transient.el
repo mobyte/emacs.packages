@@ -884,10 +884,9 @@ example, sets a variable use `define-infix-command' instead.
      (t
       (when (and (listp suffix)
                  (listp elt))
-        (let ((key (or (plist-get elt :key)
-                       (transient--command-key (plist-get elt :command)))))
+        (let ((key (transient--spec-key suf)))
           (if (equal (transient--kbd key)
-                     (transient--kbd (plist-get (nth 2 elt) :key)))
+                     (transient--kbd (transient--spec-key elt)))
               (setq action 'replace)
             (transient-remove-suffix prefix key))))
       (cl-ecase action
@@ -1016,6 +1015,12 @@ See info node `(transient)Modifying Existing Transients'."
   (when (stringp keys)
     (setq keys (kbd keys)))
   keys)
+
+(defun transient--spec-key (spec)
+  (let ((plist (nth 2 spec)))
+    (or (plist-get plist :key)
+        (transient--command-key
+         (plist-get plist :command)))))
 
 (defun transient--command-key (cmd)
   (when-let ((obj (get cmd 'transient--suffix)))
@@ -2711,7 +2716,10 @@ If the OBJ's `key' is currently unreachable, then apply the face
 
 (cl-defmethod transient-format-value ((obj transient-option))
   (let ((value (oref obj value)))
-    (propertize (concat (oref obj argument) value)
+    (propertize (concat (oref obj argument)
+                        (if (listp value)
+                            (mapconcat #'identity value ",")
+                          value))
                 'face (if value
                           'transient-value
                         'transient-inactive-value))))

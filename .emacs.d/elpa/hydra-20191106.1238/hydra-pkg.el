@@ -1,4 +1,4 @@
-(define-package "hydra" "20190821.939" "Make bindings that stick around."
+(define-package "hydra" "20191106.1238" "Make bindings that stick around."
   '((cl-lib "0.5")
     (lv "0"))
   :keywords

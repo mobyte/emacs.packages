@@ -1,5 +1,5 @@
 ;;; lv.el --- Other echo area
-;; Package-Version: 20191103.1442
+;; Package-Version: 20191106.1238
 
 ;; Copyright (C) 2015  Free Software Foundation, Inc.
 
@@ -45,7 +45,7 @@
   :type 'boolean)
 
 (defcustom lv-use-padding nil
-  "Wheter to use horizontal padding in the LV window."
+  "Whether to use horizontal padding in the LV window."
   :group 'lv
   :type 'boolean)
 
