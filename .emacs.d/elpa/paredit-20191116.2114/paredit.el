@@ -4,7 +4,7 @@
 
 ;; Author: Taylor R. Campbell <campbell+paredit@mumble.net>
 ;; Version: 25beta
-;; Package-Version: 20171127.205
+;; Package-Version: 20191116.2114
 ;; Created: 2005-07-31
 ;; Keywords: lisp
 
@@ -200,7 +200,7 @@ If point was on indentation, it stays in indentation."
   "Keymap for the paredit minor mode.")
 
 (defvar paredit-override-check-parens-function
-  (lambda (condition) condition nil)
+  (lambda (condition) (declare ignore condition) nil)
   "Function to tell whether unbalanced text should inhibit Paredit Mode.")
 
 ;;;###autoload
