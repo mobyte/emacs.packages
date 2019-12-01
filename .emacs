@@ -129,7 +129,6 @@
 
 (load-theme 'reverse t)
 
-(set-default-font "Monaco 16")
 ;; (set-background-color "black")
 ;; (set-face-background 'default "black")
 ;; (set-face-background 'region "black")
@@ -149,7 +148,9 @@
 
 (defun default-font ()
   (interactive)
-  (set-default-font "Monaco 16"))
+  (set-face-attribute 'default nil
+                      :family "Monaco"
+                      :height 160))
 
 (define-key ctl-x-map [(control ?+)] 'zoom-in/out)
 (define-key ctl-x-map [(control ?-)] 'zoom-in/out)
