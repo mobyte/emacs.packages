@@ -152,6 +152,8 @@
                       :family "Monaco"
                       :height 160))
 
+(default-font)
+
 (define-key ctl-x-map [(control ?+)] 'zoom-in/out)
 (define-key ctl-x-map [(control ?-)] 'zoom-in/out)
 (define-key ctl-x-map [(control ?=)] 'zoom-in/out)
