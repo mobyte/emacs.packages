@@ -43,7 +43,9 @@ Purge DIR from the cache of the current project.
 \(fn DIR)" t nil)
 
 (autoload 'projectile-cache-current-file "projectile" "\
-Add the currently visited file to the cache." t nil)
+Add the currently visited file to the cache.
+
+\(fn)" t nil)
 
 (autoload 'projectile-discover-projects-in-directory "projectile" "\
 Discover any projects in DIRECTORY and add them to the projectile cache.
@@ -54,23 +56,35 @@ at the top level of DIRECTORY.
 
 (autoload 'projectile-discover-projects-in-search-path "projectile" "\
 Discover projects in `projectile-project-search-path'.
-Invoked automatically when `projectile-mode' is enabled." t nil)
+Invoked automatically when `projectile-mode' is enabled.
+
+\(fn)" t nil)
 
 (autoload 'projectile-switch-to-buffer "projectile" "\
-Switch to a project buffer." t nil)
+Switch to a project buffer.
+
+\(fn)" t nil)
 
 (autoload 'projectile-switch-to-buffer-other-window "projectile" "\
-Switch to a project buffer and show it in another window." t nil)
+Switch to a project buffer and show it in another window.
+
+\(fn)" t nil)
 
 (autoload 'projectile-switch-to-buffer-other-frame "projectile" "\
-Switch to a project buffer and show it in another window." t nil)
+Switch to a project buffer and show it in another window.
+
+\(fn)" t nil)
 
 (autoload 'projectile-display-buffer "projectile" "\
-Display a project buffer in another window without selecting it." t nil)
+Display a project buffer in another window without selecting it.
+
+\(fn)" t nil)
 
 (autoload 'projectile-project-buffers-other-buffer "projectile" "\
 Switch to the most recently selected buffer project buffer.
-Only buffers not visible in windows are returned." t nil)
+Only buffers not visible in windows are returned.
+
+\(fn)" t nil)
 
 (autoload 'projectile-multi-occur "projectile" "\
 Do a `multi-occur' in the project's buffers.
@@ -200,7 +214,9 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 \(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-toggle-project-read-only "projectile" "\
-Toggle project read only." t nil)
+Toggle project read only.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-dir "projectile" "\
 Jump to a project's directory using completion.
@@ -231,13 +247,19 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 \(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-related-file-other-window "projectile" "\
-Open related file in other window." t nil)
+Open related file in other window.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-related-file-other-frame "projectile" "\
-Open related file in other frame." t nil)
+Open related file in other frame.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-related-file "projectile" "\
-Open related file." t nil)
+Open related file.
+
+\(fn)" t nil)
 
 (autoload 'projectile-related-files-fn-groups "projectile" "\
 Generate a related-files-fn which relates as KIND for files in each of GROUPS.
@@ -260,16 +282,24 @@ Generate a related-files-fn which relates tests and impl for files with EXTENSIO
 \(fn EXTENSION TEST-SUFFIX)" nil nil)
 
 (autoload 'projectile-project-info "projectile" "\
-Display info for current project." t nil)
+Display info for current project.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-implementation-or-test-other-window "projectile" "\
-Open matching implementation or test file in other window." t nil)
+Open matching implementation or test file in other window.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-implementation-or-test-other-frame "projectile" "\
-Open matching implementation or test file in other frame." t nil)
+Open matching implementation or test file in other frame.
+
+\(fn)" t nil)
 
 (autoload 'projectile-toggle-between-implementation-and-test "projectile" "\
-Toggle between an implementation file and its test file." t nil)
+Toggle between an implementation file and its test file.
+
+\(fn)" t nil)
 
 (autoload 'projectile-grep "projectile" "\
 Perform rgrep in the project.
@@ -299,34 +329,50 @@ regular expression.
 \(fn SEARCH-TERM &optional ARG)" t nil)
 
 (autoload 'projectile-regenerate-tags "projectile" "\
-Regenerate the project's [e|g]tags." t nil)
+Regenerate the project's [e|g]tags.
+
+\(fn)" t nil)
 
 (autoload 'projectile-find-tag "projectile" "\
-Find tag in project." t nil)
+Find tag in project.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-command-in-root "projectile" "\
-Invoke `execute-extended-command' in the project's root." t nil)
+Invoke `execute-extended-command' in the project's root.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-shell-command-in-root "projectile" "\
-Invoke `shell-command' in the project's root." t nil)
+Invoke `shell-command' in the project's root.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-async-shell-command-in-root "projectile" "\
-Invoke `async-shell-command' in the project's root." t nil)
+Invoke `async-shell-command' in the project's root.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-shell "projectile" "\
 Invoke `shell' in the project's root.
 
-Switch to the project specific shell buffer if it already exists." t nil)
+Switch to the project specific shell buffer if it already exists.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-eshell "projectile" "\
 Invoke `eshell' in the project's root.
 
-Switch to the project specific eshell buffer if it already exists." t nil)
+Switch to the project specific eshell buffer if it already exists.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-ielm "projectile" "\
 Invoke `ielm' in the project's root.
 
-Switch to the project specific ielm buffer if it already exists." t nil)
+Switch to the project specific ielm buffer if it already exists.
+
+\(fn)" t nil)
 
 (autoload 'projectile-run-term "projectile" "\
 Invoke `term' in the project's root.
@@ -338,7 +384,9 @@ Switch to the project specific term buffer if it already exists.
 (autoload 'projectile-run-vterm "projectile" "\
 Invoke `vterm' in the project's root.
 
-Switch to the project specific term buffer if it already exists." t nil)
+Switch to the project specific term buffer if it already exists.
+
+\(fn)" t nil)
 
 (autoload 'projectile-replace "projectile" "\
 Replace literal string in project using non-regexp `tags-query-replace'.
@@ -360,19 +408,29 @@ to run the replacement.
 Kill project buffers.
 
 The buffer are killed according to the value of
-`projectile-kill-buffers-filter'." t nil)
+`projectile-kill-buffers-filter'.
+
+\(fn)" t nil)
 
 (autoload 'projectile-save-project-buffers "projectile" "\
-Save all project buffers." t nil)
+Save all project buffers.
+
+\(fn)" t nil)
 
 (autoload 'projectile-dired "projectile" "\
-Open `dired' at the root of the project." t nil)
+Open `dired' at the root of the project.
+
+\(fn)" t nil)
 
 (autoload 'projectile-dired-other-window "projectile" "\
-Open `dired'  at the root of the project in another window." t nil)
+Open `dired'  at the root of the project in another window.
+
+\(fn)" t nil)
 
 (autoload 'projectile-dired-other-frame "projectile" "\
-Open `dired' at the root of the project in another frame." t nil)
+Open `dired' at the root of the project in another frame.
+
+\(fn)" t nil)
 
 (autoload 'projectile-vc "projectile" "\
 Open `vc-dir' at the root of the project.
@@ -388,7 +446,9 @@ directory to open.
 \(fn &optional PROJECT-ROOT)" t nil)
 
 (autoload 'projectile-recentf "projectile" "\
-Show a list of recently visited files in a project." t nil)
+Show a list of recently visited files in a project.
+
+\(fn)" t nil)
 
 (autoload 'projectile-configure-project "projectile" "\
 Run project configure command.
@@ -461,13 +521,19 @@ This command will first prompt for the directory the file is in.
 \(fn &optional DIRECTORY)" t nil)
 
 (autoload 'projectile-find-file-in-known-projects "projectile" "\
-Jump to a file in any of the known projects." t nil)
+Jump to a file in any of the known projects.
+
+\(fn)" t nil)
 
 (autoload 'projectile-cleanup-known-projects "projectile" "\
-Remove known projects that don't exist anymore." t nil)
+Remove known projects that don't exist anymore.
+
+\(fn)" t nil)
 
 (autoload 'projectile-clear-known-projects "projectile" "\
-Clear both `projectile-known-projects' and `projectile-known-projects-file'." t nil)
+Clear both `projectile-known-projects' and `projectile-known-projects-file'.
+
+\(fn)" t nil)
 
 (autoload 'projectile-remove-known-project "projectile" "\
 Remove PROJECT from the list of known projects.
@@ -475,7 +541,9 @@ Remove PROJECT from the list of known projects.
 \(fn &optional PROJECT)" t nil)
 
 (autoload 'projectile-remove-current-project-from-known-projects "projectile" "\
-Remove the current project from the list of known projects." t nil)
+Remove the current project from the list of known projects.
+
+\(fn)" t nil)
 
 (autoload 'projectile-add-known-project "projectile" "\
 Add PROJECT-ROOT to the list of known projects.
@@ -495,7 +563,9 @@ The user is prompted for a single character indicating the action to invoke.
 The `?' character describes then
 available actions.
 
-See `def-projectile-commander-method' for defining new methods." t nil)
+See `def-projectile-commander-method' for defining new methods.
+
+\(fn)" t nil)
 
 (autoload 'projectile-browse-dirty-projects "projectile" "\
 Browse dirty version controlled projects.
@@ -506,7 +576,9 @@ dirty project list.
 \(fn &optional CACHED)" t nil)
 
 (autoload 'projectile-edit-dir-locals "projectile" "\
-Edit or create a .dir-locals.el file of the project." t nil)
+Edit or create a .dir-locals.el file of the project.
+
+\(fn)" t nil)
 
 (defvar projectile-mode nil "\
 Non-nil if Projectile mode is enabled.
@@ -535,7 +607,7 @@ Otherwise behave as if called interactively.
 
 (define-obsolete-function-alias 'projectile-global-mode 'projectile-mode "1.0")
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "projectile" '("??" "compilation-find-file-projectile-find-compilation-buffer" "def-projectile-commander-method" "delete-file-projectile-remove-from-cache" "projectile-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "projectile" '("projectile-" "??" "delete-file-projectile-remove-from-cache" "def-projectile-commander-method" "compilation-find-file-projectile-find-compilation-buffer")))
 
 ;;;***
 
