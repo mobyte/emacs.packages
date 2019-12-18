@@ -129,6 +129,8 @@
 
 (load-theme 'reverse t)
 
+(set-frame-font "Monaco 16")
+;; (set-default-font "Monaco 16")
 ;; (set-background-color "black")
 ;; (set-face-background 'default "black")
 ;; (set-face-background 'region "black")
