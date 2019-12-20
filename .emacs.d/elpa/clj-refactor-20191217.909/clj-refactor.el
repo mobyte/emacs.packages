@@ -823,7 +823,7 @@ A new record is created to define this constructor."
 
 (defun cljr--project-dir ()
   (or
-   (thread-last  '("project.clj" "build.boot" "pom.xml" "deps.edn")
+   (thread-last  '("project.clj" "build.boot" "pom.xml" "deps.edn" "shadow-cljs.edn")
      (mapcar 'cljr--locate-project-file)
      (delete 'nil)
      car)
@@ -842,6 +842,8 @@ A new record is created to define this constructor."
         (let ((file (expand-file-name "pom.xml" project-dir)))
           (and (file-exists-p file) file))
         (let ((file (expand-file-name "deps.edn" project-dir)))
+          (and (file-exists-p file) file))
+        (let ((file (expand-file-name "shadow-cljs.edn" project-dir)))
           (and (file-exists-p file) file)))))
 
 (defun cljr--project-files ()
@@ -2171,6 +2173,13 @@ If it's present KEY indicates the key to extract from the response."
                                  (when cljr--debug-mode
                                    (message "Artifact cache updated")))))
 
+(defun cljr--init-artifact-cache ()
+  (cljr--call-middleware-async (cljr--create-msg "artifact-list"
+                                                 "force" "false")
+                               (lambda (_)
+                                 (when cljr--debug-mode
+                                   (message "Artifact cache updated")))))
+
 (defun cljr--dictionary-lessp (str1 str2)
   "return t if STR1 is < STR2 when doing a dictionary compare
 (splitting the string at numbers and doing numeric compare with them).
@@ -2711,7 +2720,8 @@ Also adds the alias prefix to all occurrences of public symbols in the namespace
 (defun cljr--warm-ast-cache ()
   (run-hooks 'cljr-before-warming-ast-cache-hook)
   (cljr--call-middleware-async
-   (cljr--create-msg "warm-ast-cache")
+   (cljr--create-msg "warm-ast-cache"
+                     "ignore-paths" cljr-middleware-ignored-paths)
    (lambda (res)
      (run-hook-with-args 'cljr-after-warming-ast-cache-hook res)
      (cljr--maybe-rethrow-error res)
@@ -3277,7 +3287,7 @@ warning by customizing `cljr-suppress-no-project-warning'.)"))))
   (ignore-errors
     (when (cljr--middleware-version) ; check if middleware is running
       (when cljr-populate-artifact-cache-on-startup
-        (cljr--update-artifact-cache))
+        (cljr--init-artifact-cache))
       (when (and (not cljr-warn-on-eval)
                  cljr-eagerly-build-asts-on-startup)
         (cljr--warm-ast-cache)))))
