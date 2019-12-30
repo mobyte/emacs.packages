@@ -1606,6 +1606,11 @@ Push a tag to another repository.
 
 \(fn TAG REMOTE &optional ARGS)" t nil)
 
+(autoload 'magit-push-notes-ref "magit-push" "\
+Push a notes ref to another repository.
+
+\(fn REF REMOTE &optional ARGS)" t nil)
+
 (autoload 'magit-push-implicitly "magit-push" "\
 Push somewhere without using an explicit refspec.
 

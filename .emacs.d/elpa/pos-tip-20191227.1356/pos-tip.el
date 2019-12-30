@@ -5,7 +5,7 @@
 ;; Author: S. Irie
 ;; Maintainer: S. Irie
 ;; Keywords: Tooltip
-;; Package-Version: 20191127.1028
+;; Package-Version: 20191227.1356
 
 (defconst pos-tip-version "0.4.6")
 
@@ -646,6 +646,7 @@ Example:
 			  (x-display-pixel-height frame))
 		      border)
 		   (frame-char-height frame))))
+	 (x-gtk-use-system-tooltips nil) ; Don't use Gtk+ tooltip in Emacs 24
 	 (mpos (with-selected-window window (mouse-pixel-position)))
 	 (mframe (car mpos))
 	 default-frame-alist)
