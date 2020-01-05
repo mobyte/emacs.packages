@@ -21,5 +21,4 @@
                        "-XX:+TieredCompilation" 
                        "-XX:TieredStopAtLevel=1" 
                        "-XX:+CMSClassUnloadingEnabled" 
-                       "-Xverify:none"]
-  :java-cmd "/Users/mobyte/src/jdk-12.0.1.jdk/Contents/Home/bin/java"}}
+                       "-Xverify:none"]}}
