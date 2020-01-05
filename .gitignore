@@ -15,3 +15,4 @@ resources/see-also.edn
 .boot/cache/
 leiningen-2.9.0-standalone.jar
 .emacs.d/opt/
+.emacs.d/transient/
