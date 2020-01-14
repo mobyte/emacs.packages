@@ -12,7 +12,7 @@
 ;; Maintainer: Jonas Bernoulli <jonas@bernoul.li>
 
 ;; Package-Requires: ((emacs "25.1") (dash "20180910") (transient "20190812") (with-editor "20181103"))
-;; Package-Version: 20200102.2204
+;; Package-Version: 20200111.1558
 ;; Keywords: git tools vc
 ;; Homepage: https://github.com/magit/magit
 
@@ -314,7 +314,7 @@ In this context a \"keyword\" is text surrounded be brackets."
   :group 'git-commit-faces)
 
 (define-obsolete-face-alias 'git-commit-note
-  'git-commit-keyword "Git-Commit 2.91.0")
+  'git-commit-keyword "Git-Commit 3.0.0")
 
 (defface git-commit-pseudo-header
   '((t :inherit font-lock-string-face))

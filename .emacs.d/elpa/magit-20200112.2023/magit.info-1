@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.90.1 (v2.90.1-875-gdff0bca6f+1).
+This manual is for Magit version 2.90.1 (v2.90.1-880-gf63077242+1).
 
      Copyright (C) 2015-2020 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -6192,18 +6192,17 @@ Two Remotes::.
 
      This command rebases the current branch onto its push-remote.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the push-remote
-     is not configured, then configure it before rebasing.  With a
-     prefix argument let the user change the push-remote before rebasing
-     onto it.
+     With a prefix argument or when the push-remote is either not
+     configured or unusable, then let the user first configure the
+     push-remote.
 
 ‘r u’     (‘magit-rebase-onto-upstream’)
 
      This command rebases the current branch onto its upstream branch.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the upstream is
-     not configured, then configure it before rebasing.  With a prefix
-     argument let the user change the upstream before rebasing onto it.
+     With a prefix argument or when the upstream is either not
+     configured or unusable, then let the user first configure the
+     upstream.
 
 ‘r e’     (‘magit-rebase-branch’)
 
@@ -7116,28 +7115,6 @@ These variables can be set from the transient prefix command
      value, then only tags are fetched that are reachable from fetched
      branches.
 
- -- User Option: magit-remote-set-if-missing
-
-     This option controls whether missing remotes are configured before
-     fetching, pulling, pushing and rebasing.
-
-     When ‘nil’, then commands such as ‘magit-pull-from-upstream’ and
-     ‘magit-rebase-onto-uptream’ are not available as suffix commands if
-     the push-remote or upstream is not configured.
-
-     When ‘non-nil’, then these commands are always available in their
-     respective transient, but if the required configuration is missing,
-     then they do appear in a way that indicates that this is the case.
-     If the user invokes such a command, then it asks for the necessary
-     configuration, stores the configuration, and only then performs the
-     action.
-
-     This option also affects whether the argument ‘--set-upstream’ is
-     available in ‘magit-push’.  If the value is ‘non-nil’, then that
-     argument would be redundant.  But note that changing the value of
-     this option does not take affect immediately, the argument will
-     only be added or removed after restarting Emacs.
-
 
 File: magit.info,  Node: Fetching,  Next: Pulling,  Prev: Remotes,  Up: Transferring
 
@@ -7155,20 +7132,24 @@ and the push-remote, see *note The Two Remotes::.
 
 ‘f p’     (‘magit-fetch-from-pushremote’)
 
-     This command fetches from the push-remote of the current branch.
+     This command fetches from the current push-remote.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the push-remote
-     is not configured, then configure it before fetching.  With a
-     prefix argument let the user change the push-remote before fetching
-     from it.
+     With a prefix argument or when the push-remote is either not
+     configured or unusable, then let the user first configure the
+     push-remote.
 
 ‘f u’     (‘magit-fetch-from-upstream’)
 
      This command fetch from the upstream of the current branch.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the upstream is
-     not configured, then configure it before fetching.  With a prefix
-     argument let the user change the upstream before fetching from it.
+     If the upstream is configured for the current branch and names an
+     existing remote, then use that.  Otherwise try to use another
+     remote: If only a single remote is configured, then use that.
+     Otherwise if a remote named "origin" exists, then use that.
+
+     If no remote can be determined, then this command is not available
+     from the ‘magit-fetch’ transient prefix and invoking it directly
+     results in an error.
 
 ‘f e’     (‘magit-fetch-other’)
 
@@ -7224,18 +7205,17 @@ and the push-remote, see *note The Two Remotes::.
 
      This command pulls from the push-remote of the current branch.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the push-remote
-     is not configured, then configure it before pulling.  With a prefix
-     argument let the user change the push-remote before pulling from
-     it.
+     With a prefix argument or when the push-remote is either not
+     configured or unusable, then let the user first configure the
+     push-remote.
 
 ‘F u’     (‘magit-pull-from-upstream’)
 
      This command pulls from the upstream of the current branch.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the upstream is
-     not configured, then configure it before pulling.  With a prefix
-     argument let the user change the upstream before pulling from it.
+     With a prefix argument or when the upstream is either not
+     configured or unusable, then let the user first configure the
+     upstream.
 
 ‘F e’     (‘magit-pull-branch’)
 
@@ -7260,17 +7240,17 @@ and the push-remote, see *note The Two Remotes::.
 
      This command pushes the current branch to its push-remote.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the push-remote
-     is not configured, then configure it before pushing.  With a prefix
-     argument let the user change the push-remote before pushing to it.
+     With a prefix argument or when the push-remote is either not
+     configured or unusable, then let the user first configure the
+     push-remote.
 
 ‘P u’     (‘magit-push-current-to-upstream’)
 
      This command pushes the current branch to its upstream branch.
 
-     When ‘magit-remote-set-if-missing’ is non-nil and the upstream is
-     not configured, then configure it before pushing.  With a prefix
-     argument let the user change the upstream before pushing to it.
+     With a prefix argument or when the upstream is either not
+     configured or unusable, then let the user first configure the
+     upstream.
 
 ‘P e’     (‘magit-push-current’)
 
@@ -7754,4 +7734,88 @@ Also see *note (gitman)git-subtree::.
 ‘O e s’     (‘magit-subtree-split’)
 
      This command extracts the history of the subtree PREFIX.
+
+
+File: magit.info,  Node: Worktree,  Next: Common Commands,  Prev: Subtree,  Up: Miscellaneous
+
+8.5 Worktree
+============
+
+Also see *note (gitman)git-worktree::.
+
+‘%’     (‘magit-worktree’)
+
+     This transient prefix command binds the following suffix commands
+     and displays them in a temporary buffer until a suffix is invoked.
+
+‘% b’     (‘magit-worktree-checkout’)
+
+     Checkout BRANCH in a new worktree at PATH.
+
+‘% c’     (‘magit-worktree-branch’)
+
+     Create a new BRANCH and check it out in a new worktree at PATH.
+
+‘% m’     (‘magit-worktree-move’)
+
+     Move an existing worktree to a new PATH.
+
+‘% k’     (‘magit-worktree-delete’)
+
+     Delete a worktree, defaulting to the worktree at point.  The
+     primary worktree cannot be deleted.
+
+‘% g’     (‘magit-worktree-status’)
+
+     Show the status for the worktree at point.
+
+     If there is no worktree at point, then read one in the minibuffer.
+     If the worktree at point is the one whose status is already being
+     displayed in the current buffer, then show it in Dired instead.
+
+
+File: magit.info,  Node: Common Commands,  Next: Wip Modes,  Prev: Worktree,  Up: Miscellaneous
+
+8.6 Common Commands
+===================
+
+These are some of the commands that can be used in all buffers whose
+major-modes derive from ‘magit-mode’.  There are other common commands
+beside the ones below, but these didn’t fit well anywhere else.
+
+‘M-w’     (‘magit-copy-section-value’)
+
+     This command saves the value of the current section to the
+     ‘kill-ring’, and, provided that the current section is a commit,
+     branch, or tag section, it also pushes the (referenced) revision to
+     the ‘magit-revision-stack’.
+
+     When the current section is a branch or a tag, and a prefix
+     argument is used, then it saves the revision at its tip to the
+     ‘kill-ring’ instead of the reference name.
+
+     When the region is active, this command saves that to the
+     ‘kill-ring’, like ‘kill-ring-save’ would, instead of behaving as
+     described above.  If a prefix argument is used and the region is
+     within a hunk, it strips the outer diff marker column before saving
+     the text.
+
+‘C-w’     (‘magit-copy-buffer-revision’)
+
+     This command saves the revision being displayed in the current
+     buffer to the ‘kill-ring’ and also pushes it to the
+     ‘magit-revision-stack’.  It is mainly intended for use in
+     ‘magit-revision-mode’ buffers, the only buffers where it is always
+     unambiguous exactly which revision should be saved.
+
+     Most other Magit buffers usually show more than one revision, in
+     some way or another, so this command has to select one of them, and
+     that choice might not always be the one you think would have been
+     the best pick.
+
+   Outside of Magit ‘M-w’ and ‘C-w’ are usually bound to
+‘kill-ring-save’ and ‘kill-region’, and these commands would also be
+useful in Magit buffers.  Therefore when the region is active, then both
+of these commands behave like ‘kill-ring-save’ instead of as described
+above.
 

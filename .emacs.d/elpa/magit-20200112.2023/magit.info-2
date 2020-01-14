@@ -18,90 +18,6 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: magit.info,  Node: Worktree,  Next: Common Commands,  Prev: Subtree,  Up: Miscellaneous
-
-8.5 Worktree
-============
-
-Also see *note (gitman)git-worktree::.
-
-‘%’     (‘magit-worktree’)
-
-     This transient prefix command binds the following suffix commands
-     and displays them in a temporary buffer until a suffix is invoked.
-
-‘% b’     (‘magit-worktree-checkout’)
-
-     Checkout BRANCH in a new worktree at PATH.
-
-‘% c’     (‘magit-worktree-branch’)
-
-     Create a new BRANCH and check it out in a new worktree at PATH.
-
-‘% m’     (‘magit-worktree-move’)
-
-     Move an existing worktree to a new PATH.
-
-‘% k’     (‘magit-worktree-delete’)
-
-     Delete a worktree, defaulting to the worktree at point.  The
-     primary worktree cannot be deleted.
-
-‘% g’     (‘magit-worktree-status’)
-
-     Show the status for the worktree at point.
-
-     If there is no worktree at point, then read one in the minibuffer.
-     If the worktree at point is the one whose status is already being
-     displayed in the current buffer, then show it in Dired instead.
-
-
-File: magit.info,  Node: Common Commands,  Next: Wip Modes,  Prev: Worktree,  Up: Miscellaneous
-
-8.6 Common Commands
-===================
-
-These are some of the commands that can be used in all buffers whose
-major-modes derive from ‘magit-mode’.  There are other common commands
-beside the ones below, but these didn’t fit well anywhere else.
-
-‘M-w’     (‘magit-copy-section-value’)
-
-     This command saves the value of the current section to the
-     ‘kill-ring’, and, provided that the current section is a commit,
-     branch, or tag section, it also pushes the (referenced) revision to
-     the ‘magit-revision-stack’.
-
-     When the current section is a branch or a tag, and a prefix
-     argument is used, then it saves the revision at its tip to the
-     ‘kill-ring’ instead of the reference name.
-
-     When the region is active, this command saves that to the
-     ‘kill-ring’, like ‘kill-ring-save’ would, instead of behaving as
-     described above.  If a prefix argument is used and the region is
-     within a hunk, it strips the outer diff marker column before saving
-     the text.
-
-‘C-w’     (‘magit-copy-buffer-revision’)
-
-     This command saves the revision being displayed in the current
-     buffer to the ‘kill-ring’ and also pushes it to the
-     ‘magit-revision-stack’.  It is mainly intended for use in
-     ‘magit-revision-mode’ buffers, the only buffers where it is always
-     unambiguous exactly which revision should be saved.
-
-     Most other Magit buffers usually show more than one revision, in
-     some way or another, so this command has to select one of them, and
-     that choice might not always be the one you think would have been
-     the best pick.
-
-   Outside of Magit ‘M-w’ and ‘C-w’ are usually bound to
-‘kill-ring-save’ and ‘kill-region’, and these commands would also be
-useful in Magit buffers.  Therefore when the region is active, then both
-of these commands behave like ‘kill-ring-save’ instead of as described
-above.
-
-
 File: magit.info,  Node: Wip Modes,  Next: Minor Mode for Buffers Visiting Files,  Prev: Common Commands,  Up: Miscellaneous
 
 8.7 Wip Modes
@@ -2371,18 +2287,18 @@ Appendix C Keystroke Index
                                                               (line  63)
 * f <1>:                                 Fetching.            (line   9)
 * F:                                     Pulling.             (line   9)
-* f a:                                   Fetching.            (line  46)
+* f a:                                   Fetching.            (line  50)
 * f C:                                   Branch Commands.     (line  30)
 * F C:                                   Branch Commands.     (line  31)
-* f e:                                   Fetching.            (line  32)
-* F e:                                   Pulling.             (line  31)
-* f m:                                   Fetching.            (line  50)
-* f o:                                   Fetching.            (line  36)
+* f e:                                   Fetching.            (line  36)
+* F e:                                   Pulling.             (line  30)
+* f m:                                   Fetching.            (line  54)
+* f o:                                   Fetching.            (line  40)
 * f p:                                   Fetching.            (line  15)
 * F p:                                   Pulling.             (line  14)
-* f r:                                   Fetching.            (line  41)
-* f u:                                   Fetching.            (line  24)
-* F u:                                   Pulling.             (line  23)
+* f r:                                   Fetching.            (line  45)
+* f u:                                   Fetching.            (line  23)
+* F u:                                   Pulling.             (line  22)
 * g:                                     Automatic Refreshing of Magit Buffers.
                                                               (line  24)
 * G:                                     Automatic Refreshing of Magit Buffers.
@@ -2526,19 +2442,19 @@ Appendix C Keystroke Index
 * r:                                     Rebasing.            (line   9)
 * r <1>:                                 Editing Rebase Sequences.
                                                               (line  51)
-* r a:                                   Rebasing.            (line 124)
-* r e:                                   Rebasing.            (line  45)
-* r e <1>:                               Rebasing.            (line 119)
-* r f:                                   Rebasing.            (line  85)
-* r i:                                   Rebasing.            (line  81)
-* r k:                                   Rebasing.            (line 100)
-* r m:                                   Rebasing.            (line  90)
+* r a:                                   Rebasing.            (line 123)
+* r e:                                   Rebasing.            (line  44)
+* r e <1>:                               Rebasing.            (line 118)
+* r f:                                   Rebasing.            (line  84)
+* r i:                                   Rebasing.            (line  80)
+* r k:                                   Rebasing.            (line  99)
+* r m:                                   Rebasing.            (line  89)
 * r p:                                   Rebasing.            (line  28)
-* r r:                                   Rebasing.            (line 107)
-* r s:                                   Rebasing.            (line  51)
-* r s <1>:                               Rebasing.            (line 114)
-* r u:                                   Rebasing.            (line  37)
-* r w:                                   Rebasing.            (line  95)
+* r r:                                   Rebasing.            (line 106)
+* r s:                                   Rebasing.            (line  50)
+* r s <1>:                               Rebasing.            (line 113)
+* r u:                                   Rebasing.            (line  36)
+* r w:                                   Rebasing.            (line  94)
 * RET:                                   References Buffer.   (line 181)
 * RET <1>:                               Visiting Files and Blobs from a Diff.
                                                               (line   8)
@@ -2858,13 +2774,13 @@ Appendix D Command Index
                                                               (line 136)
 * magit-emacs-Q-command:                 Debugging Tools.     (line  16)
 * magit-fetch:                           Fetching.            (line   9)
-* magit-fetch-all:                       Fetching.            (line  46)
-* magit-fetch-branch:                    Fetching.            (line  36)
+* magit-fetch-all:                       Fetching.            (line  50)
+* magit-fetch-branch:                    Fetching.            (line  40)
 * magit-fetch-from-pushremote:           Fetching.            (line  15)
-* magit-fetch-from-upstream:             Fetching.            (line  24)
+* magit-fetch-from-upstream:             Fetching.            (line  23)
 * magit-fetch-modules:                   Submodule Transient. (line  58)
-* magit-fetch-other:                     Fetching.            (line  32)
-* magit-fetch-refspec:                   Fetching.            (line  41)
+* magit-fetch-other:                     Fetching.            (line  36)
+* magit-fetch-refspec:                   Fetching.            (line  45)
 * magit-file-checkout:                   Resetting.           (line  44)
 * magit-file-checkout <1>:               Minor Mode for Buffers Visiting Files.
                                                               (line 165)
@@ -2952,9 +2868,9 @@ Appendix D Command Index
 * magit-process:                         Viewing Git Output.  (line  16)
 * magit-process-kill:                    Viewing Git Output.  (line  24)
 * magit-pull:                            Pulling.             (line   9)
-* magit-pull-branch:                     Pulling.             (line  31)
+* magit-pull-branch:                     Pulling.             (line  30)
 * magit-pull-from-pushremote:            Pulling.             (line  14)
-* magit-pull-from-upstream:              Pulling.             (line  23)
+* magit-pull-from-upstream:              Pulling.             (line  22)
 * magit-push:                            Pushing.             (line   9)
 * magit-push-current:                    Pushing.             (line  31)
 * magit-push-current-to-pushremote:      Pushing.             (line  15)
@@ -2967,19 +2883,19 @@ Appendix D Command Index
 * magit-push-tags:                       Pushing.             (line  58)
 * magit-push-to-remote remote args:      Pushing.             (line  85)
 * magit-rebase:                          Rebasing.            (line   9)
-* magit-rebase-abort:                    Rebasing.            (line 124)
-* magit-rebase-autosquash:               Rebasing.            (line  85)
-* magit-rebase-branch:                   Rebasing.            (line  45)
-* magit-rebase-continue:                 Rebasing.            (line 107)
-* magit-rebase-edit:                     Rebasing.            (line 119)
-* magit-rebase-edit-commit:              Rebasing.            (line  90)
-* magit-rebase-interactive:              Rebasing.            (line  81)
+* magit-rebase-abort:                    Rebasing.            (line 123)
+* magit-rebase-autosquash:               Rebasing.            (line  84)
+* magit-rebase-branch:                   Rebasing.            (line  44)
+* magit-rebase-continue:                 Rebasing.            (line 106)
+* magit-rebase-edit:                     Rebasing.            (line 118)
+* magit-rebase-edit-commit:              Rebasing.            (line  89)
+* magit-rebase-interactive:              Rebasing.            (line  80)
 * magit-rebase-onto-pushremote:          Rebasing.            (line  28)
-* magit-rebase-onto-upstream:            Rebasing.            (line  37)
-* magit-rebase-remove-commit:            Rebasing.            (line 100)
-* magit-rebase-reword-commit:            Rebasing.            (line  95)
-* magit-rebase-skip:                     Rebasing.            (line 114)
-* magit-rebase-subset:                   Rebasing.            (line  51)
+* magit-rebase-onto-upstream:            Rebasing.            (line  36)
+* magit-rebase-remove-commit:            Rebasing.            (line  99)
+* magit-rebase-reword-commit:            Rebasing.            (line  94)
+* magit-rebase-skip:                     Rebasing.            (line 113)
+* magit-rebase-subset:                   Rebasing.            (line  50)
 * magit-reflog-current:                  Reflog.              (line  11)
 * magit-reflog-head:                     Reflog.              (line  19)
 * magit-reflog-other:                    Reflog.              (line  15)
@@ -3088,7 +3004,7 @@ Appendix D Command Index
 * magit-status:                          Status Buffer.       (line  22)
 * magit-submodule:                       Submodule Transient. (line   6)
 * magit-submodule-add:                   Submodule Transient. (line  20)
-* magit-submodule-fetch:                 Fetching.            (line  50)
+* magit-submodule-fetch:                 Fetching.            (line  54)
 * magit-submodule-populate:              Submodule Transient. (line  34)
 * magit-submodule-register:              Submodule Transient. (line  27)
 * magit-submodule-synchronize:           Submodule Transient. (line  44)
@@ -3538,7 +3454,7 @@ Appendix F Variable Index
                                                               (line  64)
 * magit-process-raise-error:             Calling Git for Effect.
                                                               (line 151)
-* magit-pull-or-fetch:                   Fetching.            (line  55)
+* magit-pull-or-fetch:                   Fetching.            (line  59)
 * magit-reflog-margin:                   Reflog.              (line  23)
 * magit-refresh-args:                    Refreshing Buffers.  (line  55)
 * magit-refresh-buffer-hook:             Automatic Refreshing of Magit Buffers.
@@ -3557,8 +3473,6 @@ Appendix F Variable Index
 * magit-refs-show-remote-prefix:         References Buffer.   (line  62)
 * magit-remote-add-set-remote.pushDefault: Remote Commands.   (line  92)
 * magit-remote-direct-configure:         Remote Commands.     (line  21)
-* magit-remote-set-if-missing:           Remote Git Variables.
-                                                              (line  39)
 * magit-repolist-columns:                Repository List.     (line  14)
 * magit-repository-directories:          Status Buffer.       (line  58)
 * magit-revision-filter-files-on-follow: Revision Buffer.     (line  64)
