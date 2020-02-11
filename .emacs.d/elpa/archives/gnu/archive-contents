@@ -1173,7 +1173,7 @@
 	   (:maintainer "Alexey Veretennikov" . "alexey.veretennikov@gmail.com")
 	   (:url . "https://github.com/fourier/loccur"))])
  (map .
-      [(2 0)
+      [(2 1)
        ((emacs
 	 (25)))
        "Map manipulation functions" single
@@ -1411,10 +1411,10 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 3 2)
+      [(9 3 3)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
-	(:maintainer "Bastien Guerry <bzg at gnu dot org>")
+	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 	(:authors
 	 ("Carsten Dominik <carsten at orgmode dot org>"))
 	(:keywords "outlines" "hypermedia" "calendar" "wp"))])
@@ -1543,11 +1543,11 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(0 5 0)
+	   [(0 6 0)
 	    ((emacs
 	      (26)))
 	    "Pop a posframe (just a frame) at point" single
-	    ((:keywords "tooltip")
+	    ((:keywords "convenience" "tooltip")
 	     (:authors
 	      ("Feng Shu" . "tumashu@163.com"))
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
