@@ -6,10 +6,17 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "peg" "peg.el" (0 0 0 0))
-;;; Generated autoloads from peg.el
+;;;### (autoloads "actual autoloads are elsewhere" "peg" "../../../../../.emacs.d/elpa/peg-20150708.641/peg.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/peg-20150708.641/peg.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "peg" '("peg-")))
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/peg-20150708.641/peg-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/peg-20150708.641/peg.el") (0
+;;;;;;  0 0 0))
 
 ;;;***
 

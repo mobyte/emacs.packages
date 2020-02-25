@@ -1,14 +1,16 @@
 ;;; clj-refactor.el --- A collection of commands for refactoring Clojure code -*- lexical-binding: t -*-
 
 ;; Copyright © 2012-2014 Magnar Sveen
-;; Copyright © 2014-2018 Magnar Sveen, Lars Andersen, Benedek Fazekas
+;; Copyright © 2014-2020 Magnar Sveen, Lars Andersen, Benedek Fazekas, Bozhidar Batsov
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
 ;;         Lars Andersen <expez@expez.com>
 ;;         Benedek Fazekas <benedek.fazekas@gmail.com>
+;;         Bozhidar Batsov <bozhidar@batsov.com>
 ;; Version: 2.5.0-snapshot
 ;; Keywords: convenience, clojure, cider
-;; Package-Requires: ((emacs "25.1") (seq "2.19") (yasnippet "0.6.1") (paredit "24") (multiple-cursors "1.2.2") (clojure-mode "5.6.1") (cider "0.23.0") (edn "1.1.2") (inflections "2.3") (hydra "0.13.2"))
+
+;; Package-Requires: ((emacs "25.1") (seq "2.19") (yasnippet "0.6.1") (paredit "24") (multiple-cursors "1.2.2") (clojure-mode "5.6.1") (cider "0.23.0") (parseedn "0.1") (inflections "2.3") (hydra "0.13.2"))
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License
@@ -42,7 +44,7 @@
 (require 'multiple-cursors-core)
 (require 'clojure-mode)
 (require 'cider)
-(require 'edn)
+(require 'parseedn)
 (require 'sgml-mode)
 (require 'inflections)
 (require 'hydra)
@@ -1911,7 +1913,7 @@ FEATURE is either :clj or :cljs."
     cljr--ensure-op-supported
     cljr--create-msg
     (cljr--call-middleware-sync "namespace-aliases")
-    edn-read))
+    parseedn-read-str))
 
 (defun cljr--get-aliases-from-middleware ()
   (when-let (aliases (cljr--call-middleware-for-namespace-aliases))
@@ -2505,7 +2507,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-promote-function
       (unless (cljr--empty-buffer-p)
         (goto-char (point-min))
         (while (not (cljr--end-of-buffer-p))
-          (push (edn-read) occurrences))))
+          (push (parseedn-read) occurrences))))
     occurrences))
 
 (defun cljr--find-symbol (symbol ns callback)
@@ -2560,7 +2562,7 @@ root."
         (when (= cjr--occurrence-count cljr--num-syms)
           (cljr--finalise-find-symbol-buffer cljr--num-syms)))
     (when-let (occurrence-data (nrepl-dict-get occurrence-resp "occurrence"))
-      (let* ((occurrence (edn-read occurrence-data))
+      (let* ((occurrence (parseedn-read-str occurrence-data))
              (occurrence-id (format "%s%s"
                                     (cljr--get-valid-filename occurrence)
                                     (gethash :line-beg occurrence))))
@@ -2699,7 +2701,7 @@ Also adds the alias prefix to all occurrences of public symbols in the namespace
                               "used-ns" ns
                               "file" filename))
            (occurrences (thread-last (cljr--call-middleware-sync request "used-publics")
-                          (edn-read))))
+                          (parseedn-read-str))))
       (cljr--replace-refer-all-with-alias ns occurrences alias))))
 
 (defun cljr--maybe-nses-in-bad-state (response)
@@ -2707,7 +2709,7 @@ Also adds the alias prefix to all occurrences of public symbols in the namespace
                             (lambda (it)
                               (not (stringp (car (last it)))))
                             (thread-first (nrepl-dict-get response "ast-statuses")
-                              edn-read
+                              parseedn-read-str
                               (seq-partition 2)))))
     (when (not (= 0 (length asts-in-bad-state)))
       (user-error (concat "Some namespaces are in a bad state: "
@@ -2890,7 +2892,7 @@ Date. -> Date
                                                         (with-no-warnings (cider-current-session)))
                           (cljr--call-middleware-sync
                            "candidates")))
-    (edn-read candidates)))
+    (parseedn-read-str candidates)))
 
 (defun cljr--get-error-value (response)
   "Gets the error value from the middleware response.
@@ -3070,7 +3072,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-add-stubs"
                             (format "%s/%s" alias? (cljr--symbol-suffix interface))
                           interface)
                       (format "%s/%s" (cider-current-ns) interface)))
-         (functions (edn-read (cljr--call-middleware-sync
+         (functions (parseedn-read-str (cljr--call-middleware-sync
                                (cljr--create-msg "stubs-for-interface"
                                                  "interface" interface)
                                "functions"))))
@@ -3211,7 +3213,7 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-inline-symbol"
                                           "name" symbol-name
                                           "ignore-errors"
                                           (when cljr-ignore-analyzer-errors "true")))
-             (response (edn-read (cljr--call-middleware-sync
+             (response (parseedn-read-str (cljr--call-middleware-sync
                                   extract-definition-request "definition")))
              (definition (gethash :definition response))
              (occurrences (gethash :occurrences response)))

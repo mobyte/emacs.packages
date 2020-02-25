@@ -6,8 +6,9 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "edn" "edn.el" (0 0 0 0))
-;;; Generated autoloads from edn.el
+;;;### (autoloads nil "edn" "../../../../../.emacs.d/elpa/edn-20160215.1219/edn.el"
+;;;;;;  "a334fb4c90c75727cf7868447abde3a8")
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/edn-20160215.1219/edn.el
 
 (autoload 'edn-time-to-inst "edn" "\
 Turn a `time-date' TIME into our internal representation of an inst.
@@ -83,8 +84,20 @@ You can use `edn-add-writer' to add writers capable of writing
 your own tagged data.
 
 \(fn DATUM)" nil nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "edn" "../../../../../.emacs.d/elpa/edn-20160215.1219/edn.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/edn-20160215.1219/edn.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "edn" '("edn--" "hash-table-")))
+
+;;;***
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/edn-20160215.1219/edn-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/edn-20160215.1219/edn.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 
