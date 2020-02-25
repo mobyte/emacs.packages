@@ -21,4 +21,4 @@
                        "-XX:+TieredCompilation" 
                        "-XX:TieredStopAtLevel=1" 
                        "-XX:+CMSClassUnloadingEnabled" 
-                       "-Xverify:none"]}}
+                       #_"-Xverify:none"]}}
