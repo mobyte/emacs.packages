@@ -736,6 +736,14 @@
 		(:authors
 		 ("Thomas Fitzsimmons" . "fitzsim@fitzsim.org"))
 		(:keywords "calendar"))])
+ (expand-region .
+		[(0 11 0)
+		 nil "Increase selected region by semantic units." tar
+		 ((:url . "https://github.com/magnars/expand-region.el")
+		  (:maintainer "Magnar Sveen" . "magnars@gmail.com")
+		  (:authors
+		   ("Magnar Sveen" . "magnars@gmail.com"))
+		  (:keywords "marking" "region"))])
  (exwm .
        [(0 23)
 	((xelb

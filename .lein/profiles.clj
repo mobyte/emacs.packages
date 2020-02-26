@@ -3,12 +3,12 @@
   :plugins [[cider/cider-nrepl "0.24.0-SNAPSHOT"]
             [refactor-nrepl "2.5.0-SNAPSHOT"]]
   :repl-options {:init (do (require 'clojure.pprint
-                                    'clojure.tools.namespace.repl)
+                                    #_'clojure.tools.namespace.repl)
                            (intern 'clojure.core
                                    '>pprint clojure.pprint/pprint)
-                           (intern 'clojure.core
+                           #_(intern 'clojure.core
                                    '>refresh clojure.tools.namespace.repl/refresh)
-                           (intern 'clojure.core
+                           #_(intern 'clojure.core
                                    '>clear clojure.tools.namespace.repl/clear)
                            (intern 'clojure.core
                                    '>run-tests clojure.test/run-tests))
@@ -20,5 +20,4 @@
                        "-Djsse.enableSNIExtension=false"
                        "-XX:+TieredCompilation" 
                        "-XX:TieredStopAtLevel=1" 
-                       "-XX:+CMSClassUnloadingEnabled" 
-                       #_"-Xverify:none"]}}
+                       "-XX:+CMSClassUnloadingEnabled"]}}
