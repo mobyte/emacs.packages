@@ -4,7 +4,7 @@
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-git-messenger
-;; Package-Version: 20170102.440
+;; Package-Version: 20200315.1050
 ;; Version: 0.18
 ;; Package-Requires: ((emacs "24.3") (popup "0.5.0"))
 
@@ -187,7 +187,7 @@ and menus.")
         (hg (git-messenger:hg-commit-message commit-id))))))
 
 (defun git-messenger:commit-date (commit-id)
-  (let ((args (list "--no-pager" "show" "--pretty=%cd" commit-id)))
+  (let ((args (list "--no-pager" "show" "--pretty=%ad" commit-id)))
     (with-temp-buffer
       (unless (zerop (git-messenger:execute-command 'git args t))
         (error "Failed 'git show'"))

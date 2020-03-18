@@ -829,6 +829,12 @@ the faster ‘vfork’ will be used.  (The creation of child processes still
 takes about twice as long on Darwin compared to Linux.)  See (1) for
 more information.
 
+   On Catalina, and potentially other macOS releases, there may be a
+performance problem where any action takes 20 times longer on Darwin
+than on Linux.  This can be fixed by setting ‘magit-git-executable’ to
+the absolute path of the ‘git’ executable, instead of relying on
+resolving the ‘$PATH’.
+
    ---------- Footnotes ----------
 
    (1) 
