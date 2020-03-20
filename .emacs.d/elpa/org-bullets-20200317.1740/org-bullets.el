@@ -1,10 +1,10 @@
 ;;; org-bullets.el --- Show bullets in org-mode as UTF-8 characters
 
-;; Version: 0.2.4
-;; Package-Version: 20190802.927
+;; Version: 0.3.0
+;; Package-Version: 20200317.1740
 ;; Author: sabof
-;; Maintainer: Jonas Bernoulli <jonas@bernoul.li>
-;; Homepage: https://github.com/emacsorphanage/org-bullets
+;; Maintainer: D. Williams <d.williams@posteo.net>
+;; Homepage: https://github.com/integral-dw/org-bullets
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -25,10 +25,18 @@
 
 ;; Show org-mode bullets as UTF-8 characters.
 
-;; Because the author is inactive, this package is currenlty being
-;; maintained at https://github.com/emacsorphanage/org-bullets.
+;; This is a legacy package maintained with a focus on preservation.
+;; It has an unofficial successor package (org-superstar).  This means
+;; that new features will no longer be added, and backwards
+;; compatibility will be preserved.
+
+;; It's unofficial successor package is available on MELPA.  You can
+;; also find it on GitHub:
+;; https://github.com/integral-dw/org-superstar-mode
 
 ;;; Code:
+
+(require 'org)
 
 (defgroup org-bullets nil
   "Display bullets as UTF-8 characters."
@@ -61,6 +69,7 @@ Otherwise the face of the heading level is used."
 (defvar org-bullets-bullet-map (make-sparse-keymap))
 
 (defun org-bullets-level-char (level)
+  "Return the desired bullet for the given heading LEVEL."
   (string-to-char
    (nth (mod (/ (1- level) (if org-odd-levels-only 2 1))
              (length org-bullets-bullet-list))
@@ -87,9 +96,7 @@ Otherwise the face of the heading level is used."
                                org-bullets-face-name))
           (put-text-property (match-beginning 0)
                              (- (match-end 0) 2)
-                             'face (list :foreground
-                                         (face-attribute
-                                          'default :background)))
+                             'face 'org-hide)
           (put-text-property (match-beginning 0)
                              (match-end 0)
                              'keymap
@@ -112,6 +119,7 @@ Otherwise the face of the heading level is used."
       (org-bullets--fontify-buffer))))
 
 (defun org-bullets--fontify-buffer ()
+  "Fontify the current buffer."
   (when font-lock-mode
     (if (and (fboundp 'font-lock-flush)
              (fboundp 'font-lock-ensure))
