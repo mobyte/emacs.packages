@@ -959,7 +959,7 @@ Please, install (or update) refactor-nrepl %s and restart the REPL."
 (defun cljr--goto-ns ()
   "Go to the first namespace defining form in the buffer."
   (goto-char (point-min))
-  (if (re-search-forward clojure-namespace-name-regex nil t)
+  (if (re-search-forward clojure-namespace-regexp nil t)
       (cljr--goto-toplevel)
     (error "No namespace declaration found")))
 
@@ -970,10 +970,10 @@ no namespace form above point, return the first one in the buffer."
   (save-restriction
     (widen)
     ;; The closest ns form above point.
-    (when (or (re-search-backward clojure-namespace-name-regex nil t)
+    (when (or (re-search-backward clojure-namespace-regexp nil t)
               ;; Or any form at all.
               (and (goto-char (point-min))
-                   (re-search-forward clojure-namespace-name-regex nil t)))
+                   (re-search-forward clojure-namespace-regexp nil t)))
       (cljr--goto-toplevel))))
 
 (defun cljr--goto-cljs-branch ()
@@ -2497,7 +2497,8 @@ See: https://github.com/clojure-emacs/clj-refactor.el/wiki/cljr-promote-function
       (unless (cljr--empty-buffer-p)
         (goto-char (point-min))
         (while (not (cljr--end-of-buffer-p))
-          (push (parseedn-read) occurrences))))
+          (dolist (edn (parseedn-read))
+            (push edn occurrences)))))
     occurrences))
 
 (defun cljr--find-symbol (symbol ns callback)
