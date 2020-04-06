@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200307.1701
+;; Package-Version: 20200329.1908
 ;; Keywords: project, convenience
 ;; Version: 2.2.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -2556,6 +2556,7 @@ test/impl/other files as below:
 (projectile-register-project-type 'haskell-cabal #'projectile-cabal-project-p
                                   :compile "cabal build"
                                   :test "cabal test"
+                                  :run "cabal run"
                                   :test-suffix "Spec")
 (projectile-register-project-type 'dotnet #'projectile-dotnet-project-p
                                   :compile "dotnet build"
@@ -2585,7 +2586,8 @@ test/impl/other files as below:
                                   :compile "make"
                                   :test "make test")
 (projectile-register-project-type 'cmake '("CMakeLists.txt")
-                                  :configure "cmake %s"
+                                  :compilation-dir "build"
+                                  :configure "cmake %s -B %s"
                                   :compile "cmake --build ."
                                   :test "ctest")
 ;; PHP
@@ -3796,7 +3798,7 @@ project of that type"
       projectile-project-configure-cmd
       (let ((cmd-format-string (projectile-default-configure-command (projectile-project-type))))
         (when cmd-format-string
-          (format cmd-format-string (projectile-project-root))))))
+          (format cmd-format-string (projectile-project-root) compile-dir)))))
 
 (defun projectile-compilation-command (compile-dir)
   "Retrieve the compilation command for COMPILE-DIR.
