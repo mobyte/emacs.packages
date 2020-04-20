@@ -17,7 +17,8 @@
                  :port 4001}
   :offline? false
   :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
-                       "-Djsse.enableSNIExtension=false"
-                       "-XX:+TieredCompilation" 
-                       "-XX:TieredStopAtLevel=1" 
-                       "-XX:+CMSClassUnloadingEnabled"]}}
+                       ;; "-Djsse.enableSNIExtension=false"
+                       ;; "-XX:+TieredCompilation" 
+                       ;; "-XX:TieredStopAtLevel=1" 
+                       ;; "-XX:+CMSClassUnloadingEnabled"
+                       ]}}
