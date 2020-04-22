@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20200311.1106
+;; Package-Version: 20200421.1027
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -193,6 +193,7 @@ If the commands isn't on the list, `avy-style' is used."
     (?m . avy-action-mark)
     (?n . avy-action-copy)
     (?y . avy-action-yank)
+    (?Y . avy-action-yank-line)
     (?i . avy-action-ispell)
     (?z . avy-action-zap-to-char))
   "List of actions for `avy-handler-default'.
@@ -713,6 +714,11 @@ Set `avy-style' according to COMMAND as well."
   (avy-action-copy pt)
   (yank)
   t)
+
+(defun avy-action-yank-line (pt)
+  "Yank sexp starting at PT at the current point."
+  (let ((avy-command 'avy-goto-line))
+    (avy-action-yank pt)))
 
 (defun avy-action-kill-move (pt)
   "Kill sexp at PT and move there."
@@ -1607,9 +1613,7 @@ When BOTTOM-UP is non-nil, display avy candidates from top to bottom"
                            (point)))
                        (selected-window)) candidates))
               (if visual-line-mode
-                  (progn
-                    (setq temporary-goal-column 0)
-                    (line-move-visual 1 t))
+                  (line-move-visual 1 t)
                 (forward-line 1)))))))
     (if bottom-up
         candidates
