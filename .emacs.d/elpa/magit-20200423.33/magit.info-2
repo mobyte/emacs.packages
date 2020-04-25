@@ -27,7 +27,7 @@ These are some of the commands that can be used in all buffers whose
 major-modes derive from ‘magit-mode’.  There are other common commands
 beside the ones below, but these didn’t fit well anywhere else.
 
-‘M-w’     (‘magit-copy-section-value’)
+‘C-w’     (‘magit-copy-section-value’)
 
      This command saves the value of the current section to the
      ‘kill-ring’, and, provided that the current section is a commit,
@@ -44,7 +44,7 @@ beside the ones below, but these didn’t fit well anywhere else.
      within a hunk, it strips the outer diff marker column before saving
      the text.
 
-‘C-w’     (‘magit-copy-buffer-revision’)
+‘M-w’     (‘magit-copy-buffer-revision’)
 
      This command saves the revision being displayed in the current
      buffer to the ‘kill-ring’ and also pushes it to the
@@ -2282,7 +2282,7 @@ Appendix C Keystroke Index
                                                               (line  42)
 * C-c M-s:                               Editing Commit Messages.
                                                               (line  34)
-* C-w:                                   Common Commands.     (line  27)
+* C-w:                                   Common Commands.     (line  10)
 * C-x g:                                 Status Buffer.       (line  22)
 * C-x u:                                 Editing Rebase Sequences.
                                                               (line  94)
@@ -2404,7 +2404,7 @@ Appendix C Keystroke Index
 * M-p <2>:                               Editing Rebase Sequences.
                                                               (line  43)
 * M-w:                                   Blaming.             (line 130)
-* M-w <1>:                               Common Commands.     (line  10)
+* M-w <1>:                               Common Commands.     (line  27)
 * M-x magit-debug-git-executable:        Git Executable.      (line  45)
 * M-x magit-debug-git-executable <1>:    Debugging Tools.     (line  36)
 * M-x magit-describe-section-briefly:    Section Types and Values.
@@ -2518,9 +2518,9 @@ Appendix C Keystroke Index
 * T:                                     Notes.               (line   8)
 * T a:                                   Notes.               (line  52)
 * T c:                                   Notes.               (line  47)
-* t k:                                   Tagging.             (line  40)
+* t k:                                   Tagging.             (line  43)
 * T m:                                   Notes.               (line  38)
-* t p:                                   Tagging.             (line  47)
+* t p:                                   Tagging.             (line  50)
 * T p:                                   Notes.               (line  30)
 * t r:                                   Tagging.             (line  19)
 * T r:                                   Notes.               (line  22)
@@ -3059,8 +3059,8 @@ Appendix D Command Index
 * magit-subtree-split:                   Subtree.             (line  59)
 * magit-tag:                             Tagging.             (line   8)
 * magit-tag-create:                      Tagging.             (line  14)
-* magit-tag-delete:                      Tagging.             (line  40)
-* magit-tag-prune:                       Tagging.             (line  47)
+* magit-tag-delete:                      Tagging.             (line  43)
+* magit-tag-prune:                       Tagging.             (line  50)
 * magit-tag-release:                     Tagging.             (line  19)
 * magit-toggle-buffer-lock:              Modes and Buffers.   (line  17)
 * magit-toggle-margin:                   Refreshing Logs.     (line  37)

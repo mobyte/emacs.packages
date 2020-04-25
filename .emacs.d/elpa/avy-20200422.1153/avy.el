@@ -4,7 +4,7 @@
 
 ;; Author: Oleh Krehel <ohwoeowho@gmail.com>
 ;; URL: https://github.com/abo-abo/avy
-;; Package-Version: 20200421.1027
+;; Package-Version: 20200422.1153
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "24.1") (cl-lib "0.5"))
 ;; Keywords: point, location
@@ -2029,6 +2029,9 @@ newline."
   "Whether enter exits avy-goto-char-timer early. If nil it matches newline"
   :type 'boolean)
 
+(defvar avy-text ""
+  "Store the input read by `avy--read-candidates'.")
+
 (defun avy--read-candidates (&optional re-builder)
   "Read as many chars as possible and return their occurrences.
 At least one char must be read, and then repeatedly one next char
@@ -2042,8 +2045,8 @@ RE-BUILDER is a function that takes a string and returns a regex.
 When nil, `regexp-quote' is used.
 If a group is captured, the first group is highlighted.
 Otherwise, the whole regex is highlighted."
-  (let ((str "")
-        (re-builder (or re-builder #'regexp-quote))
+  (setq avy-text "")
+  (let ((re-builder (or re-builder #'regexp-quote))
         char break overlays regex)
     (unwind-protect
          (progn
@@ -2053,11 +2056,11 @@ Otherwise, the whole regex is highlighted."
                        (setq char
                              (read-char (format "%d  char%s: "
                                                 (length overlays)
-                                                (if (string= str "")
-                                                    str
-                                                  (format " (%s)" str)))
+                                                (if (string= avy-text "")
+                                                    avy-text
+                                                  (format " (%s)" avy-text)))
                                         t
-                                        (and (not (string= str ""))
+                                        (and (not (string= avy-text ""))
                                              avy-timeout-seconds))))
              ;; Unhighlight
              (dolist (ov overlays)
@@ -2068,21 +2071,21 @@ Otherwise, the whole regex is highlighted."
                ((= char 13)
                 (if avy-enter-times-out
                     (setq break t)
-                  (setq str (concat str (list ?\n)))))
+                  (setq avy-text (concat avy-text (list ?\n)))))
                ;; Handle C-h, DEL
                ((memq char avy-del-last-char-by)
-                (let ((l (length str)))
+                (let ((l (length avy-text)))
                   (when (>= l 1)
-                    (setq str (substring str 0 (1- l))))))
+                    (setq avy-text (substring avy-text 0 (1- l))))))
                ;; Handle ESC
                ((= char 27)
                 (keyboard-quit))
                (t
-                (setq str (concat str (list char)))))
+                (setq avy-text (concat avy-text (list char)))))
              ;; Highlight
-             (when (>= (length str) 1)
+             (when (>= (length avy-text) 1)
                (let ((case-fold-search
-                      (or avy-case-fold-search (string= str (downcase str))))
+                      (or avy-case-fold-search (string= avy-text (downcase avy-text))))
                      found)
                  (avy-dowindows current-prefix-arg
                    (dolist (pair (avy--find-visible-regions
@@ -2090,7 +2093,7 @@ Otherwise, the whole regex is highlighted."
                                   (window-end (selected-window) t)))
                      (save-excursion
                        (goto-char (car pair))
-                       (setq regex (funcall re-builder str))
+                       (setq regex (funcall re-builder avy-text))
                        (while (re-search-forward regex (cdr pair) t)
                          (unless (not (avy--visible-p (1- (point))))
                            (let* ((idx (if (= (length (match-data)) 4) 1 0))
