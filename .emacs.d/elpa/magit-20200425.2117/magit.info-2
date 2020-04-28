@@ -2552,12 +2552,13 @@ Appendix C Keystroke Index
 * x:                                     Editing Rebase Sequences.
                                                               (line  76)
 * x <1>:                                 Resetting.           (line   8)
-* X f:                                   Resetting.           (line  44)
+* X f:                                   Resetting.           (line  50)
 * X h:                                   Resetting.           (line  26)
-* X i:                                   Resetting.           (line  31)
+* X i:                                   Resetting.           (line  37)
+* X k:                                   Resetting.           (line  31)
 * X m:                                   Resetting.           (line  15)
 * X s:                                   Resetting.           (line  20)
-* X w:                                   Resetting.           (line  38)
+* X w:                                   Resetting.           (line  44)
 * X w <1>:                               Wip Modes.           (line  66)
 * Y:                                     Cherries.            (line  17)
 * y:                                     References Buffer.   (line   6)
@@ -2819,7 +2820,7 @@ Appendix D Command Index
 * magit-fetch-modules:                   Submodule Transient. (line  58)
 * magit-fetch-other:                     Fetching.            (line  36)
 * magit-fetch-refspec:                   Fetching.            (line  45)
-* magit-file-checkout:                   Resetting.           (line  44)
+* magit-file-checkout:                   Resetting.           (line  50)
 * magit-file-checkout <1>:               Minor Mode for Buffers Visiting Files.
                                                               (line 165)
 * magit-file-delete:                     Minor Mode for Buffers Visiting Files.
@@ -2952,11 +2953,12 @@ Appendix D Command Index
 * magit-reset-hard:                      Resetting.           (line  26)
 * magit-reset-index:                     Staging and Unstaging.
                                                               (line  87)
-* magit-reset-index <1>:                 Resetting.           (line  31)
+* magit-reset-index <1>:                 Resetting.           (line  37)
+* magit-reset-keep:                      Resetting.           (line  31)
 * magit-reset-mixed:                     Resetting.           (line  15)
 * magit-reset-quickly:                   Resetting.           (line   8)
 * magit-reset-soft:                      Resetting.           (line  20)
-* magit-reset-worktree:                  Resetting.           (line  38)
+* magit-reset-worktree:                  Resetting.           (line  44)
 * magit-reset-worktree <1>:              Wip Modes.           (line  66)
 * magit-reverse:                         Applying.            (line  44)
 * magit-reverse-in-index:                Staging and Unstaging.

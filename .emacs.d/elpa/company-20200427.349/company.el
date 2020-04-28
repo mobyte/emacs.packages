@@ -858,7 +858,8 @@ means that `company-mode' is always turned on except in `message-mode' buffers."
 ;; Hack:
 ;; Emacs calculates the active keymaps before reading the event.  That means we
 ;; cannot change the keymap from a timer.  So we send a bogus command.
-;; XXX: Even in Emacs 24.4, seems to be needed in the terminal.
+;; XXX: Seems not to be needed anymore in Emacs 24.4
+;; Apparently, starting with emacs-mirror/emacs@99d0d6dc23.
 (defun company-ignore ()
   (interactive)
   (setq this-command last-command))
@@ -1446,7 +1447,8 @@ prefix match (same case) will be prioritized."
        (eq tick (buffer-chars-modified-tick))
        (eq pos (point))
        (when (company-auto-begin)
-         (company-input-noop)
+         (when (version< emacs-version "24.3.50")
+           (company-input-noop))
          (let ((this-command 'company-idle-begin))
            (company-post-command)))))
 
