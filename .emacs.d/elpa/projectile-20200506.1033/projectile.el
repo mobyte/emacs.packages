@@ -4,7 +4,7 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200427.1153
+;; Package-Version: 20200506.1033
 ;; Keywords: project, convenience
 ;; Version: 2.2.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -1511,7 +1511,7 @@ choices."
 
 ;;;###autoload
 (defun projectile-switch-to-buffer-other-frame ()
-  "Switch to a project buffer and show it in another window."
+  "Switch to a project buffer and show it in another frame."
   (interactive)
   (switch-to-buffer-other-frame
    (projectile-read-buffer-to-switch "Switch to buffer: ")))
@@ -1927,7 +1927,7 @@ Other file extensions can be customized with the variable `projectile-other-file
 
 ;;;###autoload
 (defun projectile-find-other-file-other-frame (&optional flex-matching)
-  "Switch between files with the same name but different extensions in other window.
+  "Switch between files with the same name but different extensions in other frame.
 With FLEX-MATCHING, match any file that contains the base name of current file.
 Other file extensions can be customized with the variable `projectile-other-file-alist'."
   (interactive "P")
@@ -2259,7 +2259,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first."
 
 ;;;###autoload
 (defun projectile-find-dir-other-frame (&optional invalidate-cache)
-  "Jump to a project's directory in other window using completion.
+  "Jump to a project's directory in other frame using completion.
 
 With a prefix arg INVALIDATE-CACHE invalidates the cache first."
   (interactive "P")

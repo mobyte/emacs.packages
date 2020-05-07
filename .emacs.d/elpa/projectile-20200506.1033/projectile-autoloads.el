@@ -71,7 +71,7 @@ Switch to a project buffer and show it in another window.
 \(fn)" t nil)
 
 (autoload 'projectile-switch-to-buffer-other-frame "projectile" "\
-Switch to a project buffer and show it in another window.
+Switch to a project buffer and show it in another frame.
 
 \(fn)" t nil)
 
@@ -107,7 +107,7 @@ Other file extensions can be customized with the variable `projectile-other-file
 \(fn &optional FLEX-MATCHING)" t nil)
 
 (autoload 'projectile-find-other-file-other-frame "projectile" "\
-Switch between files with the same name but different extensions in other window.
+Switch between files with the same name but different extensions in other frame.
 With FLEX-MATCHING, match any file that contains the base name of current file.
 Other file extensions can be customized with the variable `projectile-other-file-alist'.
 
@@ -233,7 +233,7 @@ With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 \(fn &optional INVALIDATE-CACHE)" t nil)
 
 (autoload 'projectile-find-dir-other-frame "projectile" "\
-Jump to a project's directory in other window using completion.
+Jump to a project's directory in other frame using completion.
 
 With a prefix arg INVALIDATE-CACHE invalidates the cache first.
 
