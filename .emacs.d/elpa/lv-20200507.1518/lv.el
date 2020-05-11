@@ -1,5 +1,5 @@
 ;;; lv.el --- Other echo area
-;; Package-Version: 20200227.1301
+;; Package-Version: 20200507.1518
 
 ;; Copyright (C) 2015  Free Software Foundation, Inc.
 
@@ -33,6 +33,8 @@
 ;;     --  Андрій Кузьменко, L.V.
 
 ;;; Code:
+
+(require 'cl-lib)
 
 (defgroup lv nil
   "The other echo area."

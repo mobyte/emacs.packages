@@ -1119,6 +1119,12 @@ Usually it remains current while the transient is active.")
 
 (defvar transient--history nil)
 
+(defvar transient--scroll-commands
+  '(transient-scroll-up
+    transient-scroll-down
+    mwheel-scroll
+    scroll-bar-toolkit-scroll))
+
 ;;; Identities
 
 (defun transient-suffix-object (&optional command)
@@ -1333,6 +1339,7 @@ edited using the same functions as used for transients.")
     (define-key map [transient-scroll-up]     'transient--do-stay)
     (define-key map [transient-scroll-down]   'transient--do-stay)
     (define-key map [mwheel-scroll]           'transient--do-stay)
+    (define-key map [scroll-bar-toolkit-scroll]   'transient--do-stay)
     (define-key map [transient-noop]              'transient--do-noop)
     (define-key map [transient-mouse-push-button] 'transient--do-move)
     (define-key map [transient-push-button]       'transient--do-move)
@@ -1790,9 +1797,7 @@ EDIT may be non-nil."
 (defun transient--redisplay ()
   (if (or (eq transient-show-popup t)
           transient--showp)
-      (unless (memq this-command '(transient-scroll-up
-                                   transient-scroll-down
-                                   mwheel-scroll))
+      (unless (memq this-command transient--scroll-commands)
         (transient--show))
     (when (and (numberp transient-show-popup)
                (not (zerop transient-show-popup))
