@@ -6,7 +6,7 @@
 ;;         Marshall T. Vandegrift <llasram@gmail.com>
 ;; Maintainer: Vasilij Schneidermann <mail@vasilij.de>
 ;; Package-Requires: ((emacs "24.1"))
-;; Package-Version: 20200510.1921
+;; Package-Version: 20200511.952
 ;; Keywords: data yaml
 ;; Version: 0.0.14
 
@@ -285,7 +285,10 @@ that key is pressed to begin a block literal."
             ;; We're right after a quote that opens a string literal.
             ;; Skip over it (big speedup for long JSON strings).
             (goto-char (1- pt))
-            (ignore-errors (forward-sexp)))))))))
+            (condition-case nil
+                (forward-sexp)
+              (scan-error
+               (goto-char end))))))))))
 
 (defun yaml-font-lock-block-literals (bound)
   "Find lines within block literals.
