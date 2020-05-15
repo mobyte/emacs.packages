@@ -1074,7 +1074,7 @@ refresh because that also automatically moves to the next change.
      input.
 
      INPUT should be a buffer or the name of an existing buffer.  The
-     content of that buffer is used as the process’ standard input.
+     content of that buffer is used as the process’s standard input.
      After the process returns a refresh is performed.
 
      As a special case, INPUT may also be nil.  In that case the content
@@ -1086,9 +1086,9 @@ refresh because that also automatically moves to the next change.
 
  -- Function: magit-run-git-with-logfile file &rest args
 
-     Calls git synchronously with ARGS.  The process’ output is saved in
-     FILE.  This is rarely useful and so this function might be removed
-     in the future.
+     Calls git synchronously with ARGS.  The process’s output is saved
+     in FILE.  This is rarely useful and so this function might be
+     removed in the future.
 
      This function actually runs git asynchronously.  But then it waits
      for the process to return, so the function itself is synchronous.
