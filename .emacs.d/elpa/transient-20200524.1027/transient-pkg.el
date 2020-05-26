@@ -1,4 +1,4 @@
-(define-package "transient" "20200517.2038" "Transient commands"
+(define-package "transient" "20200524.1027" "Transient commands"
   '((emacs "25.1"))
   :keywords
   '("bindings")
