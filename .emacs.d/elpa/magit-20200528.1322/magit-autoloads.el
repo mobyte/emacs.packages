@@ -547,6 +547,7 @@ history element.
 
 \(fn DATE)" t nil)
  (autoload 'magit-commit-absorb "magit-commit" nil t)
+ (autoload 'magit-commit-autofixup "magit-commit" nil t)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-commit" '("magit-")))
 
