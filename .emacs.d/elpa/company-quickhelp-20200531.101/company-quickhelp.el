@@ -4,7 +4,8 @@
 
 ;; Author: Lars Andersen <expez@expez.com>
 ;; URL: https://www.github.com/expez/company-quickhelp
-;; Package-Version: 20180525.1003
+;; Package-Version: 20200531.101
+;; Package-Commit: 2dda13403c49221cc98e87b4bbf8168436f27560
 ;; Keywords: company popup documentation quickhelp
 ;; Version: 2.2.0
 ;; Package-Requires: ((emacs "24.3") (company "0.8.9") (pos-tip "0.4.6"))
@@ -27,7 +28,7 @@
 ;;; Commentary:
 
 ;; When idling on a completion candidate the documentation for the
-;; candidate will pop up after `company-quickhelp-idle-delay' seconds.
+;; candidate will pop up after `company-quickhelp-delay' seconds.
 
 ;;; Usage:
 ;;  put (company-quickhelp-mode) in your init.el to activate
