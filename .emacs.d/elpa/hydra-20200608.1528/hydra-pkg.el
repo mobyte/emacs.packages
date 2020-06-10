@@ -1,7 +1,7 @@
-(define-package "hydra" "20200504.1747" "Make bindings that stick around."
+(define-package "hydra" "20200608.1528" "Make bindings that stick around."
   '((cl-lib "0.5")
     (lv "0"))
-  :keywords
+  :commit "8a9124f80b6919ad5288172b3e9f46c5332763ca" :keywords
   '("bindings")
   :authors
   '(("Oleh Krehel" . "ohwoeowho@gmail.com"))
