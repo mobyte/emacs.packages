@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200610.1221
-;; Package-Commit: d7baa74eaa32cbed5d003a39a2687fa168cc4126
+;; Package-Version: 20200616.1659
+;; Package-Commit: 95bcc7d805cbe7116f54e46480563452537b20ef
 ;; Keywords: project, convenience
 ;; Version: 2.3.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -177,6 +177,12 @@ A value of nil means the cache never expires."
   :type '(choice (const :tag "Disabled" nil)
                  (integer :tag "Seconds")))
 
+(defcustom projectile-auto-discover t
+  "Whether to discover projects when `projectile-mode' is activated."
+  :group 'projectile
+  :type 'boolean
+  :package-version '(projectile . "2.3.0"))
+
 (defcustom projectile-auto-update-cache t
   "Whether the cache should automatically be updated when files are opened or deleted."
   :group 'projectile
@@ -294,33 +300,6 @@ If variable `projectile-project-name' is non-nil, this function will not be used
 
 (defcustom projectile-project-root-files
   '(
-    ".ensime"            ; Ensime configuration file
-    "Cargo.toml"         ; Cargo project file
-    "DESCRIPTION"        ; R package description file
-    "Gemfile"            ; Bundler file
-    "SConstruct"         ; Scons project file
-    "WORKSPACE"          ; Bazel project file
-    "build.boot"         ; Boot-clj project file
-    "build.gradle"       ; Gradle project file
-    "build.sbt"          ; SBT project file
-    "composer.json"      ; Composer project file
-    "default.nix"        ; Nix
-    "deps.edn"           ; Clojure CLI project file
-    "go.mod"             ; golang default package root as of 1.13
-    "gradlew"            ; Gradle wrapper script
-    "info.rkt"           ; Racket package description file
-    "meson.build"        ; Meson
-    "mix.exs"            ; Elixir mix project file
-    "pom.xml"            ; Maven project file
-    "project.clj"        ; Leiningen project file
-    "pyproject.toml"     ; Python project file
-    "rebar.config"       ; Rebar project file
-    "requirements.txt"   ; Pip file
-    "setup.py"           ; Setuptools file
-    "stack.yaml"         ; Haskell's stack tool based project
-    "tox.ini"            ; Tox file
-    ;; More generic markers are at the end of the list as
-    ;; they might exist alongside other project markers
     "GTAGS"              ; GNU Global tags
     "TAGS"               ; etags/ctags are usually in the root of project
     "configure.ac"       ; autoconf new style
@@ -328,7 +307,8 @@ If variable `projectile-project-name' is non-nil, this function will not be used
     "cscope.out"         ; cscope
     )
   "A list of files considered to mark the root of a project.
-The topmost match has precedence."
+The topmost match has precedence.
+See `projectile-register-project-type'."
   :group 'projectile
   :type '(repeat string))
 
@@ -2518,11 +2498,12 @@ The project types are symbols and they are linked to plists holding
 the properties of the various project types.")
 
 (cl-defun projectile-register-project-type
-    (project-type marker-files &key compilation-dir configure compile test run test-suffix test-prefix src-dir test-dir related-files-fn)
+    (project-type marker-files &key project-file compilation-dir configure compile test run test-suffix test-prefix src-dir test-dir related-files-fn)
   "Register a project type with projectile.
 
 A project type is defined by PROJECT-TYPE, a set of MARKER-FILES,
 and optional keyword arguments:
+PROJECT-FILE the main project file in the root project directory.
 COMPILATION-DIR the directory to run the tests- and compilations in,
 CONFIGURE which specifies a command that configures the project
           `%s' in the command will be substituted with (projectile-project-root)
@@ -2540,6 +2521,7 @@ test/impl/other files as below:
     a plist containing :test, :impl or :other as key and the relative path/paths or
     predicate as value. PREDICATE accepts a relative path as the input."
   (let ((project-plist (list 'marker-files marker-files
+                             'project-file project-file
                              'compilation-dir compilation-dir
                              'configure-command configure
                              'compile-command compile
@@ -2549,6 +2531,8 @@ test/impl/other files as below:
     ;; explicit argument of nil and an omitted argument. However, the
     ;; body of the function is free to consider nil an abbreviation
     ;; for some other meaningful value
+    (when (and project-file (not (member project-file projectile-project-root-files)))
+      (add-to-list 'projectile-project-root-files project-file))
     (when test-suffix
       (plist-put project-plist 'test-suffix test-suffix))
     (when test-prefix
@@ -2595,9 +2579,6 @@ test/impl/other files as below:
 ;; it should be listed first).
 ;;
 ;; Ideally common project types should be checked earlier than exotic ones.
-;;
-;; NOTE: If a project type has some project root file marker (e.g. pom.xml) it
-;; should be added to `projectile-project-root-files' as well.
 
 ;; Function-based detection project type
 (projectile-register-project-type 'haskell-cabal #'projectile-cabal-project-p
@@ -2617,128 +2598,157 @@ test/impl/other files as below:
 
 ;; Universal
 (projectile-register-project-type 'scons '("SConstruct")
+                                  :project-file "SConstruct"
                                   :compile "scons"
                                   :test "scons test"
                                   :test-suffix "test")
 (projectile-register-project-type 'meson '("meson.build")
+                                  :project-file "meson.build"
                                   :compilation-dir "build"
                                   :configure "meson %s"
                                   :compile "ninja"
                                   :test "ninja test")
 (projectile-register-project-type 'nix '("default.nix")
+                                  :project-file "default.nix"
                                   :compile "nix-build"
                                   :test "nix-build")
 (projectile-register-project-type 'bazel '("WORKSPACE")
+                                  :project-file "WORKSPACE"
                                   :compile "bazel build"
                                   :test "bazel test"
                                   :run "bazel run")
 
 ;; Make & CMake
 (projectile-register-project-type 'make '("Makefile")
+                                  :project-file "Makefile"
                                   :compile "make"
                                   :test "make test")
 (projectile-register-project-type 'cmake '("CMakeLists.txt")
+                                  :project-file "CMakeLists.txt"
                                   :compilation-dir "build"
                                   :configure "cmake %s -B %s"
                                   :compile "cmake --build ."
                                   :test "ctest")
 ;; PHP
 (projectile-register-project-type 'php-symfony '("composer.json" "app" "src" "vendor")
+                                  :project-file "composer.json"
                                   :compile "app/console server:run"
                                   :test "phpunit -c app "
                                   :test-suffix "Test")
 ;; Erlang & Elixir
 (projectile-register-project-type 'rebar '("rebar.config")
+                                  :project-file "rebar.config"
                                   :compile "rebar"
                                   :test "rebar eunit"
                                   :test-suffix "_SUITE")
 (projectile-register-project-type 'elixir '("mix.exs")
+                                  :project-file "mix.exs"
                                   :compile "mix compile"
                                   :src-dir "lib/"
                                   :test "mix test"
                                   :test-suffix "_test")
 ;; JavaScript
 (projectile-register-project-type 'grunt '("Gruntfile.js")
+                                  :project-file "Gruntfile.js"
                                   :compile "grunt"
                                   :test "grunt test")
 (projectile-register-project-type 'gulp '("gulpfile.js")
+                                  :project-file "gulpfile.js"
                                   :compile "gulp"
                                   :test "gulp test")
 (projectile-register-project-type 'npm '("package.json")
+                                  :project-file "package.json"
                                   :compile "npm install"
                                   :test "npm test"
                                   :test-suffix ".test")
 ;; Angular
 (projectile-register-project-type 'angular '("angular.json" ".angular-cli.json")
+                                  :project-file "angular.json"
                                   :compile "ng build"
                                   :run "ng serve"
-                                  :test "ng test")
+                                  :test "ng test"
+                                  :test-suffix ".spec")
 ;; Python
 (projectile-register-project-type 'django '("manage.py")
+                                  :project-file "manage.py"
                                   :compile "python manage.py runserver"
                                   :test "python manage.py test"
                                   :test-prefix "test_"
                                   :test-suffix"_test")
 (projectile-register-project-type 'python-pip '("requirements.txt")
+                                  :project-file "requirements.txt"
                                   :compile "python setup.py build"
                                   :test "python -m unittest discover"
                                   :test-prefix "test_"
                                   :test-suffix"_test")
 (projectile-register-project-type 'python-pkg '("setup.py")
+                                  :project-file "setup.py"
                                   :compile "python setup.py build"
                                   :test "python -m unittest discover"
                                   :test-prefix "test_"
                                   :test-suffix"_test")
 (projectile-register-project-type 'python-tox '("tox.ini")
+                                  :project-file "tox.ini"
                                   :compile "tox -r --notest"
                                   :test "tox"
                                   :test-prefix "test_"
                                   :test-suffix"_test")
 (projectile-register-project-type 'python-pipenv '("Pipfile")
+                                  :project-file "Pipfile"
                                   :compile "pipenv run build"
                                   :test "pipenv run test"
                                   :test-prefix "test_"
                                   :test-suffix "_test")
 ;; Java & friends
 (projectile-register-project-type 'maven '("pom.xml")
+                                  :project-file "pom.xml"
                                   :compile "mvn clean install"
                                   :test "mvn test"
                                   :test-suffix "Test"
                                   :src-dir "main/src/"
                                   :test-dir "main/test/")
 (projectile-register-project-type 'gradle '("build.gradle")
+                                  :project-file "build.gradle"
                                   :compile "gradle build"
                                   :test "gradle test"
                                   :test-suffix "Spec")
 (projectile-register-project-type 'gradlew '("gradlew")
+                                  :project-file "gradlew"
                                   :compile "./gradlew build"
                                   :test "./gradlew test"
                                   :test-suffix "Spec")
 (projectile-register-project-type 'grails '("application.properties" "grails-app")
+                                  :project-file "application.properties"
                                   :compile "grails package"
                                   :test "grails test-app"
                                   :test-suffix "Spec")
 ;; Scala
 (projectile-register-project-type 'sbt '("build.sbt")
+                                  :project-file "build.sbt"
                                   :compile "sbt compile"
                                   :test "sbt test"
                                   :test-suffix "Spec")
 ;; Clojure
 (projectile-register-project-type 'lein-test '("project.clj")
+                                  :project-file "project.clj"
                                   :compile "lein compile"
                                   :test "lein test"
                                   :test-suffix "_test")
 (projectile-register-project-type 'lein-midje '("project.clj" ".midje.clj")
+                                  :project-file "project.clj"
                                   :compile "lein compile"
                                   :test "lein midje"
                                   :test-prefix "t_")
 (projectile-register-project-type 'boot-clj '("build.boot")
+                                  :project-file "build.boot"
                                   :compile "boot aot"
                                   :test "boot test"
                                   :test-suffix "_test")
 (projectile-register-project-type 'clojure-cli '("deps.edn")
+                                  :project-file "deps.edn"
                                   :test-suffix "_test")
 (projectile-register-project-type 'bloop '(".bloop")
+                                  :project-file ".bloop"
                                   :compile "bloop compile root"
                                   :test "bloop test --propagate --reporter scalac root"
                                   :src-dir "src/main/"
@@ -2746,12 +2756,14 @@ test/impl/other files as below:
                                   :test-suffix "Spec")
 ;; Ruby
 (projectile-register-project-type 'ruby-rspec '("Gemfile" "lib" "spec")
+                                  :project-file "Gemfile"
                                   :compile "bundle exec rake"
                                   :src-dir "lib/"
                                   :test "bundle exec rspec"
                                   :test-dir "spec/"
                                   :test-suffix "_spec")
 (projectile-register-project-type 'ruby-test '("Gemfile" "lib" "test")
+                                  :project-file "Gemfile"
                                   :compile"bundle exec rake"
                                   :src-dir "lib/"
                                   :test "bundle exec rake test"
@@ -2759,11 +2771,13 @@ test/impl/other files as below:
 ;; Rails needs to be registered after npm, otherwise `package.json` makes it `npm`.
 ;; https://github.com/bbatsov/projectile/pull/1191
 (projectile-register-project-type 'rails-test '("Gemfile" "app" "lib" "db" "config" "test")
+                                  :project-file "Gemfile"
                                   :compile "bundle exec rails server"
                                   :src-dir "lib/"
                                   :test "bundle exec rake test"
                                   :test-suffix "_test")
 (projectile-register-project-type 'rails-rspec '("Gemfile" "app" "lib" "db" "config" "spec")
+                                  :project-file "Gemfile"
                                   :compile "bundle exec rails server"
                                   :src-dir "lib/"
                                   :test "bundle exec rspec"
@@ -2771,6 +2785,7 @@ test/impl/other files as below:
                                   :test-suffix "_spec")
 ;; Crystal
 (projectile-register-project-type 'crystal-spec '("shard.yml")
+                                  :project-file "shard.yml"
                                   :src-dir "src/"
                                   :test "crystal spec"
                                   :test-dir "spec/"
@@ -2778,30 +2793,48 @@ test/impl/other files as below:
 
 ;; Emacs
 (projectile-register-project-type 'emacs-cask '("Cask")
+                                  :project-file "Cask"
                                   :compile "cask install"
                                   :test-prefix "test-"
                                   :test-suffix "-test")
+(projectile-register-project-type 'emacs-eldev (lambda () (or (projectile-verify-file "Eldev")
+                                                              (projectile-verify-file "Eldev-local")))
+                                  :compile "eldev package"
+                                  :test "eldev test"
+                                  :run "eldev emacs")
 
 ;; R
 (projectile-register-project-type 'r '("DESCRIPTION")
+                                  :project-file "DESCRIPTION"
                                   :compile "R CMD INSTALL --with-keep.source ."
                                   :test (concat "R CMD check -o " temporary-file-directory " ."))
 
 ;; Haskell
 (projectile-register-project-type 'haskell-stack '("stack.yaml")
+                                  :project-file "stack.yaml"
                                   :compile "stack build"
                                   :test "stack build --test"
                                   :test-suffix "Spec")
 
 ;; Rust
 (projectile-register-project-type 'rust-cargo '("Cargo.toml")
+                                  :project-file "Cargo.toml"
                                   :compile "cargo build"
                                   :test "cargo test"
                                   :run "cargo run")
 
 ;; Racket
 (projectile-register-project-type 'racket '("info.rkt")
+                                  :project-file "info.rkt"
                                   :test "raco test .")
+
+;; Dart
+(projectile-register-project-type 'dart '("pubspec.yaml")
+                                  :project-file "pubspec.yaml"
+                                  :compile "pub get"
+                                  :test "pub run test"
+                                  :run "dart"
+                                  :test-suffix "_test.dart")
 
 
 (defvar-local projectile-project-type nil
@@ -2817,9 +2850,9 @@ Fallsback to a generic project type when the type can't be determined."
                    (lambda (project-type-record)
                      (let ((project-type (car project-type-record))
                            (marker (plist-get (cdr project-type-record) 'marker-files)))
-                       (if (listp marker)
-                           (and (projectile-verify-files marker) project-type)
-                         (and (funcall marker) project-type))))
+                       (if (functionp marker)
+                           (and (funcall marker) project-type)
+                         (and (projectile-verify-files marker) project-type))))
                    projectile-project-types))
              'generic)))
     (puthash (projectile-project-root) project-type projectile-project-type-cache)
@@ -4818,7 +4851,8 @@ Otherwise behave as if called interactively.
     (projectile-load-known-projects)
     ;; update the list of known projects
     (projectile--cleanup-known-projects)
-    (projectile-discover-projects-in-search-path)
+    (when projectile-auto-discover
+      (projectile-discover-projects-in-search-path))
     (add-hook 'find-file-hook 'projectile-find-file-hook-function)
     (add-hook 'projectile-find-dir-hook #'projectile-track-known-projects-find-file-hook t)
     (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t t)

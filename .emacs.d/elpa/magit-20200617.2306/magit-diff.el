@@ -55,7 +55,8 @@
 (declare-function magit-merge-in-progress-p "magit-merge" ())
 (declare-function magit--merge-range "magit-merge" (&optional head))
 ;; For `magit-diff--dwim'
-(declare-function forge--pullreq-range "forge-pullreq" (pullreq))
+(declare-function forge--pullreq-range "forge-pullreq"
+                  (pullreq &optional endpoints))
 (declare-function forge--pullreq-ref "forge-pullreq" (pullreq))
 ;; For `magit-diff-wash-diff'
 (declare-function ansi-color-apply-on-region "ansi-color" (begin end))
@@ -1698,7 +1699,7 @@ the Magit-Status buffer for DIRECTORY."
                    (cdr spec)
                  (cdr (magit-split-range spec)))))
       (if (and magit-diff-visit-avoid-head-blob
-               (magit-rev-head-p spec))
+               (magit-rev-head-p rev))
           'unstaged
         rev))))
 
