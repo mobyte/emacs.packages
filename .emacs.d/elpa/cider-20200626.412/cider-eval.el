@@ -67,7 +67,7 @@ The following values are possible t or 'always, 'except-in-repl,
 'only-in-repl.  Any other value, including nil, will cause the stacktrace
 not to be automatically shown.
 
-Irespective of the value of this variable, the `cider-error-buffer' is
+Irrespective of the value of this variable, the `cider-error-buffer' is
 always generated in the background.  Use `cider-selector' to
 navigate to this buffer."
   :type '(choice (const :tag "always" t)
@@ -185,6 +185,54 @@ When invoked with a prefix ARG the command doesn't prompt for confirmation."
   (when-let* ((error-win (get-buffer-window cider-error-buffer)))
     (save-excursion
       (quit-window nil error-win))))
+
+
+;;; Sideloader
+
+(defvar cider-sideloader-dir (file-name-directory load-file-name))
+
+(defun cider-provide-file (file)
+  "Provide FILE in a format suitable for sideloading."
+  (let ((file (expand-file-name file cider-sideloader-dir)))
+    (if (file-exists-p file)
+        (with-current-buffer (find-file-noselect file)
+          (base64-encode-string (substring-no-properties (buffer-string))))
+      ;; if we can't find the file we should return an empty string
+      (base64-encode-string ""))))
+
+(defun cider-sideloader-lookup-handler ()
+  "Make a sideloader-lookup handler."
+  (lambda (response)
+    (nrepl-dbind-response response (id status type name)
+      (if status
+          (when (member "sideloader-lookup" status)
+            (cider-request:sideloader-provide id type name))))))
+
+(defun cider-request:sideloader-start (&optional connection)
+  "Perform the nREPL \"sideloader-start\" op.
+If CONNECTION is nil, use `cider-current-repl'."
+  (cider-ensure-op-supported "sideloader-start")
+  (cider-nrepl-send-request `("op" "sideloader-start")
+                            (cider-sideloader-lookup-handler)
+                            connection))
+
+(defun cider-request:sideloader-provide (id type file &optional connection)
+  "Perform the nREPL \"sideloader-provide\" op for ID, TYPE and FILE.
+If CONNECTION is nil, use `cider-current-repl'."
+  (cider-nrepl-send-request `("id" ,id
+                              "op" "sideloader-provide"
+                              "type" ,type
+                              "name" ,file
+                              "content" ,(cider-provide-file file))
+                            (cider-sideloader-lookup-handler)
+                            connection))
+
+(defun cider-sideloader-start (&optional connection)
+  "Start nREPL's sideloader.
+If CONNECTION is nil, use `cider-current-repl'."
+  (interactive)
+  (message "Starting nREPL's sideloader")
+  (cider-request:sideloader-start connection))
 
 
 ;;; Dealing with compilation (evaluation) errors and warnings
@@ -515,6 +563,7 @@ REPL buffer.  This is controlled via
             (cider--make-fringe-overlay (point)))
         (scan-error nil)))))
 
+(declare-function cider-inspect-last-result "cider-inspector")
 (defun cider-interactive-eval-handler (&optional buffer place)
   "Make an interactive eval handler for BUFFER.
 PLACE is used to display the evaluation result.
