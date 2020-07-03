@@ -4,8 +4,8 @@
 
 ;; Author: Lars Andersen <expez@expez.com>
 ;; URL: https://www.github.com/expez/company-quickhelp
-;; Package-Version: 20200624.2101
-;; Package-Commit: 0fec463511c8f26ba96a953426ee40df36ca927d
+;; Package-Version: 20200626.1245
+;; Package-Commit: c401603685edafa82454fbf045c835e055e8bc56
 ;; Keywords: company popup documentation quickhelp
 ;; Version: 2.2.0
 ;; Package-Requires: ((emacs "24.3") (company "0.8.9") (pos-tip "0.4.6"))
@@ -41,9 +41,6 @@
 (require 'company)
 (require 'pos-tip)
 (require 'cl-lib)
-
-;; To avoid warnings in Emacs < 26.
-(declare-function line-number-display-width "indent.c")
 
 (defgroup company-quickhelp nil
   "Documentation popups for `company-mode'"
@@ -189,9 +186,7 @@ currently active `company' completion candidate."
              (overlay-width (* (frame-char-width)
                                (if ovl (overlay-get ovl 'company-width) 0)))
              (overlay-position (* (frame-char-width)
-                                  (+ (- (if ovl (overlay-get ovl 'company-column) 1) 1)
-                                     (if (bound-and-true-p display-line-numbers)
-                                       (+ (line-number-display-width) 2) 0))))
+                                  (- (if ovl (overlay-get ovl 'company-column) 1) 1)))
              (x-gtk-use-system-tooltips nil)
              (fg-bg `(,company-quickhelp-color-foreground
                       . ,company-quickhelp-color-background))
