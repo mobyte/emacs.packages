@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200616.1659
-;; Package-Commit: 95bcc7d805cbe7116f54e46480563452537b20ef
+;; Package-Version: 20200710.947
+;; Package-Commit: bbcf781d3fddb8e00d0dc10eb68bc2528fb409b3
 ;; Keywords: project, convenience
 ;; Version: 2.3.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -3583,13 +3583,16 @@ Returns a list of expanded filenames."
 (defun projectile-files-with-string (string directory)
   "Return a list of all files containing STRING in DIRECTORY.
 
-Tries to use ag, ack, git-grep, and grep in that order.  If those
+Tries to use rg, ag, ack, git-grep, and grep in that order.  If those
 are impossible (for instance on Windows), returns a list of all
 files in the project."
   (if (projectile-unixy-system-p)
       (let* ((search-term (shell-quote-argument string))
-             (cmd (cond ((executable-find "ag")
-                         (concat "ag --literal --nocolor --noheading -l -- "
+             (cmd (cond ((executable-find "rg")
+			   (concat "rg -lF --no-heading --color never -- "
+				    search-term))
+			  ((executable-find "ag")
+			   (concat "ag --literal --nocolor --noheading -l -- "
                                  search-term))
                         ((executable-find "ack")
                          (concat "ack --literal --noheading --nocolor -l -- "

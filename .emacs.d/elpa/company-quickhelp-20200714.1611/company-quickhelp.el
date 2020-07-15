@@ -4,8 +4,8 @@
 
 ;; Author: Lars Andersen <expez@expez.com>
 ;; URL: https://www.github.com/expez/company-quickhelp
-;; Package-Version: 20200626.1245
-;; Package-Commit: c401603685edafa82454fbf045c835e055e8bc56
+;; Package-Version: 20200714.1611
+;; Package-Commit: 5a86731de461142db3b7ca26b4681756edb4b773
 ;; Keywords: company popup documentation quickhelp
 ;; Version: 2.2.0
 ;; Package-Requires: ((emacs "24.3") (company "0.8.9") (pos-tip "0.4.6"))
@@ -180,43 +180,43 @@ currently active `company' completion candidate."
       (let* ((selected (nth company-selection company-candidates))
              (doc (let ((inhibit-message t))
                     (company-quickhelp--doc selected)))
-             (width 80)
-             (timeout 300)
-             (ovl company-pseudo-tooltip-overlay)
-             (overlay-width (* (frame-char-width)
-                               (if ovl (overlay-get ovl 'company-width) 0)))
-             (overlay-position (* (frame-char-width)
-                                  (- (if ovl (overlay-get ovl 'company-column) 1) 1)))
-             (x-gtk-use-system-tooltips nil)
-             (fg-bg `(,company-quickhelp-color-foreground
-                      . ,company-quickhelp-color-background))
-             (pos (save-excursion
-                    (goto-char (min (overlay-start ovl) (point)))
-                    (line-beginning-position)))
-             (dy (if (and ovl (< (overlay-get ovl 'company-height) 0))
-                     0
-                   (frame-char-height))))
+             (ovl company-pseudo-tooltip-overlay))
         (when (and ovl doc)
           (with-no-warnings
-            (if company-quickhelp-use-propertized-text
-                (let* ((frame (window-frame (selected-window)))
-                       (max-width (pos-tip-x-display-width frame))
-                       (max-height (pos-tip-x-display-height frame))
-                       (w-h (pos-tip-string-width-height doc)))
-                  (cond
-                   ((> (car w-h) width)
-                    (setq doc (pos-tip-fill-string doc width nil 'none nil max-height)
-                          w-h (pos-tip-string-width-height doc)))
-                   ((or (> (car w-h) max-width)
-                        (> (cdr w-h) max-height))
-                    (setq doc (pos-tip-truncate-string doc max-width max-height)
-                          w-h (pos-tip-string-width-height doc))))
-                  (pos-tip-show-no-propertize doc fg-bg pos nil timeout
-                                              (pos-tip-tooltip-width (car w-h) (frame-char-width frame))
-                                              (pos-tip-tooltip-height (cdr w-h) (frame-char-height frame) frame)
-                                              nil (+ overlay-width overlay-position) dy))
-              (pos-tip-show doc fg-bg pos nil timeout width nil
-                            (+ overlay-width overlay-position) dy))))))))
+            (let ((width 80)
+                  (timeout 300)
+                  (overlay-width (* (frame-char-width)
+                                    (overlay-get ovl 'company-width)))
+                  (overlay-position (* (frame-char-width)
+                                       (- (overlay-get ovl 'company-column) 1)))
+                  (x-gtk-use-system-tooltips nil)
+                  (fg-bg `(,company-quickhelp-color-foreground
+                           . ,company-quickhelp-color-background))
+                  (pos (save-excursion
+                         (goto-char (min (overlay-start ovl) (point)))
+                         (line-beginning-position)))
+                  (dy (if (< (overlay-get ovl 'company-height) 0)
+                          0
+                        (frame-char-height))))
+              (if company-quickhelp-use-propertized-text
+                  (let* ((frame (window-frame (selected-window)))
+                         (max-width (pos-tip-x-display-width frame))
+                         (max-height (pos-tip-x-display-height frame))
+                         (w-h (pos-tip-string-width-height doc)))
+                    (cond
+                     ((> (car w-h) width)
+                      (setq doc (pos-tip-fill-string doc width nil 'none nil max-height)
+                            w-h (pos-tip-string-width-height doc)))
+                     ((or (> (car w-h) max-width)
+                          (> (cdr w-h) max-height))
+                      (setq doc (pos-tip-truncate-string doc max-width max-height)
+                            w-h (pos-tip-string-width-height doc))))
+                    (pos-tip-show-no-propertize doc fg-bg pos nil timeout
+                                                (pos-tip-tooltip-width (car w-h) (frame-char-width frame))
+                                                (pos-tip-tooltip-height (cdr w-h) (frame-char-height frame) frame)
+                                                nil (+ overlay-width overlay-position) dy))
+                (pos-tip-show doc fg-bg pos nil timeout width nil
+                              (+ overlay-width overlay-position) dy)))))))))
 
 (defun company-quickhelp--set-timer ()
   (when (or (null company-quickhelp--timer)
