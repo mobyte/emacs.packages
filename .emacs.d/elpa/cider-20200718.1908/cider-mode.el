@@ -330,7 +330,8 @@ If invoked with a prefix ARG eval the expression after inserting it."
     ["Close ancillary buffers" cider-close-ancillary-buffers
      :active (seq-remove #'null cider-ancillary-buffers)]
     ("nREPL" :active (cider-connected-p)
-     ["Describe nrepl session" cider-describe-nrepl-session]
+     ["List nREPL middleware" cider-list-nrepl-middleware]
+     ["Describe nREPL session" cider-describe-nrepl-session]
      ["Toggle message logging" nrepl-toggle-message-logging]))
   "Menu for CIDER mode.")
 
