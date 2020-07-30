@@ -782,6 +782,11 @@ like pretty much every other keymap:
 
 \(fn)" t nil)
 
+(autoload 'magit-project-status "magit-extras" "\
+Run `magit-status' in the current project's root.
+
+\(fn)" t nil)
+
 (autoload 'magit-dired-jump "magit-extras" "\
 Visit file at point using Dired.
 With a prefix argument, visit in another window.  If there
