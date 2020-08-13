@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200810.544
-;; Package-Commit: fc9d4c8afd406fa46a686b999a7b8f5701614442
+;; Package-Version: 20200810.1245
+;; Package-Commit: 2eaf2c0e2d42457b55068d92659ef14195e12918
 ;; Keywords: project, convenience
 ;; Version: 2.3.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -2709,7 +2709,7 @@ test/impl/other files as below:
                                   :compile "poetry build"
                                   :test "poetry run python -m unittest discover"
                                   :test-prefix "test_"
-                                  :test-suffix"_test")
+                                  :test-suffix "_test")
 ;; Java & friends
 (projectile-register-project-type 'maven '("pom.xml")
                                   :project-file "pom.xml"
