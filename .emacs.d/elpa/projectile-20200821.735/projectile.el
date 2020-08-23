@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200810.1245
-;; Package-Commit: 2eaf2c0e2d42457b55068d92659ef14195e12918
+;; Package-Version: 20200821.735
+;; Package-Commit: b49a0034fb8f2fb602cb093fa721515f87183eaa
 ;; Keywords: project, convenience
 ;; Version: 2.3.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -61,12 +61,14 @@
 (declare-function make-term "term")
 (declare-function term-mode "term")
 (declare-function term-char-mode "term")
+(declare-function term-ansi-make-term "term")
 (declare-function eshell-search-path "esh-ext")
 (declare-function vc-dir "vc-dir")
 (declare-function vc-dir-busy "vc-dir")
 (declare-function string-trim "subr-x")
 (declare-function fileloop-continue "fileloop")
 (declare-function fileloop-initialize-replace "fileloop")
+(declare-function tramp-archive-file-name-p "tramp-archive")
 
 (declare-function ggtags-ensure-project "ext:ggtags")
 (declare-function ggtags-update-tags "ext:ggtags")
@@ -389,7 +391,8 @@ Regular expressions can be used."
     "_darcs"
     ".tox"
     ".svn"
-    ".stack-work")
+    ".stack-work"
+    ".ccls-cache")
   "A list of directories globally ignored by projectile.
 
 Regular expressions can be used."
@@ -2810,9 +2813,11 @@ test/impl/other files as below:
                                   :test-suffix "-test")
 (projectile-register-project-type 'emacs-eldev (lambda () (or (projectile-verify-file "Eldev")
                                                               (projectile-verify-file "Eldev-local")))
-                                  :compile "eldev package"
+                                  :project-file "Eldev"
+                                  :compile "eldev compile"
                                   :test "eldev test"
-                                  :run "eldev emacs")
+                                  :run "eldev emacs"
+                                  :package "eldev package")
 
 ;; R
 (projectile-register-project-type 'r '("DESCRIPTION")
@@ -3664,7 +3669,7 @@ to run the replacement."
                                   (goto-char (match-beginning 0))))
             tags-loop-operate `(perform-replace ',old-text ',new-text t nil nil
                                                 nil multi-query-replace-map))
-      (tags-loop-continue (or (cons 'list files) t)))))
+      (with-no-warnings (tags-loop-continue (or (cons 'list files) t))))))
 
 ;;;###autoload
 (defun projectile-replace-regexp (&optional arg)
@@ -3692,7 +3697,8 @@ to run the replacement."
           (cl-remove-if
            #'file-directory-p
            (mapcar #'projectile-expand-root (projectile-dir-files directory)))))
-    (tags-query-replace old-text new-text nil (cons 'list files))))
+    ;; FIXME: Probably would fail on Emacs 27+, fourth argument is gone.
+    (with-no-warnings (tags-query-replace old-text new-text nil (cons 'list files)))))
 
 ;;;###autoload
 (defun projectile-kill-buffers ()

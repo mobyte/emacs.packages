@@ -1823,6 +1823,7 @@ each one wraps a part of the input string."
 (defun company--permutations (lst)
   (if (not lst)
       '(nil)
+    ;; FIXME: Replace with `mapcan' in Emacs 26.
     (cl-mapcan
      (lambda (e)
        (mapcar (lambda (perm) (cons e perm))
@@ -2434,6 +2435,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                           thereis (let ((company-backend b))
                                     (setq backend b)
                                     (company-call-backend 'prefix))))
+         (c-a-p-f completion-at-point-functions)
          cc annotations)
     (when (or (stringp prefix) (consp prefix))
       (let ((company-backend backend))
@@ -2460,7 +2462,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
               (memq 'company-capf backend)
             (eq backend 'company-capf))
       (insert "Value of c-a-p-f: "
-              (pp-to-string completion-at-point-functions)))
+              (pp-to-string c-a-p-f)))
     (insert "Major mode: " mode)
     (insert "\n")
     (insert "Prefix: " (pp-to-string prefix))
@@ -2752,7 +2754,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                      :background (face-attribute 'default :background)))
            (str (apply #'concat
                        (when nl " \n")
-                       (mapcan
+                       (cl-mapcan
                         ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=42552#23
                         (lambda (line) (list line (propertize "\n" 'face nl-face)))
                         (nreverse new)))))
@@ -2815,6 +2817,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
           (setq annotation (company--clean-string annotation))
           (when company-tooltip-align-annotations
             ;; `lisp-completion-at-point' adds a space.
+            ;; FIXME: Use `string-trim' in Emacs 24.4
             (setq annotation (comment-string-strip annotation t nil))))
         (push (cons value annotation) items)
         (setq width (max (+ (length value)
