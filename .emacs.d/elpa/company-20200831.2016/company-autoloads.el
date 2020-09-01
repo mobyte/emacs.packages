@@ -309,12 +309,25 @@ confirm the selection and finish the completion.
 
 \(fn COMMAND)" nil nil)
 
-(autoload 'company-tng-configure-default "company-tng" "\
-Applies the default configuration to enable company-tng.
+(define-obsolete-function-alias 'company-tng-configure-default 'company-tng-mode "0.9.14" "\
+Applies the default configuration to enable company-tng.")
 
-\(fn)" nil nil)
+(defvar company-tng-mode nil "\
+Non-nil if Company-Tng mode is enabled.
+See the `company-tng-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `company-tng-mode'.")
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-tng" '("company-tng--")))
+(custom-autoload 'company-tng-mode "company-tng" nil)
+
+(autoload 'company-tng-mode "company-tng" "\
+This minor mode enables `company-tng-frontend'.
+
+\(fn &optional ARG)" t nil)
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "company-tng" '("company-tng-")))
 
 ;;;***
 
