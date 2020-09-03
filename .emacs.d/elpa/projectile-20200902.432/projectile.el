@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20200822.822
-;; Package-Commit: a2b5a70e204e277a738615901dfebf274c8202c2
+;; Package-Version: 20200902.432
+;; Package-Commit: 1104e448779600a6238ffc91afb7e29d6b268ef1
 ;; Keywords: project, convenience
 ;; Version: 2.3.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -2868,6 +2868,11 @@ test/impl/other files as below:
                                   :run "dart"
                                   :test-suffix "_test.dart")
 
+;; OCaml
+(projectile-register-project-type 'ocaml-dune '("dune-project")
+                                  :project-file "dune-project"
+                                  :compile "dune build"
+                                  :test "dune runtest")
 
 (defvar-local projectile-project-type nil
   "Buffer local var for overriding the auto-detected project type.

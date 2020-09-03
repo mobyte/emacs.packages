@@ -74,6 +74,8 @@
 
 ;;* general settings
 
+(setq byte-compile-warnings '(cl-functions))
+
 (setq visible-bell t)
 (setq visible-bell nil) ;; The default
 (setq ring-bell-function 'ignore)
