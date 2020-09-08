@@ -1,4 +1,4 @@
-(define-package "cider" "20200903.1034" "Clojure Interactive Development Environment that Rocks"
+(define-package "cider" "20200904.1100" "Clojure Interactive Development Environment that Rocks"
   '((emacs "25")
     (clojure-mode "5.12")
     (parseedn "0.1")
@@ -7,7 +7,7 @@
     (spinner "1.7")
     (seq "2.16")
     (sesman "0.3.2"))
-  :commit "cf67ba1197f063b582efa0e97811212d47a580b8" :keywords
+  :commit "054f9c009213ec35f458464f5571e92515491789" :keywords
   '("languages" "clojure" "cider")
   :authors
   '(("Tim King" . "kingtim@gmail.com")
