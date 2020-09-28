@@ -680,7 +680,7 @@ current git branch as a string.  Otherwise return an empty string."
      (wrap-result 'defun)
      (handle-error 'defun)
      (context-defn 'defun)
-     (context-fn 'defun)
+     (context-fn 1)
      (context-fn-stub 'defun)
      (defroutes 'defun)
      (testing 'defun)
