@@ -1,11 +1,12 @@
 ;;; packed.el --- package manager agnostic Emacs Lisp package utilities  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2012-2018  Jonas Bernoulli
+;; Copyright (C) 2012-2020  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/emacscollective/packed
 ;; Keywords: compile, convenience, lisp, package, library
-;; Package-Version: 20180318.1729
+;; Package-Version: 20201024.954
+;; Package-Commit: 394efe60bc7ba4f45f355d820b26bfe5494b01f8
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This file is not part of GNU Emacs.
@@ -408,7 +409,10 @@ nil if not found."
 
 (defun packed-update-autoloads (dest path)
   (packed-with-loaddefs dest
-    (update-directory-autoloads path)))
+    (cond ((fboundp 'make-directory-autoloads)   ; >= 28
+           (make-directory-autoloads path generated-autoload-file))
+          ((fboundp 'update-directory-autoloads) ; <= 27
+           (update-directory-autoloads path)))))
 
 (defun packed-remove-autoloads (dest path)
   (packed-with-loaddefs dest

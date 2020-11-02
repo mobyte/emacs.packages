@@ -1,13 +1,14 @@
 ;;; auto-compile.el --- automatically compile Emacs Lisp libraries  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2008-2019  Jonas Bernoulli
+;; Copyright (C) 2008-2020  Jonas Bernoulli
 
 ;; Author: Jonas Bernoulli <jonas@bernoul.li>
 ;; Homepage: https://github.com/emacscollective/auto-compile
 ;; Keywords: compile, convenience, lisp
-;; Package-Version: 20191020.1040
+;; Package-Version: 20201028.1039
+;; Package-Commit: e7f0e2f449f35e33f50b090234b62dfab78406cb
 
-;; Package-Requires: ((emacs "25.1") (packed "3.0.0"))
+;; Package-Requires: ((emacs "25.1") (packed "3.0.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -141,7 +142,6 @@
 (defvar autoload-modified-buffers)
 (defvar warning-minimum-level)
 
-(defvar auto-compile-update-autoloads)
 (defvar auto-compile-use-mode-line)
 
 (defgroup auto-compile nil
@@ -540,7 +540,8 @@ pretend the byte code file exists.")
               (packed-with-loaddefs loaddefs
                 (let ((autoload-modified-buffers
                        (list (find-buffer-visiting file))))
-                  (autoload-generate-file-autoloads file)))
+                  (autoload-generate-file-autoloads
+                   file nil generated-autoload-file)))
             (error
              (message "Generating loaddefs for %s failed" file)
              (setq loaddefs nil))))

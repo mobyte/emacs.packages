@@ -168,7 +168,7 @@ This command starts such a bisect session by asking for a know
 good and a bad commit.  To move the session forward use the
 other actions from the bisect transient command (\\<magit-status-mode-map>\\[magit-bisect]).
 
-\(fn BAD GOOD)" t nil)
+\(fn BAD GOOD ARGS)" t nil)
 
 (autoload 'magit-bisect-reset "magit-bisect" "\
 After bisecting, cleanup bisection state and return to original `HEAD'." t nil)
@@ -195,7 +195,7 @@ Unlike `git bisect run' this can be used before bisecting has
 begun.  In that case it behaves like `git bisect start; git
 bisect run'.
 
-\(fn CMDLINE &optional BAD GOOD)" t nil)
+\(fn CMDLINE &optional BAD GOOD ARGS)" t nil)
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-bisect" '("magit-")))
 
@@ -1762,7 +1762,7 @@ With a prefix argument reset the working tree otherwise don't.
 ;;;### (autoloads nil "magit-section" "magit-section.el" (0 0 0 0))
 ;;; Generated autoloads from magit-section.el
 
-(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-section" '("magit-")))
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "magit-section" '("isearch-clean-overlays@magit-mode" "magit-")))
 
 ;;;***
 
@@ -2294,6 +2294,35 @@ See info node `(magit)Debugging Tools' for more information." t nil)
 
 ;;;### (autoloads nil "magit-wip" "magit-wip.el" (0 0 0 0))
 ;;; Generated autoloads from magit-wip.el
+
+(defvar magit-wip-mode nil "\
+Non-nil if Magit-Wip mode is enabled.
+See the `magit-wip-mode' command
+for a description of this minor mode.
+Setting this variable directly does not take effect;
+either customize it (see the info node `Easy Customization')
+or call the function `magit-wip-mode'.")
+
+(custom-autoload 'magit-wip-mode "magit-wip" nil)
+
+(autoload 'magit-wip-mode "magit-wip" "\
+Save uncommitted changes to work-in-progress refs.
+
+If called interactively, enable Magit-Wip mode if ARG is
+positive, and disable it if ARG is zero or negative.  If called
+from Lisp, also enable the mode if ARG is omitted or nil, and
+toggle it if ARG is `toggle'; disable the mode otherwise.
+
+Whenever appropriate (i.e. when dataloss would be a possibility
+otherwise) this mode causes uncommitted changes to be committed
+to dedicated work-in-progress refs.
+
+For historic reasons this mode is implemented on top of four
+other `magit-wip-*' modes, which can also be used individually,
+if you want finer control over when the wip refs are updated;
+but that is discouraged.
+
+\(fn &optional ARG)" t nil)
 
 (put 'magit-wip-after-save-mode 'globalized-minor-mode t)
 
