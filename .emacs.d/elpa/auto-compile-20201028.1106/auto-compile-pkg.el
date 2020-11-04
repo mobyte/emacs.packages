@@ -1,0 +1,2 @@
+;;; Generated package description from /Users/mobyte/.emacs.d/elpa/auto-compile-20201028.1106/auto-compile.el  -*- no-byte-compile: t -*-
+(define-package "auto-compile" "20201028.1106" "automatically compile Emacs Lisp libraries" '((emacs "25.1") (packed "3.0.1")) :commit "105997d4436bcf96322a4bc91686cfcfef0e455c" :keywords '("compile" "convenience" "lisp") :authors '(("Jonas Bernoulli" . "jonas@bernoul.li")) :maintainer '("Jonas Bernoulli" . "jonas@bernoul.li") :url "https://github.com/emacscollective/auto-compile")
