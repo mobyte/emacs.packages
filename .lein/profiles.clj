@@ -3,13 +3,13 @@
   :plugins [[cider/cider-nrepl "0.25.3-SNAPSHOT"]
             [refactor-nrepl "2.5.0"]]
   :repl-options {:init (do (require 'clojure.pprint
-                                    #_'clojure.tools.namespace.repl)
+                                    'clojure.tools.namespace.repl)
                            (intern 'clojure.core
                                    '>pprint clojure.pprint/pprint)
-                           #_(intern 'clojure.core
-                                   '>refresh clojure.tools.namespace.repl/refresh)
-                           #_(intern 'clojure.core
-                                   '>clear clojure.tools.namespace.repl/clear)
+                           (intern 'clojure.core
+                                     '>refresh clojure.tools.namespace.repl/refresh)
+                           (intern 'clojure.core
+                                     '>clear clojure.tools.namespace.repl/clear)
                            (intern 'clojure.core
                                    '>run-tests clojure.test/run-tests))
                  :skip-default-init true
