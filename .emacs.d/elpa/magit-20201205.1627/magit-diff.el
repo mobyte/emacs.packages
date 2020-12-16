@@ -75,6 +75,7 @@
 (defgroup magit-diff nil
   "Inspect and manipulate Git diffs."
   :link '(info-link "(magit)Diffing")
+  :group 'magit-commands
   :group 'magit-modes)
 
 (defcustom magit-diff-mode-hook nil
@@ -2559,7 +2560,7 @@ or a ref which is not a branch, then it inserts nothing."
        (eq magit-revision-insert-related-refs 'all))
       (magit--insert-related-refs
        magit-buffer-revision "--contains" "Contained"
-       (eq magit-revision-insert-related-refs '(all mixed)))
+       (memq magit-revision-insert-related-refs '(all mixed)))
       (when-let ((follows (magit-get-current-tag magit-buffer-revision t)))
         (let ((tag (car  follows))
               (cnt (cadr follows)))

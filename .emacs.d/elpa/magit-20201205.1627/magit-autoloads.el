@@ -1336,6 +1336,17 @@ https://github.com/mhagger/git-when-merged.
 Move to the Nth parent of the current commit.
 
 \(fn &optional N)" t nil)
+ (autoload 'magit-shortlog "magit-log" nil t)
+
+(autoload 'magit-shortlog-since "magit-log" "\
+Show a history summary for commits since REV.
+
+\(fn REV ARGS)" t nil)
+
+(autoload 'magit-shortlog-range "magit-log" "\
+Show a history summary for commit or range REV-OR-RANGE.
+
+\(fn REV-OR-RANGE ARGS)" t nil)
 
 (autoload 'magit-cherry "magit-log" "\
 Show commits in a branch that are not merged in the upstream branch.

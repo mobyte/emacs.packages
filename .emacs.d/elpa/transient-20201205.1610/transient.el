@@ -92,8 +92,15 @@
 (defmacro transient--with-emergency-exit (&rest body)
   (declare (indent defun))
   `(condition-case err
-       ,(macroexp-progn body)
-     (error (transient--emergency-exit err))))
+       (let ((debugger #'transient--exit-and-debug))
+         ,(macroexp-progn body))
+     ((debug error)
+      (transient--emergency-exit)
+      (signal (car err) (cdr err)))))
+
+(defun transient--exit-and-debug (&rest args)
+  (transient--emergency-exit)
+  (apply #'debug args))
 
 ;;; Options
 
@@ -539,6 +546,7 @@ If `transient-save-history' is nil, then do nothing."
    (command     :initarg :command)
    (level       :initarg :level)
    (variable    :initarg :variable    :initform nil)
+   (init-value  :initarg :init-value)
    (value) (default-value :initarg :value)
    (scope       :initarg :scope       :initform nil)
    (history     :initarg :history     :initform nil)
@@ -987,8 +995,7 @@ example, sets a variable use `transient-define-infix' instead.
                 ((not (string-suffix-p "=" arg))
                  (setq class 'transient-switch))
                 (t
-                 (setq class 'transient-option)
-                 (setq args (plist-put args :reader 'read-string))))))
+                 (setq class 'transient-option)))))
        (t
         (error "Needed command or argument, got %S" car)))
       (while (keywordp car)
@@ -1314,11 +1321,13 @@ probably use this instead:
   (get COMMAND 'transient--suffix)"
   (when command
     (cl-check-type command command))
-  (if transient--prefix
+  (if (or transient--prefix
+          transient-current-prefix)
       (cl-find-if (lambda (obj)
                     (eq (transient--suffix-command obj)
                         (or command this-original-command)))
-                  transient--suffixes)
+                  (or transient--suffixes
+                      transient-current-suffixes))
     (when-let ((obj (get (or command this-command) 'transient--suffix))
                (obj (clone obj)))
       (transient-init-scope obj)
@@ -2002,15 +2011,8 @@ value.  Otherwise return CHILDREN as is."
                  arg this-command transient--exitp)
       (apply #'message arg args))))
 
-(defun transient--emergency-exit (&optional err)
+(defun transient--emergency-exit ()
   "Exit the current transient command after an error occurred.
-
-Beside being used with `condition-case', this function also has
-to be a member of `debugger-mode-hook', else the debugger would
-be unusable and exiting it by pressing \"q\" would fail because
-the transient command would still be active and that key would
-either be unbound or do something else.
-
 When no transient is active (i.e. when `transient--prefix') is
 nil, then do nothing."
   (transient--debug 'emergency-exit)
@@ -2018,11 +2020,7 @@ nil, then do nothing."
     (setq transient--stack nil)
     (setq transient--exitp t)
     (transient--pre-exit)
-    (transient--post-command))
-  (when err
-    (signal (car err) (cdr err))))
-
-(add-hook 'debugger-mode-hook 'transient--emergency-exit)
+    (transient--post-command)))
 
 ;;; Pre-Commands
 
@@ -2327,6 +2325,13 @@ abstract `transient-infix' class must implement this function.
 Non-infix suffix commands usually don't have a value."
   nil)
 
+(cl-defmethod transient-init-value :around ((obj transient-prefix))
+  "If bound, then call OBJ's `init-value' function.
+Otherwise call the primary method according to objects class."
+  (if (slot-boundp obj 'init-value)
+      (funcall (oref obj init-value) obj)
+    (cl-call-next-method obj)))
+
 (cl-defmethod transient-init-value :around ((obj transient-infix))
   "If bound, then call OBJ's `init-value' function.
 Otherwise call the primary method according to objects class."
@@ -2567,10 +2572,7 @@ prompt."
   "Set the value of infix object OBJ to value.")
 
 (cl-defmethod transient-infix-set ((obj transient-infix) value)
-  "Set the value of infix object OBJ to value.
-
-This implementation should be suitable for almost all infix
-commands."
+  "Set the value of infix object OBJ to value."
   (oset obj value value))
 
 (cl-defmethod transient-infix-set :around ((obj transient-argument) value)
