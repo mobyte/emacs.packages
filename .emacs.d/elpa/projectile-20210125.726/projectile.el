@@ -1,11 +1,11 @@
 ;;; projectile.el --- Manage and navigate projects in Emacs easily -*- lexical-binding: t -*-
 
-;; Copyright © 2011-2020 Bozhidar Batsov <bozhidar@batsov.com>
+;; Copyright © 2011-2021 Bozhidar Batsov <bozhidar@batsov.com>
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20210117.1224
-;; Package-Commit: 0e2620ad5cb236a64a2b4faa4c44a76a08a1cf08
+;; Package-Version: 20210125.726
+;; Package-Commit: fd5994762a90c2311e8aa40c37373f24e1743a55
 ;; Keywords: project, convenience
 ;; Version: 2.4.0-snapshot
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -1025,14 +1025,16 @@ This function is not recursive and only adds projects with roots
 at the top level of DIRECTORY."
   (interactive
    (list (read-directory-name "Starting directory: ")))
-  (let ((subdirs (directory-files directory t)))
-    (mapcar
-     (lambda (dir)
-       (when (and (file-directory-p dir)
-                  (not (member (file-name-nondirectory dir) '(".." "."))))
-         (when (projectile-project-p dir)
-           (projectile-add-known-project dir))))
-     subdirs)))
+  (if (file-exists-p directory)
+      (let ((subdirs (directory-files directory t)))
+        (mapcar
+         (lambda (dir)
+           (when (and (file-directory-p dir)
+                      (not (member (file-name-nondirectory dir) '(".." "."))))
+             (when (projectile-project-p dir)
+               (projectile-add-known-project dir))))
+         subdirs))
+    (message "Project search path directory %s doesn't exist" directory)))
 
 ;;;###autoload
 (defun projectile-discover-projects-in-search-path ()
