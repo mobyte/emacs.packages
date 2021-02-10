@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 2.90.1 (v2.90.1-1157-g10a931f15+1).
+This manual is for Magit version 2.90.1 (v2.90.1-1171-gb4cf9fa9c+1).
 
      Copyright (C) 2015-2021 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -5611,8 +5611,8 @@ them.  Those features are available from separate transient command.
 
 ‘b c’     (‘magit-branch-and-checkout’)
 
-     This command creates a new branch like ‘magit-branch’, but then
-     also checks it out.
+     This command creates a new branch like ‘magit-branch-create’, but
+     then also checks it out.
 
      Also see option ‘magit-branch-prefer-remote-upstream’.
 
