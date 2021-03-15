@@ -1,7 +1,7 @@
 {:user
- {:dependencies [[org.clojure/clojure "1.10.1"]]
+ {:dependencies [[org.clojure/clojure "1.10.3"]]
   :plugins [[cider/cider-nrepl "0.25.3-SNAPSHOT"]
-            [refactor-nrepl "2.5.0"]
+            [refactor-nrepl "2.5.1"]
             [lein-nomis-ns-graph "0.14.6"]]
   :repl-options {:init (do (require 'clojure.pprint
                                     'clojure.tools.namespace.repl)
