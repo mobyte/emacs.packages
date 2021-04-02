@@ -3,6 +3,7 @@
   :plugins [[cider/cider-nrepl "0.25.3-SNAPSHOT"]
             [refactor-nrepl "2.5.1"]
             [lein-nomis-ns-graph "0.14.6"]]
+  :javac-options ["-target" "11" "-source" "11" "-Xlint:-options"]
   :repl-options {:init (do (require 'clojure.pprint
                                     'clojure.tools.namespace.repl)
                            (intern 'clojure.core
