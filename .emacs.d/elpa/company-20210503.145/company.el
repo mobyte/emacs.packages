@@ -224,6 +224,10 @@ visualization is active.
 `post-command': After every command that is executed while the
 visualization is active.
 
+`unhide': When an asynchronous backend is waiting for its completions.
+Only needed in frontends which hide their visualizations in `pre-command'
+for technical reasons.
+
 The visualized data is stored in `company-prefix', `company-candidates',
 `company-common', `company-selection', `company-point' and
 `company-search-string'."
@@ -672,6 +676,13 @@ return a string prefixed with one space."
   "If enabled, selecting item before first or after last wraps around."
   :type '(choice (const :tag "off" nil)
                  (const :tag "on" t)))
+
+(defcustom company-async-redisplay-delay 0.005
+  "Delay before redisplay when fetching candidates asynchronously.
+
+You might want to set this to a higher value if your backends respond
+quickly, to avoid redisplaying twice per each typed character."
+  :type 'number)
 
 (defvar company-async-wait 0.03
   "Pause between checks to see if the value's been set when turning an
@@ -1256,10 +1267,13 @@ update if FORCE-UPDATE."
                                            company-candidates-cache)))
                 (setq candidates (all-completions prefix prev))
                 (cl-return t)))))
-        (progn
-          ;; No cache match, call the backend.
+        ;; No cache match, call the backend.
+        (let ((refresh-timer (run-with-timer company-async-redisplay-delay
+                                             nil #'company--sneaky-refresh)))
           (setq candidates (company--preprocess-candidates
                             (company--fetch-candidates prefix)))
+          ;; If the backend is synchronous, no chance for the timer to run.
+          (cancel-timer refresh-timer)
           ;; Save in cache.
           (push (cons prefix candidates) company-candidates-cache)))
     ;; Only now apply the predicate and transformers.
@@ -1301,6 +1315,12 @@ update if FORCE-UPDATE."
         (prog1
             (and (consp res) res)
           (setq res 'exited))))))
+
+(defun company--sneaky-refresh ()
+  (when company-candidates (company-call-frontends 'unhide))
+  (let (inhibit-redisplay)
+    (redisplay))
+  (when company-candidates (company-call-frontends 'pre-command)))
 
 (defun company--flyspell-workaround-p ()
   ;; https://debbugs.gnu.org/23980
@@ -1459,54 +1479,37 @@ end of the match."
                                 selected))
 
 (defcustom company-text-icons-mapping
-  '((array . "Α")
-    (boolean . "β")
-    (class . "γ")
-    (color . "Δ")
-    (constant . "ε")
-    (enum-member . "ζ")
-    (enum . "Ζ")
-    (event . "η")
-    (field . "θ")
-    (file . "Ɩ")
-    (folder . "⍳")
-    (interface . "ϰ")
-    (keyword . "ν")
-    (method . "λ")
-    (function . "ƒ")
-    (module . "Ο")
-    (numeric . "π")
-    (operator . "⊙")
-    (parameter . "ρ")
-    (property . "σ")
-    (ruler . "τ")
-    (snippet . "υ")
-    (string . "φ")
-    (struct . "Χ")
-    (text . "μ")
-    (value . "Ζ")
-    (variable . "ѱ")
-    (t . "ξ"))
+  '((array . "a")
+    (boolean . "b")
+    (class . "c")
+    (color . "c")
+    (constant . "c")
+    (enum-member . "e")
+    (enum . "e")
+    (field . "f")
+    (file . "f")
+    (folder . "d")
+    (interface . "i")
+    (keyword . "k")
+    (method . "m")
+    (function . "f")
+    (module . "M")
+    (numeric . "n")
+    (operator . "o")
+    (parameter . "p")
+    (property . "p")
+    (ruler . "r")
+    (snippet . "S")
+    (string . "s")
+    (struct . "s")
+    (text . "t")
+    (value . "v")
+    (variable . "v")
+    (t . "."))
   "Mapping of the text icons."
   :type 'list)
 
-(defcustom company-text-icons-format "%s "
-  "Format string for printing the text icons."
-  :type 'string)
-
-(defun company-text-icons-margin (candidate _selected)
-  "Margin function which returns unicode icons."
-  (when-let ((candidate candidate)
-             (kind (company-call-backend 'kind candidate))
-             (icon (or (alist-get kind company-text-icons-mapping)
-                       (alist-get t company-text-icons-mapping))))
-    (format company-text-icons-format icon)))
-
-(defcustom company-dot-icons-format "●"
-  "Format string for `company-dot-icons-margin'."
-  :type 'string)
-
-(defcustom company-dot-icons-face-mapping
+(defcustom company-text-kind-face-mapping
   '((array . font-lock-type-face)
     (boolean . font-lock-builtin-face)
     (class . font-lock-type-face)
@@ -1526,38 +1529,68 @@ end of the match."
     (operator . font-lock-comment-delimiter-face)
     (parameter . font-lock-builtin-face)
     (property . font-lock-variable-name-face)
-    ; (ruler . nil)
+    ;; (ruler . nil)
     (snippet . font-lock-string-face)
     (string . font-lock-string-face)
     (struct . font-lock-variable-name-face)
-    ; (text . nil)
+    ;; (text . nil)
     (value . font-lock-builtin-face)
     (variable . font-lock-variable-name-face)
     (t . deemphasized))
-  "Faces mapping for `company-dot-icons-margin'."
+  "Faces mapping for `company-text-icons-margin' and `company-dot-icons-margin'."
   :type '(repeat
           (cons (symbol :tag "Kind name")
                 (face :tag "Face to use for it"))))
+
+(defcustom company-text-face-extra-attributes '(:weight bold)
+  "Additional attributes to add to text icons' faces.
+If non-nil, an anonymous face will be generated.
+Only affects `company-text-icons-margin'."
+  :type 'list)
+
+(defcustom company-text-icons-format " %s "
+  "Format string for printing the text icons."
+  :type 'string)
+
+(defun company-text-icons-margin (candidate _selected)
+  "Margin function which returns unicode icons."
+  (when-let ((candidate candidate)
+             (kind (company-call-backend 'kind candidate))
+             (icon (or (alist-get kind company-text-icons-mapping)
+                       (alist-get t company-text-icons-mapping)))
+             (face (or (assoc-default kind
+                                      company-text-kind-face-mapping)
+                       (assoc-default t company-text-kind-face-mapping))))
+    (propertize
+     (format company-text-icons-format icon)
+     'face
+     (if company-text-face-extra-attributes
+         (append company-text-face-extra-attributes
+                 (list :inherit face))
+       face))))
+
+(defcustom company-dot-icons-format "●"
+  "Format string for `company-dot-icons-margin'."
+  :type 'string)
 
 (defun company-dot-icons-margin (candidate _selected)
   "Margin function that uses a colored dot to display completion kind."
   (when-let ((kind (company-call-backend 'kind candidate))
              (face (or (assoc-default kind
-                                      company-dot-icons-face-mapping)
-                       (assoc-default t company-dot-icons-face-mapping))))
+                                      company-text-kind-face-mapping)
+                       (assoc-default t company-text-kind-face-mapping))))
     (propertize company-dot-icons-format 'face face)))
 
 (defun company-detect-icons-margin (candidate selected)
-  "Margin function which picks from vscodes icons or unicode icons
-based on `display-graphic-p'."
-  (if (display-graphic-p)
-      ;; Default to dark because who in their right mind uses light 😜
+  "Margin function which picks the appropriate icon set automatically."
+  (if (and (display-graphic-p)
+           (image-type-available-p 'svg))
       (cl-case (frame-parameter nil 'background-mode)
         ('light (company-vscode-light-icons-margin candidate selected))
         (t (company-vscode-dark-icons-margin candidate selected)))
     (company-text-icons-margin candidate selected)))
 
-(defcustom company-format-margin-function nil
+(defcustom company-format-margin-function #'company-detect-icons-margin
   "Function to format the margin.
 It accepts 2 params `candidate' and `selected' and can be used for
 inserting prefix/image before the completion items. Typically, the
@@ -3252,6 +3285,7 @@ Returns a negative number if the tooltip should be displayed above point."
   "`company-mode' frontend similar to a tooltip but based on overlays."
   (cl-case command
     (pre-command (company-pseudo-tooltip-hide-temporarily))
+    (unhide (company-pseudo-tooltip-unhide))
     (post-command
      (unless (when (overlayp company-pseudo-tooltip-overlay)
                (let* ((ov company-pseudo-tooltip-overlay)
@@ -3294,7 +3328,7 @@ Returns a negative number if the tooltip should be displayed above point."
 
 (defun company-pseudo-tooltip-unless-just-one-frontend (command)
   "`company-pseudo-tooltip-frontend', but not shown for single candidates."
-  (unless (and (eq command 'post-command)
+  (unless (and (memq command '(post-command unhide))
                (company--show-inline-p))
     (company-pseudo-tooltip-frontend command)))
 
@@ -3377,6 +3411,13 @@ Delay is determined by `company-tooltip-idle-delay'."
   "`company-mode' frontend showing the selection as if it had been inserted."
   (pcase command
     (`pre-command (company-preview-hide))
+    (`unhide
+     (when company-selection
+       (let ((company-prefix (buffer-substring
+                              (- company-point (length company-prefix))
+                              (point))))
+         (company-preview-show-at-point (point)
+                                        (nth company-selection company-candidates)))))
     (`post-command
      (when company-selection
        (company-preview-show-at-point (point)
@@ -3385,7 +3426,7 @@ Delay is determined by `company-tooltip-idle-delay'."
 
 (defun company-preview-if-just-one-frontend (command)
   "`company-preview-frontend', but only shown for single candidates."
-  (when (or (not (eq command 'post-command))
+  (when (or (not (memq command '(post-command unhide)))
             (company--show-inline-p))
     (company-preview-frontend command)))
 
@@ -3411,11 +3452,12 @@ Delay is determined by `company-tooltip-idle-delay'."
 
 (defun company-preview-common-frontend (command)
   "`company-mode' frontend preview the common part of candidates."
-  (when (or (not (eq command 'post-command))
+  (when (or (not (memq command '(post-command unhide)))
             (company-preview-common--show-p))
     (pcase command
       (`pre-command (company-preview-hide))
-      (`post-command (company-preview-show-at-point (point) company-common))
+      ((or 'post-command 'unhide)
+       (company-preview-show-at-point (point) company-common))
       (`hide (company-preview-hide)))))
 
 ;;; echo ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
