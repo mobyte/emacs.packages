@@ -700,8 +700,10 @@ asynchronous call into synchronous.")
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap "\e\e\e" 'company-abort)
     (define-key keymap "\C-g" 'company-abort)
-    (define-key keymap (kbd "M-n") 'company-select-next)
-    (define-key keymap (kbd "M-p") 'company-select-previous)
+    (define-key keymap (kbd "M-n") 'company--select-next-and-warn)
+    (define-key keymap (kbd "M-p") 'company--select-previous-and-warn)
+    (define-key keymap (kbd "C-n") 'company-select-next)
+    (define-key keymap (kbd "C-p") 'company-select-previous)
     (define-key keymap (kbd "<down>") 'company-select-next-or-abort)
     (define-key keymap (kbd "<up>") 'company-select-previous-or-abort)
     (define-key keymap [remap scroll-up-command] 'company-next-page)
@@ -727,6 +729,23 @@ asynchronous call into synchronous.")
   "Keymap that is enabled during an active completion.")
 
 (defvar company--disabled-backends nil)
+
+(defun company--select-next-and-warn (&optional arg)
+  (interactive "p")
+  (company--warn-changed-binding)
+  (company-select-next arg))
+
+(defun company--select-previous-and-warn (&optional arg)
+  (interactive "p")
+  (company--warn-changed-binding)
+  (company-select-previous arg))
+
+(defun company--warn-changed-binding ()
+  (interactive)
+  (run-with-idle-timer
+   0.01 nil
+   (lambda ()
+     (message "Warning: default bindings are being changed to C-n and C-p"))))
 
 (defun company-init-backend (backend)
   (and (symbolp backend)
@@ -1439,6 +1458,7 @@ end of the match."
                                       'company-tooltip-selection
                                     'company-tooltip)
                                   :background))
+             (dfw (default-font-width))
              (icon-size (cond
                          ((integerp company-icon-size)
                           company-icon-size)
@@ -1446,11 +1466,13 @@ end of the match."
                          ;; (aref (font-info (face-font 'default)) 2)
                          ((and (consp company-icon-size)
                                (eq 'auto-scale (car company-icon-size)))
-                          (let ((base-size (cdr company-icon-size)))
-                            (if (> (default-font-height)
-                                   (* 2 base-size))
-                                (* 2 base-size)
-                              base-size)))))
+                          (let ((base-size (cdr company-icon-size))
+                                (dfh (default-font-height)))
+                            (min
+                             (if (> dfh (* 2 base-size))
+                                 (* 2 base-size)
+                               base-size)
+                             (* 2 dfw))))))
              (spec (list 'image
                          :file (expand-file-name icon-file root-dir)
                          :type 'svg
@@ -1458,10 +1480,11 @@ end of the match."
                          :height icon-size
                          :ascent 'center
                          :background (unless (eq bkg 'unspecified)
-                                       bkg))))
+                                       bkg)))
+             (spacer-px-width (- (* 2 dfw) icon-size)))
         (concat
          (propertize " " 'display spec)
-         (propertize " " 'display `(space . (:width ,(- 2 (car (image-size spec))))))))
+         (propertize " " 'display `(space . (:width (,spacer-px-width))))))
     nil))
 
 (defun company-vscode-dark-icons-margin (candidate selected)
@@ -1479,68 +1502,48 @@ end of the match."
                                 selected))
 
 (defcustom company-text-icons-mapping
-  '((array . "a")
-    (boolean . "b")
-    (class . "c")
-    (color . "c")
-    (constant . "c")
-    (enum-member . "e")
-    (enum . "e")
-    (field . "f")
-    (file . "f")
-    (folder . "d")
-    (interface . "i")
-    (keyword . "k")
-    (method . "m")
-    (function . "f")
-    (module . "M")
-    (numeric . "n")
-    (operator . "o")
-    (parameter . "p")
-    (property . "p")
-    (ruler . "r")
-    (snippet . "S")
-    (string . "s")
-    (struct . "s")
-    (text . "t")
-    (value . "v")
-    (variable . "v")
-    (t . "."))
-  "Mapping of the text icons."
-  :type 'list)
+  '((array "a" font-lock-type-face)
+    (boolean "b" font-lock-builtin-face)
+    (class "c" font-lock-type-face)
+    (color "#" success)
+    (constant "c" font-lock-constant-face)
+    (enum-member "e" font-lock-builtin-face)
+    (enum "e" font-lock-builtin-face)
+    (field "f" font-lock-variable-name-face)
+    (file "f" font-lock-string-face)
+    (folder "d" font-lock-doc-face)
+    (interface "i" font-lock-type-face)
+    (keyword "k" font-lock-keyword-face)
+    (method "m" font-lock-function-name-face)
+    (function "f" font-lock-function-name-face)
+    (module "{" font-lock-type-face)
+    (numeric "n" font-lock-builtin-face)
+    (operator "o" font-lock-comment-delimiter-face)
+    (parameter "p" font-lock-builtin-face)
+    (property "p" font-lock-variable-name-face)
+    (ruler "r" shadow)
+    (snippet "S" font-lock-string-face)
+    (string "s" font-lock-string-face)
+    (struct "%" font-lock-variable-name-face)
+    (text "w" shadow)
+    (value "v" font-lock-builtin-face)
+    (variable "v" font-lock-variable-name-face)
+    (t "." shadow))
+  "Mapping of the text icons.
+The format should be an alist of (KIND . CONF) where CONF is a list of the
+form (ICON FG BG) which is used to propertize the icon to be shown for a
+candidate of kind KIND. FG can either be color string or a face from which
+we can get a color string (using the :foreground face-property). BG must be
+of the same form as FG or a cons cell of (BG . BG-WHEN-SELECTED) which each
+should be of the same form as FG.
 
-(defcustom company-text-kind-face-mapping
-  '((array . font-lock-type-face)
-    (boolean . font-lock-builtin-face)
-    (class . font-lock-type-face)
-    (color . success)
-    (constant . font-lock-constant-face)
-    (enum-member . font-lock-builtin-face)
-    (enum . font-lock-builtin-face)
-    (field . font-lock-variable-name-face)
-    (file . font-lock-string-face)
-    (folder . font-lock-doc-face)
-    (interface . font-lock-type-face)
-    (keyword . font-lock-keyword-face)
-    (method . font-lock-function-name-face)
-    (function . font-lock-function-name-face)
-    (module . font-lock-type-face)
-    (numeric . font-lock-builtin-face)
-    (operator . font-lock-comment-delimiter-face)
-    (parameter . font-lock-builtin-face)
-    (property . font-lock-variable-name-face)
-    ;; (ruler . nil)
-    (snippet . font-lock-string-face)
-    (string . font-lock-string-face)
-    (struct . font-lock-variable-name-face)
-    ;; (text . nil)
-    (value . font-lock-builtin-face)
-    (variable . font-lock-variable-name-face)
-    (t . deemphasized))
-  "Faces mapping for `company-text-icons-margin' and `company-dot-icons-margin'."
-  :type '(repeat
-          (cons (symbol :tag "Kind name")
-                (face :tag "Face to use for it"))))
+The only mandatory element in CONF is ICON, you can omit both the FG and BG
+fields without issue.
+
+When BG is omitted and `company-text-icons-add-background' is non-nil, a BG
+color will be generated using a gradient between the active tooltip color and
+the FG color."
+  :type 'list)
 
 (defcustom company-text-face-extra-attributes '(:weight bold)
   "Additional attributes to add to text icons' faces.
@@ -1552,34 +1555,85 @@ Only affects `company-text-icons-margin'."
   "Format string for printing the text icons."
   :type 'string)
 
-(defun company-text-icons-margin (candidate _selected)
+(defcustom company-text-icons-add-background nil
+  "When non-nil, generate a background color for text icons when none is given.
+See `company-text-icons-mapping'."
+  :type 'boolean)
+
+(defun company-text-icons-margin (candidate selected)
   "Margin function which returns unicode icons."
   (when-let ((candidate candidate)
              (kind (company-call-backend 'kind candidate))
-             (icon (or (alist-get kind company-text-icons-mapping)
-                       (alist-get t company-text-icons-mapping)))
-             (face (or (assoc-default kind
-                                      company-text-kind-face-mapping)
-                       (assoc-default t company-text-kind-face-mapping))))
-    (propertize
-     (format company-text-icons-format icon)
-     'face
-     (if company-text-face-extra-attributes
-         (append company-text-face-extra-attributes
-                 (list :inherit face))
-       face))))
+             (conf (or (alist-get kind company-text-icons-mapping)
+                       (alist-get t company-text-icons-mapping))))
+    (cl-destructuring-bind (icon &optional fg bg) conf
+      (propertize
+       (format company-text-icons-format icon)
+       'face
+       (company-text-icons--face fg bg selected)))))
+
+(declare-function color-rgb-to-hex "color")
+(declare-function color-gradient "color")
+
+(defun company-text-icons--extract-property (face property)
+  "Try to extract PROPERTY from FACE.
+If FACE isn't a valid face return FACE as is. If FACE doesn't have
+PROPERTY return nil."
+  (if (facep face)
+      (let ((value (face-attribute face property)))
+        (unless (eq value 'unspecified)
+          value))
+    face))
+
+(defun company-text-icons--face (fg bg selected)
+  (let ((fg-color (company-text-icons--extract-property fg :foreground)))
+    `(,@company-text-face-extra-attributes
+      ,@(and fg-color
+             (list :foreground fg-color))
+      ,@(let* ((bg-is-cons (consp bg))
+               (bg (if bg-is-cons (if selected (cdr bg) (car bg)) bg))
+               (bg-color (company-text-icons--extract-property bg :background))
+               (tooltip-bg-color (company-text-icons--extract-property
+                                  (if selected
+                                      'company-tooltip-selection
+                                    'company-tooltip)
+                                  :background)))
+          (cond
+           ((and company-text-icons-add-background selected
+                 (not bg-is-cons) bg-color tooltip-bg-color)
+            ;; Adjust the coloring of the background when *selected* but user hasn't
+            ;; specified an alternate background color for selected item icons.
+            (list :background
+                  (apply #'color-rgb-to-hex
+                         (nth 0 (color-gradient (color-name-to-rgb tooltip-bg-color)
+                                                (color-name-to-rgb bg-color)
+                                                2)))))
+           (bg
+            ;; When background is configured we use it as is, even if it doesn't
+            ;; constrast well with other candidates when selected.
+            (and bg-color
+                 (list :background bg-color)))
+           ((and company-text-icons-add-background fg-color tooltip-bg-color)
+            ;; Lastly attempt to generate a background from the foreground.
+            (list :background
+                  (apply #'color-rgb-to-hex
+                         (nth 0 (color-gradient (color-name-to-rgb tooltip-bg-color)
+                                                (color-name-to-rgb fg-color)
+                                                10))))))))))
 
 (defcustom company-dot-icons-format "●"
   "Format string for `company-dot-icons-margin'."
   :type 'string)
 
-(defun company-dot-icons-margin (candidate _selected)
+(defun company-dot-icons-margin (candidate selected)
   "Margin function that uses a colored dot to display completion kind."
   (when-let ((kind (company-call-backend 'kind candidate))
-             (face (or (assoc-default kind
-                                      company-text-kind-face-mapping)
-                       (assoc-default t company-text-kind-face-mapping))))
-    (propertize company-dot-icons-format 'face face)))
+             (conf (or (assoc-default kind company-text-icons-mapping)
+                       (assoc-default t company-text-icons-mapping))))
+    (cl-destructuring-bind (_icon &optional fg bg) conf
+      (propertize company-dot-icons-format
+                  'face
+                  (company-text-icons--face fg bg selected)))))
 
 (defun company-detect-icons-margin (candidate selected)
   "Margin function which picks the appropriate icon set automatically."
@@ -2210,8 +2264,10 @@ each one wraps a part of the input string."
       (define-key keymap (char-to-string meta-prefix-char) meta-map)
       (define-key keymap [escape] meta-map))
     (define-key keymap (vector meta-prefix-char t) 'company-search-other-char)
-    (define-key keymap (kbd "M-n") 'company-select-next)
-    (define-key keymap (kbd "M-p") 'company-select-previous)
+    (define-key keymap (kbd "C-n") 'company-select-next)
+    (define-key keymap (kbd "C-p") 'company-select-previous)
+    (define-key keymap (kbd "M-n") 'company--select-next-and-warn)
+    (define-key keymap (kbd "M-p") 'company--select-previous-and-warn)
     (define-key keymap (kbd "<down>") 'company-select-next-or-abort)
     (define-key keymap (kbd "<up>") 'company-select-previous-or-abort)
     (define-key keymap "\e\e\e" 'company-search-other-char)
@@ -3482,20 +3538,17 @@ Delay is determined by `company-tooltip-idle-delay'."
         (message "%s" company-echo-last-msg)
       (message ""))))
 
-(defun company-echo-show-soon (&optional getter)
+(defun company-echo-show-soon (&optional getter delay)
   (company-echo-cancel)
-  (setq company-echo-timer (run-with-timer 0 nil 'company-echo-show getter)))
+  (setq company-echo-timer (run-with-timer (or delay company-echo-delay)
+                                           nil
+                                           'company-echo-show getter)))
 
 (defun company-echo-cancel (&optional unset)
   (when company-echo-timer
     (cancel-timer company-echo-timer))
   (when unset
     (setq company-echo-timer nil)))
-
-(defun company-echo-show-when-idle (&optional getter)
-  (company-echo-cancel)
-  (setq company-echo-timer
-        (run-with-idle-timer company-echo-delay nil 'company-echo-show getter)))
 
 (defun company-echo-format ()
   (let ((selection (or company-selection 0)))
@@ -3562,19 +3615,19 @@ Delay is determined by `company-tooltip-idle-delay'."
 (defun company-echo-frontend (command)
   "`company-mode' frontend showing the candidates in the echo area."
   (pcase command
-    (`post-command (company-echo-show-soon 'company-echo-format))
+    (`post-command (company-echo-show-soon 'company-echo-format 0))
     (`hide (company-echo-hide))))
 
 (defun company-echo-strip-common-frontend (command)
   "`company-mode' frontend showing the candidates in the echo area."
   (pcase command
-    (`post-command (company-echo-show-soon 'company-echo-strip-common-format))
+    (`post-command (company-echo-show-soon 'company-echo-strip-common-format 0))
     (`hide (company-echo-hide))))
 
 (defun company-echo-metadata-frontend (command)
   "`company-mode' frontend showing the documentation in the echo area."
   (pcase command
-    (`post-command (company-echo-show-when-idle 'company-fetch-metadata))
+    (`post-command (company-echo-show-soon 'company-fetch-metadata))
     (`hide (company-echo-hide))))
 
 (provide 'company)

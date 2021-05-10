@@ -10,10 +10,10 @@
 ;;       Artur Malabarba <bruce.connor.am@gmail.com>
 ;; Maintainer: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://github.com/clojure-emacs/clojure-mode
-;; Package-Version: 20210502.824
-;; Package-Commit: 078f591741d329534595b97c66eb612a8bca0316
+;; Package-Version: 20210505.712
+;; Package-Commit: 33f267ac182afe8fa82cc321e9f515c0397e35f6
 ;; Keywords: languages clojure clojurescript lisp
-;; Version: 5.13.0-snapshot
+;; Version: 5.13.0
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
@@ -803,8 +803,6 @@ any number of matches of `clojure--sym-forbidden-rest-chars'."))
                 "\\(\\sw+\\)?" )
        (1 font-lock-keyword-face)
        (2 font-lock-function-name-face nil t))
-      ;; lambda arguments - %, %&, %1, %2, etc
-      ("\\<%[&1-9]?" (0 font-lock-variable-name-face))
       ;; Special forms
       (,(concat
          "("
@@ -864,14 +862,16 @@ any number of matches of `clojure--sym-forbidden-rest-chars'."))
          "\\>")
        0 font-lock-constant-face)
       ;; Character literals - \1, \a, \newline, \u0000
-      (,(rx "\\" (or any
-                    "newline" "space" "tab" "formfeed" "backspace"
-                    "return"
-                    (: "u" (= 4 (char "0-9a-fA-F")))
-                    (: "o" (repeat 1 3 (char "0-7"))))
-            word-boundary)
-       0 'clojure-character-face)
-
+      (,(rx (group "\\" (or any
+                            "newline" "space" "tab" "formfeed" "backspace"
+                            "return"
+                            (: "u" (= 4 (char "0-9a-fA-F")))
+                            (: "o" (repeat 1 3 (char "0-7")))))
+            (or (not word) word-boundary))
+       1 'clojure-character-face)
+      ;; lambda arguments - %, %&, %1, %2, etc
+      ;; must come after character literals for \% to be handled properly
+      ("\\<%[&1-9]?" (0 font-lock-variable-name-face))
       ;; namespace definitions: (ns foo.bar)
       (,(concat "(\\<ns\\>[ \r\n\t]*"
                 ;; Possibly metadata, shorthand and/or longhand

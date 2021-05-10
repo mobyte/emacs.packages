@@ -11,7 +11,7 @@
 ;;         Steve Purcell <steve@sanityinc.com>
 ;; Maintainer: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: http://www.github.com/clojure-emacs/cider
-;; Version: 1.1.0
+;; Version: 1.2.0-snapshot
 ;; Package-Requires: ((emacs "25") (clojure-mode "5.12") (parseedn "0.2") (pkg-info "0.4") (queue "0.2") (spinner "1.7") (seq "2.22") (sesman "0.3.2"))
 ;; Keywords: languages, clojure, cider
 
@@ -92,7 +92,7 @@
 (require 'seq)
 (require 'sesman)
 
-(defconst cider-version "1.1.0"
+(defconst cider-version "1.2.0-snapshot"
   "Fallback version used when it cannot be extracted automatically.
 Normally it won't be used, unless `pkg-info' fails to extract the
 version from the CIDER package or library.")
@@ -1099,7 +1099,7 @@ also be a server buffer, in which case a new session with a REPL for that
 server is created."
   (interactive "P")
   (cider-nrepl-connect
-   (let* ((other-repl (or other-repl (cider-current-repl nil 'ensure)))
+   (let* ((other-repl (or other-repl (cider-current-repl 'any 'ensure)))
           (other-params (cider--gather-connect-params nil other-repl))
           (ses-name (unless (nrepl-server-p other-repl)
                       (sesman-session-name-for-object 'CIDER other-repl))))
@@ -1118,7 +1118,7 @@ Figwheel, etc).  All other parameters are inferred from the OTHER-REPL.
 OTHER-REPL defaults to `cider-current-repl' but in programs can also be a
 server buffer, in which case a new session for that server is created."
   (interactive "P")
-  (let* ((other-repl (or other-repl (cider-current-repl nil 'ensure)))
+  (let* ((other-repl (or other-repl (cider-current-repl 'any 'ensure)))
          (other-params (cider--gather-connect-params nil other-repl))
          (ses-name (unless (nrepl-server-p other-repl)
                      (sesman-session-name-for-object 'CIDER other-repl))))
