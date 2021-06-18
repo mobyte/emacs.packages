@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20210527.642
-;; Package-Commit: 6b88b69ecd7e6f2b6bbcae0b68026a486be516a4
+;; Package-Version: 20210607.1513
+;; Package-Commit: 155fdb44176347c9599357c7935993033260a930
 ;; Keywords: project, convenience
 ;; Version: 2.4.0
 ;; Package-Requires: ((emacs "25.1") (pkg-info "0.4"))
@@ -1026,13 +1026,11 @@ at the top level of DIRECTORY."
   (interactive
    (list (read-directory-name "Starting directory: ")))
   (if (file-exists-p directory)
-      (let ((subdirs (directory-files directory t)))
-        (mapcar
+      (let ((subdirs (directory-files directory t directory-files-no-dot-files-regexp t)))
+        (mapc
          (lambda (dir)
-           (when (and (file-directory-p dir)
-                      (not (member (file-name-nondirectory dir) '(".." "."))))
-             (when (projectile-project-p dir)
-               (projectile-add-known-project dir))))
+           (when (and (file-directory-p dir) (projectile-project-p dir))
+             (projectile-add-known-project dir)))
          subdirs))
     (message "Project search path directory %s doesn't exist" directory)))
 
@@ -2832,7 +2830,7 @@ test/impl/other files as below:
   "Get CMake user and system COMMAND-TYPE presets."
   (projectile-flatten
    (mapcar (lambda (filename) (projectile--cmake-command-presets filename command-type))
-           '("CMakeUserPresets.json" "CMakeSystemPresets.json"))))
+           '("CMakeUserPresets.json" "CMakePresets.json"))))
 
 (defun projectile--cmake-command-preset-names (command-type)
   "Get names of CMake user and system COMMAND-TYPE presets."
