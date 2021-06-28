@@ -126,6 +126,16 @@
   '((default :inherit company-tooltip-annotation))
   "Face used for the selected completion annotation in the tooltip.")
 
+(defface company-tooltip-quick-access
+  '((default :inherit company-tooltip-annotation))
+  "Face used for the quick-access keys shown in the tooltip."
+  :package-version '(company . "0.9.14"))
+
+(defface company-tooltip-quick-access-selection
+  '((default :inherit company-tooltip-annotation-selection))
+  "Face used for the selected quick-access keys shown in the tooltip."
+  :package-version '(company . "0.9.14"))
+
 (defface company-scrollbar-fg
   '((((background light))
      :background "darkred")
@@ -2993,6 +3003,14 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                     (mod numbered 10)
                   " ")))
 
+(defun company--format-quick-access-key (numbered selected)
+  "Produce a quick-access key to show beside a candidate."
+  (propertize (funcall company-show-numbers-function numbered)
+              'face
+              (if selected
+                  'company-tooltip-quick-access-selection
+                'company-tooltip-quick-access)))
+
 (defsubst company--window-height ()
   (if (fboundp 'window-screen-lines)
       (floor (window-screen-lines))
@@ -3172,7 +3190,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
           (numbered (if company-show-numbers 0 99999))
           new)
       (when previous
-        (push (company--scrollpos-line previous width) new))
+        (push (company--scrollpos-line previous width left-margin-size) new))
 
       (dotimes (i len)
         (let* ((item (pop items))
@@ -3180,18 +3198,18 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                (annotation (cadr item))
                (left (nth 2 item))
                (right (company-space-string company-tooltip-margin))
-               (width width))
+               (width width)
+               (selected (equal selection i)))
           (when company-show-numbers
-            (let ((numbers-place
-                   (gv-ref (if (eq company-show-numbers 'left) left right))))
-            (cl-decf width 2)
-            (cl-incf numbered)
-            (setf (gv-deref numbers-place)
-                  (concat (funcall company-show-numbers-function numbered)
-                          (gv-deref numbers-place)))))
+            (let ((numbers-place (gv-ref (if (eq company-show-numbers 'left) left right))))
+              (cl-decf width 2)
+              (cl-incf numbered)
+              (setf (gv-deref numbers-place)
+                    (concat (company--format-quick-access-key numbered selected)
+                            (gv-deref numbers-place)))))
           (push (concat
                  (company-fill-propertize str annotation
-                                          width (equal i selection)
+                                          width selected
                                           left
                                           right)
                  (when scrollbar-bounds
@@ -3199,7 +3217,7 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                 new)))
 
       (when remainder
-        (push (company--scrollpos-line remainder width) new))
+        (push (company--scrollpos-line remainder width left-margin-size) new))
 
       (cons
        left-margin-size
@@ -3218,10 +3236,10 @@ If SHOW-VERSION is non-nil, show the version in the echo area."
                   'company-scrollbar-fg
                 'company-scrollbar-bg)))
 
-(defun company--scrollpos-line (text width)
+(defun company--scrollpos-line (text width fancy-margin-width)
   (propertize (concat (company-space-string company-tooltip-margin)
                       (company-safe-substring text 0 width)
-                      (company-space-string company-tooltip-margin))
+                      (company-space-string fancy-margin-width))
               'face 'company-tooltip))
 
 ;; show
@@ -3400,6 +3418,10 @@ Returns a negative number if the tooltip should be displayed above point."
                (company--show-inline-p))
     (company-pseudo-tooltip-frontend command)))
 
+(defun company-pseudo-tooltip--ujofwd-on-timer (command)
+  (when company-candidates
+    (company-pseudo-tooltip-unless-just-one-frontend-with-delay command)))
+
 (defun company-pseudo-tooltip-unless-just-one-frontend-with-delay (command)
   "`compandy-pseudo-tooltip-frontend', but shown after a delay.
 Delay is determined by `company-tooltip-idle-delay'."
@@ -3419,7 +3441,7 @@ Delay is determined by `company-tooltip-idle-delay'."
            (company-call-frontends 'post-command))
        (setq company-tooltip-timer
              (run-with-timer company-tooltip-idle-delay nil
-                             'company-pseudo-tooltip-unless-just-one-frontend-with-delay
+                             'company-pseudo-tooltip--ujofwd-on-timer
                              'post-command))))
     (unhide
      (when (overlayp company-pseudo-tooltip-overlay)
