@@ -1119,15 +1119,6 @@ refresh because that also automatically moves to the next change.
      then it waits for the process to return, so the function itself is
      synchronous.
 
- -- Function: magit-run-git-with-logfile file &rest args
-
-     Calls git synchronously with ARGS.  The process’s output is saved
-     in FILE.  This is rarely useful and so this function might be
-     removed in the future.
-
-     This function actually runs git asynchronously.  But then it waits
-     for the process to return, so the function itself is synchronous.
-
  -- Function: magit-git &rest args
 
      Calls git synchronously with ARGS for side-effects only.  This
@@ -1908,6 +1899,8 @@ A.2 FAQ - Issues and Errors
 * My Git hooks work on the command-line but not inside Magit::
 * git-commit-mode isn't used when committing from the command-line::
 * Point ends up inside invisible text when jumping to a file-visiting buffer::
+* I am unable to stage when using Tramp from MS Windows::
+* I am no longer able to save popup defaults::
 
 
 File: magit.info,  Node: Magit is slow,  Next: I changed several thousand files at once and now Magit is unusable,  Up: FAQ - Issues and Errors
@@ -2113,7 +2106,7 @@ that succeeds, do nothing else.  Otherwise start ‘emacs &’ (and
 ‘init.el’ must call ‘server-start’) and try to use ‘emacsclient’ again.
 
 
-File: magit.info,  Node: Point ends up inside invisible text when jumping to a file-visiting buffer,  Prev: git-commit-mode isn't used when committing from the command-line,  Up: FAQ - Issues and Errors
+File: magit.info,  Node: Point ends up inside invisible text when jumping to a file-visiting buffer,  Next: I am unable to stage when using Tramp from MS Windows,  Prev: git-commit-mode isn't used when committing from the command-line,  Up: FAQ - Issues and Errors
 
 A.2.12 Point ends up inside invisible text when jumping to a file-visiting buffer
 ---------------------------------------------------------------------------------
@@ -2124,6 +2117,43 @@ file at the respective position.  One solution to this problem is to use
 visible.  If that is too drastic for your taste, then you may instead
 use ‘magit-diff-visit-file-hook’ to reveal the text, possibly using
 ‘reveal-post-command’ or for Org buffers ‘org-reveal’.
+
+
+File: magit.info,  Node: I am unable to stage when using Tramp from MS Windows,  Next: I am no longer able to save popup defaults,  Prev: Point ends up inside invisible text when jumping to a file-visiting buffer,  Up: FAQ - Issues and Errors
+
+A.2.13 I am unable to stage when using Tramp from MS Windows
+------------------------------------------------------------
+
+Magit may be unable to stage (or otherwise apply) individual hunks when
+you are connected to remote machine using Tramp and the local machine
+uses MS Windows.
+
+   There appears to be a problem with ‘process-send-eof’ in this
+scenario, as mentioned at the end of ‘tramp-tests.el’.  I have contacted
+the Tramp maintainer about this.  For now this unfortunately means that
+it just doesn’t work and we cannot do anything about it.  If you have
+more information, then please comment on
+<https://github.com/magit/magit/issues/3624>.
+
+
+File: magit.info,  Node: I am no longer able to save popup defaults,  Prev: I am unable to stage when using Tramp from MS Windows,  Up: FAQ - Issues and Errors
+
+A.2.14 I am no longer able to save popup defaults
+-------------------------------------------------
+
+Magit used to use Magit-Popup to implement the transient popup menus.
+Now it used Transient instead, which is Magit-Popup’s successor.
+
+   In the older Magit-Popup menus, it was possible to save user settings
+(e.g.  setting the gpg signing key for commits) by using ‘C-c C-c’ in
+the popup buffer.  This would dismiss the popup, but save the settings
+as the defaults for future popups.
+
+   When switching to Transient menus, this functionality is now
+available via ‘C-x C-s’ instead; the ‘C-x’ prefix has other options as
+well when using Transient, which will be displayed when it is typed.
+See <https://magit.vc/manual/transient/Saving-Values.html#Saving-Values>
+for more details.
 
 
 File: magit.info,  Node: Debugging Tools,  Next: Keystroke Index,  Prev: FAQ,  Up: Top
@@ -3262,7 +3292,7 @@ Appendix E Function Index
                                                               (line  17)
 * magit-get-section:                     Matching Sections.   (line  16)
 * magit-git:                             Calling Git for Effect.
-                                                              (line  59)
+                                                              (line  50)
 * magit-git-exit-code:                   Getting a Value from Git.
                                                               (line  10)
 * magit-git-failure:                     Getting a Value from Git.
@@ -3284,7 +3314,7 @@ Appendix E Function Index
 * magit-git-true:                        Getting a Value from Git.
                                                               (line  24)
 * magit-git-wash:                        Calling Git for Effect.
-                                                              (line  64)
+                                                              (line  55)
 * magit-hunk-set-window-start:           Section Movement.    (line  51)
 * magit-ido-completing-read:             Support for Completion Frameworks.
                                                               (line  48)
@@ -3381,13 +3411,11 @@ Appendix E Function Index
 * magit-run-git:                         Calling Git for Effect.
                                                               (line  36)
 * magit-run-git-async:                   Calling Git for Effect.
-                                                              (line  74)
+                                                              (line  65)
 * magit-run-git-with-editor:             Calling Git for Effect.
-                                                              (line  87)
+                                                              (line  78)
 * magit-run-git-with-input:              Calling Git for Effect.
                                                               (line  40)
-* magit-run-git-with-logfile:            Calling Git for Effect.
-                                                              (line  50)
 * magit-save-window-configuration:       Switching Buffers.   (line  89)
 * magit-section-case:                    Matching Sections.   (line  71)
 * magit-section-hide:                    Section Visibility.  (line  49)
@@ -3401,9 +3429,9 @@ Appendix E Function Index
 * magit-section-toggle-children:         Section Visibility.  (line  68)
 * magit-section-value-if:                Matching Sections.   (line  61)
 * magit-start-git:                       Calling Git for Effect.
-                                                              (line  99)
+                                                              (line  90)
 * magit-start-process:                   Calling Git for Effect.
-                                                              (line 118)
+                                                              (line 109)
 * magit-stashes-maybe-update-stash-buffer: Section Movement.  (line 106)
 * magit-status-maybe-update-blob-buffer: Section Movement.    (line 100)
 * magit-status-maybe-update-revision-buffer: Section Movement.
@@ -3559,6 +3587,7 @@ Appendix F Variable Index
 * magit-no-confirm:                      Action Confirmation. (line  18)
 * magit-pop-revision-stack-format:       Using the Revision Stack.
                                                               (line  35)
+* magit-post-commit-hook:                Initiating a Commit. (line 101)
 * magit-post-display-buffer-hook:        Switching Buffers.   (line  95)
 * magit-pre-display-buffer-hook:         Switching Buffers.   (line  84)
 * magit-prefer-remote-upstream:          Branch Git Variables.
@@ -3566,7 +3595,7 @@ Appendix F Variable Index
 * magit-prefix-use-buffer-arguments:     Transient Arguments and Buffer Variables.
                                                               (line  64)
 * magit-process-raise-error:             Calling Git for Effect.
-                                                              (line 145)
+                                                              (line 136)
 * magit-pull-or-fetch:                   Fetching.            (line  59)
 * magit-reflog-margin:                   Reflog.              (line  23)
 * magit-refresh-args:                    Refreshing Buffers.  (line  55)
@@ -3611,7 +3640,7 @@ Appendix F Variable Index
 * magit-status-sections-hook:            Status Sections.     (line  10)
 * magit-submodule-list-columns:          Listing Submodules.  (line  21)
 * magit-this-process:                    Calling Git for Effect.
-                                                              (line 140)
+                                                              (line 131)
 * magit-uniquify-buffer-names:           Naming Buffers.      (line  74)
 * magit-unstage-committed:               Staging and Unstaging.
                                                               (line  56)
