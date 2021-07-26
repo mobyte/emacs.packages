@@ -562,7 +562,7 @@ current git branch as a string.  Otherwise return an empty string."
   (interactive)
   (cider-connect '(:host "localhost"
                    :port 4001
-                   :project-dir "/Users/mobyte/repos/rewe-order-service")))
+                   :project-dir "/Users/emil.yessenamanov/repos/rewe/rewe-order-service")))
 
 ;; clj-refactor-mode
 
@@ -881,7 +881,7 @@ current git branch as a string.  Otherwise return an empty string."
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-(setq org-directory "/Users/mobyte/Documents/org")
+(setq org-directory "/Users/emil.yessenamanov/Documents/org")
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 

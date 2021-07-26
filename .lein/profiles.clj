@@ -17,6 +17,8 @@
                  :skip-default-init true
                  :host "0.0.0.0"
                  :port 4001}
+  :profiles {:dev {:source-paths ["src-int" "src-scripts"]
+                   :test-paths ["test-int"]}}
   :offline? false
   :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
                        ;; "-Djsse.enableSNIExtension=false"
