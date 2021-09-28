@@ -20,7 +20,8 @@
   :profiles {:dev {:source-paths ["src-int" "src-scripts"]
                    :test-paths ["test-int"]}}
   :offline? false
-  :jvm-opts ^:replace ["-Xmx1g" "-Dlogfile.path=logs"
+  :jvm-opts ^:replace ["-Xmx1g"
+                       ;; "-Dlogfile.path=logs"
                        ;; "-Djsse.enableSNIExtension=false"
                        ;; "-XX:+TieredCompilation" 
                        ;; "-XX:TieredStopAtLevel=1" 
