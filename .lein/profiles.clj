@@ -1,9 +1,9 @@
 {:user
  {:dependencies [[org.clojure/clojure "1.10.3"]]
-  :plugins [[cider/cider-nrepl "0.25.3-SNAPSHOT"]
-            [refactor-nrepl "2.5.1"]
-            [lein-nomis-ns-graph "0.14.6"]]
-  :javac-options ["-target" "11" "-source" "11" "-Xlint:-options"]
+  ;; :plugins [[cider/cider-nrepl "0.27.2"]
+  ;;           [refactor-nrepl "3.1.0"]
+  ;;           [lein-nomis-ns-graph "0.14.6"]]
+;;  :javac-options ["-target" "11" "-source" "11" "-Xlint:-options"]
   :repl-options {:init (do (require 'clojure.pprint
                                     'clojure.tools.namespace.repl)
                            (intern 'clojure.core
