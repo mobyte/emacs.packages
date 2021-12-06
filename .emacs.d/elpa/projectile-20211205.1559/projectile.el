@@ -4,8 +4,8 @@
 
 ;; Author: Bozhidar Batsov <bozhidar@batsov.dev>
 ;; URL: https://github.com/bbatsov/projectile
-;; Package-Version: 20211126.1201
-;; Package-Commit: 08fcdd51269d7e3c1c41c7f688555534067daa0e
+;; Package-Version: 20211205.1559
+;; Package-Commit: 4ffbcb473d412da53afaf53433f3cfaac77d15cf
 ;; Keywords: project, convenience
 ;; Version: 2.6.0-snapshot
 ;; Package-Requires: ((emacs "25.1"))
@@ -1061,7 +1061,9 @@ discover projects there."
                        (not (member (file-name-nondirectory dir) '(".." "."))))
               (projectile-discover-projects-in-directory dir (1- depth))))
         (when (projectile-project-p directory)
-          (projectile-add-known-project (projectile-project-root directory))))
+          (let ((dir (abbreviate-file-name (projectile-project-root directory))))
+            (unless (member dir projectile-known-projects)
+              (projectile-add-known-project dir)))))
     (message "Project search path directory %s doesn't exist" directory)))
 
 ;;;###autoload

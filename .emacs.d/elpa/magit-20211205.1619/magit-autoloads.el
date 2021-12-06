@@ -1910,7 +1910,7 @@ process manually.
 Move COMMITS from the current branch onto another existing BRANCH.
 Remove COMMITS from the current branch and stay on that branch.
 If a conflict occurs, then you have to fix that and finish the
-process manually.
+process manually.  `HEAD' is allowed to be detached initially.
 
 \(fn COMMITS BRANCH &optional ARGS)" t nil)
 

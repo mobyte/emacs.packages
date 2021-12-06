@@ -31,7 +31,7 @@ to perform almost all of their daily version control tasks directly from
 within Emacs.  While many fine Git clients exist, only Magit and Git
 itself deserve to be called porcelains.
 
-This manual is for Magit version 3.3.0 (v3.3.0-40-g6da7771b6+1).
+This manual is for Magit version 3.3.0 (v3.3.0-53-g463a3550+1).
 
      Copyright (C) 2015-2021 Jonas Bernoulli <jonas@bernoul.li>
 
@@ -378,7 +378,7 @@ on Magit earlier.
    While one has to know the basic features of Emacs to be able to make
 full use of Magit, acquiring just enough Emacs skills doesn’t take long
 and is worth it, even for users who prefer other editors.  Vim users are
-advised to give Evil (https://bitbucket.org/lyro/evil/wiki/Home), the
+advised to give Evil (https://github.com/emacs-evil/evil), the
 "Extensible VI Layer for Emacs", and Spacemacs
 (https://github.com/syl20bnr/spacemacs), an "Emacs starter-kit focused
 on Evil" a try.
@@ -6870,6 +6870,7 @@ you would have to if these commands didn’t exist at all.
      This command moves the selected COMMITS from the current branch
      onto another existing BRANCH, removing them from the former.  When
      this command succeeds, then the same branch is current as before.
+     ‘HEAD’ is allowed to be detached initially.
 
      Applying the commits on the other branch or removing them from the
      current branch can lead to conflicts.  When that happens, then this
