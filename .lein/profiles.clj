@@ -1,5 +1,6 @@
 {:user
- {:dependencies [[org.clojure/clojure "1.10.3"]]
+ {:dependencies [[org.clojure/clojure "1.10.3"]
+                 [org.clojure/tools.namespace "1.2.0"]]
   ;; :plugins [[cider/cider-nrepl "0.27.2"]
   ;;           [refactor-nrepl "3.1.0"]
   ;;           [lein-nomis-ns-graph "0.14.6"]]
