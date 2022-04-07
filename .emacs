@@ -985,7 +985,7 @@ current git branch as a string.  Otherwise return an empty string."
 ;;* initial execution
 
 (split-window-right)
-(other-window 1)
+;;(other-window 1)
 
 ;(setq display-buffer-alist '(("\\`\\*e?shell" display-buffer-same-window)))
 
