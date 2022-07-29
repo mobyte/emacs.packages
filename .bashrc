@@ -1,6 +1,8 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 export PATH=/usr/local/Cellar/git/current/bin:/Applications/Emacs.app/Contents/MacOS/bin:/Library/PostgreSQL/9.3/bin:/Users/emil.yessenamanov/bin:/Applications/Postgres.app/Contents/Versions/latest/bin:/opt/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/opt/homebrew/opt/openjdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+
+#PATH=/opt/homebrew/opt/coreutils/libexec/gnubin
 export LC_ALL=en_US.UTF-8
 export EDITOR=emacsclient
 export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
